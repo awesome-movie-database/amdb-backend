@@ -1,1 +1,1 @@
-# movie-database-backend
+![Awesome Movie Database banner](/assests/main_banner.png)
