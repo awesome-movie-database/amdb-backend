@@ -1,1 +1,1 @@
-![Awesome Movie Database banner](/assests/main_banner.png)
+![Awesome Movie Database banner](/assets/main_banner.png)
