@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "amdb-backend"
+version = "0.1.0"   
+description = "Awesome Movie Database backend"
+authors = ["Madnoberson"]
+readme = "README.md"
+license = "Apache"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.7.0"
+flake8 = "^6.1.0"
+flake8-pytest = "^1.4"
+flake8-isort = "^6.1.1"
+flake8-import-order = "^0.18.2"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
