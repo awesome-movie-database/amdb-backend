@@ -25,7 +25,7 @@ class User(Entity):
     updated_at: Optional[datetime]
 
     @classmethod
-    def register(
+    def create(
         cls, id: UUID, username: str, password: str,
         created_at: datetime, sex: Optional[Sex] = None,
         email: Optional[str] = None, country: Optional[str] = None,
