@@ -49,7 +49,7 @@ class User(Entity):
         city: Union[str, None, Type[Unset]] = Unset,
         birth_date: Union[date, None, Type[Unset]] = Unset,
     ) -> None:
-        self._update_fields(
+        self._update(
             username=username, password=password, sex=sex, email=email,
             country=country, city=city, birth_date=birth_date,
         )

@@ -5,4 +5,4 @@ class Policy:
     """Base class for Policies"""
 
 
-PolicyT = TypeVar("PolicyT", bound=Policy)
+Policy_T = TypeVar("Policy_T", bound=Policy)

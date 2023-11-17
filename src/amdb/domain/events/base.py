@@ -5,4 +5,4 @@ class Event:
     """Base class for Events"""
 
 
-EventT = TypeVar("EventT", bound=Event)
+Event_T = TypeVar("Event_T", bound=Event)

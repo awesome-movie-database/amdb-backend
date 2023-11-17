@@ -6,7 +6,7 @@ from amdb.domain.constants import Unset
 class Entity:
     """Base class for Entities"""
 
-    def _update_fields(self, **fields) -> None:
+    def _update(self, **fields) -> None:
         """
         Updates Entity's fields where `fields` values
         are not `Unset`.
@@ -25,7 +25,7 @@ class Entity:
                 bar: Union[int, Type[Unset]] = Unset,
                 baz: Union[float, None, Type[Unset]] = Unset,
             ):
-                self._update_fields(bar=bar, baz=baz)
+                self._update(bar=bar, baz=baz)
 
         foo = Foo(1, 1.5)
         foo.update(bar=2)
@@ -37,4 +37,4 @@ class Entity:
             setattr(self, name, value)
 
 
-EntityT = TypeVar("EntityT", bound=Entity)
+Entity_T = TypeVar("Entity_T", bound=Entity)

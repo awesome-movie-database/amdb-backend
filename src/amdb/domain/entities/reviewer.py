@@ -13,7 +13,7 @@ class Reviewer(Entity):
     movies_ratings: int
     movies_reviews: int
     series_ratings: int
-    series_reviews: int 
+    series_reviews: int
     subscriptions: int
     subscribers: int
     achievements: int
