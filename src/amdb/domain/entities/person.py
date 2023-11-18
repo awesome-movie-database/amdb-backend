@@ -8,15 +8,29 @@ from amdb.domain.exceptions import person as person_exceptions
 from .base import Entity
 
 
+@dataclass(frozen=True, slots=True)
+class PersonName:
+
+    en_name: Optional[str]
+    original_name: Optional[str]
+
+    def __post_init__(self) -> None:
+        if (
+            self.en_name is None and self.original_name is None
+        ):
+            raise ValueError(
+                "Name must at least include en_name or original_name"
+            )
+
+
 @dataclass(slots=True)
 class Person(Entity):
 
     id: UUID
+    name: PersonName
     is_under_inspection: bool
     created_at: datetime
 
-    original_name: Optional[str]
-    en_name: Optional[str]
     sex: Optional[Sex]
     birth_date: Optional[date]
     birth_place: Optional[str]
@@ -27,9 +41,8 @@ class Person(Entity):
     def create(
         cls,
         id: UUID,
+        name: PersonName,
         created_at: datetime,
-        original_name: Optional[str] = None,
-        en_name: Optional[str] = None,
         sex: Optional[Sex] = None,
         birth_date: Optional[date] = None,
         birth_place: Optional[str] = None,
@@ -37,16 +50,15 @@ class Person(Entity):
         kinopoisk_id: Optional[str] = None,
     ) -> "Person":
         return Person(
-            id=id, is_under_inspection=False, created_at=created_at,
-            original_name=original_name, en_name=en_name, sex=sex,
-            birth_date=birth_date, birth_place=birth_place,
-            imdb_id=imdb_id, kinopoisk_id=kinopoisk_id,
+            id=id, name=name, is_under_inspection=False,
+            created_at=created_at,sex=sex, birth_date=birth_date,
+            birth_place=birth_place, imdb_id=imdb_id,
+            kinopoisk_id=kinopoisk_id,
         )
     
     def update(
         self,
-        original_name: Union[str, None, Type[Unset]] = Unset,
-        en_name: Union[str, None, Type[Unset]] = Unset,
+        name: Union[PersonName, None, Type[Unset]] = Unset,
         sex: Union[Sex, None, Type[Unset]] = Unset,
         birth_date: Union[date, None, Type[Unset]] = Unset,
         birth_place: Union[str, None, Type[Unset]] = Unset,
@@ -54,9 +66,9 @@ class Person(Entity):
         kinopoisk_id: Union[str, None, Type[Unset]] = Unset,
     ) -> None:
         self._update(
-            original_name=original_name, en_name=en_name, sex=sex,
-            birth_date=birth_date, birth_place=birth_place,
-            imdb_id=imdb_id, kinopoisk_id=kinopoisk_id
+            name=name, sex=sex, birth_date=birth_date,
+            birth_place=birth_place, imdb_id=imdb_id,
+            kinopoisk_id=kinopoisk_id,
         )
 
     def add_to_inspection(self) -> None:
