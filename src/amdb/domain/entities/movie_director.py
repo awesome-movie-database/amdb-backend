@@ -7,7 +7,7 @@ from .base import Entity
 
 @dataclass(slots=True)
 class MovieDirector(Entity):
-    
+
     person_id: UUID
     movie_id: UUID
     created_at: datetime
