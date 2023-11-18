@@ -52,7 +52,7 @@ class Person(Entity):
         birth_place: Union[str, None, Type[Unset]] = Unset,
         imdb_id: Union[str, None, Type[Unset]] = Unset,
         kinopoisk_id: Union[str, None, Type[Unset]] = Unset,
-    ) -> "Person":
+    ) -> None:
         self._update(
             original_name=original_name, en_name=en_name, sex=sex,
             birth_date=birth_date, birth_place=birth_place,
