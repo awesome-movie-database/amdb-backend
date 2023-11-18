@@ -54,12 +54,12 @@ class User(Entity):
             country=country, city=city, birth_date=birth_date,
         )
         self.updated_at = updated_at
-    
+
     def activate(self) -> None:
         self.is_active = True
 
     def deactivate(self) -> None:
         self.is_active = False
-    
+
     def verify(self) -> None:
         self.is_verified = True

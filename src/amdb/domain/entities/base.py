@@ -16,7 +16,7 @@ class Entity:
         .. code-block::python
         @dataclass
         class Foo(Entity):
-        
+
             bar: int
             baz: Optional[float]
 
