@@ -1,11 +1,11 @@
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import datetime
 from typing import Type, Optional, Union
 from uuid import UUID
 
 from amdb.domain.entities.base import Entity
 from amdb.domain.constants import Unset, Genre, MPAA, ProductionStatus
-from amdb.domain.value_objects import Money
+from amdb.domain.value_objects import Money, Date, Title
 from amdb.domain.exceptions import movie as movie_exceptions
 from amdb.domain.exceptions import vote as vote_exceptions
 
@@ -14,16 +14,14 @@ from amdb.domain.exceptions import vote as vote_exceptions
 class Movie(Entity):
 
     id: UUID
+    title: Title
     amdb_vote_count: int
     is_under_inspection: bool
     created_at: datetime
 
     amdb_rating: Optional[float]
-    original_title: Optional[str]
-    en_title: Optional[str]
-    year: Optional[int]
     runtime: Optional[int]
-    release_date: Optional[date]
+    release_date: Optional[Date]
     genres: Optional[list[Genre]]
     countries: Optional[list[str]]
     production_status: Optional[ProductionStatus]
@@ -32,6 +30,8 @@ class Movie(Entity):
     budget: Optional[Money]
     revenue: Optional[Money]
     mpaa: Optional[MPAA]
+    filming_start: Optional[Date]
+    filming_end: Optional[Date]
     imdb_id: Optional[str]
     imdb_rating: Optional[float]
     imdb_vote_count: Optional[int]
@@ -43,12 +43,10 @@ class Movie(Entity):
     def create(
         cls,
         id: UUID,
+        title: Title,
         created_at: datetime,
-        original_title: Optional[str] = None,
-        en_title: Optional[str] = None,
-        year: Optional[int] = None,
         runtime: Optional[int] = None,
-        release_date: Optional[date] = None,
+        release_date: Optional[Date] = None,
         genres: Optional[list[Genre]] = None,
         countries: Optional[list[str]] = None,
         production_status: Optional[ProductionStatus] = None,
@@ -57,6 +55,8 @@ class Movie(Entity):
         budget: Optional[Money] = None,
         revenue: Optional[Money] = None,
         mpaa: Optional[MPAA] = None,
+        filming_start: Optional[Date] = None,
+        filming_end: Optional[Date] = None,
         imdb_id: Optional[str] = None,
         imdb_rating: Optional[float] = None,
         imdb_vote_count: Optional[int] = None,
@@ -65,25 +65,22 @@ class Movie(Entity):
         kinopoisk_vote_count: Optional[int] = None,
     ) -> "Movie":
         return Movie(
-            id=id, amdb_vote_count=0, is_under_inspection=False,
-            created_at=created_at, amdb_rating=None,
-            original_title=original_title, en_title=en_title,
-            year=year, runtime=runtime, release_date=release_date,
+            id=id, title=title, amdb_vote_count=0,
+            is_under_inspection=False, created_at=created_at,
+            amdb_rating=None, runtime=runtime, release_date=release_date,
             genres=genres, countries=countries, production_status=production_status,
             description=description, summary=summary, budget=budget,
-            revenue=revenue, mpaa=mpaa, imdb_id=imdb_id,
-            imdb_rating=imdb_rating, imdb_vote_count=imdb_vote_count,
-            kinopoisk_id=kinopoisk_id, kinopoisk_rating=kinopoisk_rating,
-            kinopoisk_vote_count=kinopoisk_vote_count
+            revenue=revenue, mpaa=mpaa, filming_start=filming_start,
+            filming_end=filming_end, imdb_id=imdb_id, imdb_rating=imdb_rating,
+            imdb_vote_count=imdb_vote_count, kinopoisk_id=kinopoisk_id,
+            kinopoisk_rating=kinopoisk_rating, kinopoisk_vote_count=kinopoisk_vote_count,
         )
     
     def update(
         self,
-        original_title: Union[str, None, Type[Unset]] = Unset,
-        en_title: Union[str, None, Type[Unset]] = Unset,
-        year: Union[int, None, Type[Unset]] = Unset,
+        title: Union[Title, Type[Unset]] = Unset,
         runtime: Union[int, None, Type[Unset]] = Unset,
-        release_date: Union[date, None, Type[Unset]] = Unset,
+        release_date: Union[Date, None, Type[Unset]] = Unset,
         genres: Union[list[Genre], None, Type[Unset]] = Unset,
         countries: Union[list[str], None, Type[Unset]] = Unset,
         production_status: Union[ProductionStatus, None, Type[Unset]] = Unset,
@@ -92,6 +89,8 @@ class Movie(Entity):
         budget: Union[Money, None, Type[Unset]] = Unset,
         revenue: Union[Money, None, Type[Unset]] = Unset,
         mpaa: Union[MPAA, None, Type[Unset]] = Unset,
+        filming_start: Union[Date, None, Type[Unset]] = Unset,
+        filming_end: Union[Date, None, Type[Unset]] = Unset,
         imdb_id: Union[str, None, Type[Unset]] = Unset,
         imdb_rating: Union[float, None, Type[Unset]] = Unset,
         imdb_vote_count: Union[int, None, Type[Unset]] = Unset,
@@ -100,14 +99,13 @@ class Movie(Entity):
         kinopoisk_vote_count: Union[int, None, Type[Unset]] = Unset,
     ) -> None:
         self._update(
-            original_title=original_title, en_title=en_title, year=year,
-            runtime=runtime, release_date=release_date, genres=genres,
-            countries=countries, production_status=production_status,
+            title=title, runtime=runtime, release_date=release_date,
+            genres=genres, countries=countries, production_status=production_status,
             description=description, summary=summary, budget=budget,
-            revenue=revenue, mpaa=mpaa, imdb_id=imdb_id,
-            imdb_rating=imdb_rating, imdb_vote_count=imdb_vote_count,
-            kinopoisk_id=kinopoisk_id, kinopoisk_rating=kinopoisk_rating,
-            kinopoisk_vote_count=kinopoisk_vote_count,
+            revenue=revenue, mpaa=mpaa, filming_start=filming_start,
+            filming_end=filming_end, imdb_id=imdb_id, imdb_rating=imdb_rating,
+            imdb_vote_count=imdb_vote_count, kinopoisk_id=kinopoisk_id,
+            kinopoisk_rating=kinopoisk_rating, kinopoisk_vote_count=kinopoisk_vote_count,
         )
     
     def add_amdb_votes(self, *votes: float) -> None:
