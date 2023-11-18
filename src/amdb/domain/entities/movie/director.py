@@ -2,11 +2,11 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
-from .base import Entity
+from amdb.domain.entities.base import Entity
 
 
 @dataclass(slots=True)
-class MovieProducer(Entity):
+class MovieDirector(Entity):
 
     person_id: UUID
     movie_id: UUID
@@ -16,8 +16,8 @@ class MovieProducer(Entity):
     def create(
         cls, person_id: UUID, movie_id: UUID,
         created_at: datetime
-    ) -> "MovieProducer":
-        return MovieProducer(
+    ) -> "MovieDirector":
+        return MovieDirector(
             person_id=person_id, movie_id=movie_id,
             created_at=created_at
         )

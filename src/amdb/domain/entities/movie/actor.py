@@ -3,8 +3,8 @@ from datetime import datetime
 from typing import Type, Optional, Union
 from uuid import UUID
 
+from amdb.domain.entities.base import Entity
 from amdb.domain.constants import Unset
-from .base import Entity
 
 
 @dataclass(slots=True)

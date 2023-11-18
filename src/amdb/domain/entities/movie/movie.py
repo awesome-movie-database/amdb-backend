@@ -3,11 +3,11 @@ from datetime import date, datetime
 from typing import Type, Optional, Union
 from uuid import UUID
 
+from amdb.domain.entities.base import Entity
 from amdb.domain.constants import Unset, Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Money
 from amdb.domain.exceptions import movie as movie_exceptions
 from amdb.domain.exceptions import vote as vote_exceptions
-from .base import Entity
 
 
 @dataclass(slots=True)
