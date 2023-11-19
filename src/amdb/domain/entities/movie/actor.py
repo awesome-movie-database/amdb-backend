@@ -9,7 +9,7 @@ from amdb.domain.constants import Unset
 
 @dataclass(slots=True)
 class MovieActor(Entity):
-    
+
     person_id: UUID
     movie_id: UUID
     role: str

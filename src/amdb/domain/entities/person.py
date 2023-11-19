@@ -51,11 +51,11 @@ class Person(Entity):
     ) -> "Person":
         return Person(
             id=id, name=name, is_under_inspection=False,
-            created_at=created_at,sex=sex, birth_date=birth_date,
+            created_at=created_at, sex=sex, birth_date=birth_date,
             birth_place=birth_place, imdb_id=imdb_id,
             kinopoisk_id=kinopoisk_id,
         )
-    
+
     def update(
         self,
         name: Union[PersonName, None, Type[Unset]] = Unset,
@@ -75,7 +75,7 @@ class Person(Entity):
         if self.is_under_inspection:
             raise person_exceptions.PersonUnderInspection()
         self.is_under_inspection = True
-    
+
     def remove_from_inspection(self) -> None:
         if not self.is_under_inspection:
             raise person_exceptions.PersonNotUnderInspection()

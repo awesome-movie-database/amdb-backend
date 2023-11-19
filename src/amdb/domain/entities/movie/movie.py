@@ -75,7 +75,7 @@ class Movie(Entity):
             imdb_vote_count=imdb_vote_count, kinopoisk_id=kinopoisk_id,
             kinopoisk_rating=kinopoisk_rating, kinopoisk_vote_count=kinopoisk_vote_count,
         )
-    
+
     def update(
         self,
         title: Union[Title, Type[Unset]] = Unset,
@@ -107,7 +107,7 @@ class Movie(Entity):
             imdb_vote_count=imdb_vote_count, kinopoisk_id=kinopoisk_id,
             kinopoisk_rating=kinopoisk_rating, kinopoisk_vote_count=kinopoisk_vote_count,
         )
-    
+
     def add_amdb_votes(self, *votes: float) -> None:
         if self.is_under_inspection:
             raise movie_exceptions.MovieUnderInspection()
@@ -116,35 +116,35 @@ class Movie(Entity):
             self.amdb_rating = sum(votes) / len(votes)
             self.amdb_vote_count = len(votes)
             return
-        
+
         self.amdb_rating = (
             ((self.amdb_rating * self.amdb_vote_count) + sum(votes)) /
             (self.amdb_vote_count + len(votes))
         )
         self.amdb_vote_count += len(votes)
-    
+
     def remove_amdb_votes(self, *votes: float) -> None:
         if self.is_under_inspection:
             raise movie_exceptions.MovieUnderInspection()
-        
+
         if self.amdb_rating is None or self.amdb_vote_count < len(votes):
             raise vote_exceptions.NotEnoughAmdbVotes()
         elif self.amdb_vote_count == 1:
             self.amdb_rating = None
             self.amdb_vote_count = 0
             return
-        
+
         self.amdb_rating = (
             ((self.amdb_rating * self.amdb_vote_count) - sum(votes)) /
             (self.amdb_vote_count - len(votes))
         )
         self.amdb_vote_count -= len(votes)
-    
+
     def add_to_inspection(self) -> None:
         if self.is_under_inspection:
             raise movie_exceptions.MovieUnderInspection()
         self.is_under_inspection = True
-    
+
     def remove_from_inspection(self) -> None:
         if not self.is_under_inspection:
             raise movie_exceptions.MovieNotUnderInspection()

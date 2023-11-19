@@ -28,10 +28,10 @@ class MovieVote(Entity):
             vote=vote, is_full=is_full, created_at=created_at,
             updated_at=None,
         )
-    
+
     def change_vote(self, vote: Vote, updated_at: datetime) -> None:
         self.vote = vote
         self.updated_at = updated_at
-    
+
     def make_full(self) -> None:
         self.is_full = True
