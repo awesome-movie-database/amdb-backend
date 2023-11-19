@@ -4,7 +4,6 @@ from typing import Type, Optional, Union
 from uuid import UUID
 
 from amdb.domain.constants import Unset, Sex
-from amdb.domain.exceptions import person as person_exceptions
 from .base import Entity
 
 
@@ -72,11 +71,7 @@ class Person(Entity):
         )
 
     def add_to_inspection(self) -> None:
-        if self.is_under_inspection:
-            raise person_exceptions.PersonUnderInspection()
         self.is_under_inspection = True
 
     def remove_from_inspection(self) -> None:
-        if not self.is_under_inspection:
-            raise person_exceptions.PersonNotUnderInspection()
         self.is_under_inspection = False

@@ -7,7 +7,6 @@ from amdb.domain.entities.base import Entity
 from amdb.domain.constants import Unset, Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Money, Date, Title
 from amdb.domain.exceptions import movie as movie_exceptions
-from amdb.domain.exceptions import vote as vote_exceptions
 
 
 @dataclass(slots=True)
@@ -127,25 +126,19 @@ class Movie(Entity):
         if self.is_under_inspection:
             raise movie_exceptions.MovieUnderInspection()
 
-        if self.amdb_rating is None or self.amdb_vote_count < len(votes):
-            raise vote_exceptions.NotEnoughAmdbVotes()
-        elif self.amdb_vote_count == 1:
+        if self.amdb_vote_count == 1:
             self.amdb_rating = None
             self.amdb_vote_count = 0
             return
 
         self.amdb_rating = (
-            ((self.amdb_rating * self.amdb_vote_count) - sum(votes)) /
+            ((self.amdb_rating * self.amdb_vote_count) - sum(votes)) /  # type: ignore
             (self.amdb_vote_count - len(votes))
         )
         self.amdb_vote_count -= len(votes)
 
     def add_to_inspection(self) -> None:
-        if self.is_under_inspection:
-            raise movie_exceptions.MovieUnderInspection()
         self.is_under_inspection = True
 
     def remove_from_inspection(self) -> None:
-        if not self.is_under_inspection:
-            raise movie_exceptions.MovieNotUnderInspection()
         self.is_under_inspection = False
