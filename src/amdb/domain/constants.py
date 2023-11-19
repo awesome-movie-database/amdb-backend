@@ -67,3 +67,10 @@ class ProductionStatus(IntEnum):
     ANNOUNCED = 3
     UNKNOWN = 4
     POST_PRODUCTION = 5
+
+
+class ReviewType(IntEnum):
+
+    NEUTRAL = 0
+    POSITIVE = 1
+    NEGATIVE = 2
