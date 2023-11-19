@@ -12,7 +12,7 @@ class MovieVotingPolicy(Policy):
     required_days_since_registration: int
     required_vote_count: int
 
-    def check_can_create_full_movie_vote(
+    def check_reviewer_can_create_full_movie_vote(
         self, is_active: bool, is_verified: bool,
         created_at: datetime, vote_count: int,
     ) -> bool:
