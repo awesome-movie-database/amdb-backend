@@ -30,3 +30,16 @@ class Title:
             raise ValueError(
                 "Title must at least include en_title or original_title"
             )
+
+
+@dataclass(frozen=True, slots=True)
+class Vote:
+
+    value: float
+
+    def __post_init__(self) -> None:
+        if 10 < self.value < 0.5 or self.value % 0.5 != 0:
+            raise ValueError(
+                "Vote's value must be between 0.5 and 10, "
+                "and also be a multiple of 0.5"
+            )
