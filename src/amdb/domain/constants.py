@@ -74,3 +74,9 @@ class ReviewType(IntEnum):
     NEUTRAL = 0
     POSITIVE = 1
     NEGATIVE = 2
+
+
+class RatingType(IntEnum):
+
+    LIKE = 0
+    DISLIKE = 1

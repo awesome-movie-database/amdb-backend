@@ -23,7 +23,7 @@ class MovieReview(Entity):
     def create(
         cls, movie_id: UUID, review_id: UUID,
         type: ReviewType, title: str, content: str,
-         is_approved: bool, created_at: datetime,
+        is_approved: bool, created_at: datetime,
     ) -> "MovieReview":
         return MovieReview(
             movie_id=movie_id, reviewer_id=review_id,
@@ -34,6 +34,6 @@ class MovieReview(Entity):
 
     def add_like(self) -> None:
         self.likes += 1
-    
+
     def add_dislikes(self) -> None:
         self.dislikes += 1
