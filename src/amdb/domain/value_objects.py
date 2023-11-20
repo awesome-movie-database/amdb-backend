@@ -33,6 +33,13 @@ class Title:
 
 
 @dataclass(frozen=True, slots=True)
+class Runtime:
+
+    hours: int
+    minutes: int
+
+
+@dataclass(frozen=True, slots=True)
 class Vote:
 
     value: float
