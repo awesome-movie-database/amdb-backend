@@ -1,4 +1,4 @@
-from .base import DomainException
+from amdb.domain.exceptions.base import DomainException
 
 
 class SeriesUnderInspection(DomainException):
