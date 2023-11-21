@@ -1,3 +1,0 @@
-[flake8]
-extend-ignore = I001, I003, I005 
-max-line-length = 99 
