@@ -5,9 +5,3 @@ class SeriesUnderInspection(DomainException):
     """
     Operation cannot be performed while series is under inspection
     """
-
-
-class SeriesNotUnderInspection(DomainException):
-    """
-    Operation cannot be performed while series is not under inspection
-    """

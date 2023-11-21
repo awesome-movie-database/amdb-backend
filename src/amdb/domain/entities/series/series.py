@@ -129,7 +129,7 @@ class Series(Entity):
 
     def remove_amdb_votes(self, *votes: float) -> None:
         if self.is_under_inspection:
-            raise series_exceptions.SeriesNotUnderInspection()
+            raise series_exceptions.SeriesUnderInspection()
 
         if self.amdb_vote_count == 1:
             self.amdb_rating = None
