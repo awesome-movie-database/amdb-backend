@@ -6,7 +6,7 @@ from amdb.domain.entities.base import Entity
 
 
 @dataclass(slots=True)
-class MovieScreenWriter(Entity):
+class MovieScreenwriter(Entity):
     person_id: UUID
     movie_id: UUID
     created_at: datetime
@@ -17,8 +17,8 @@ class MovieScreenWriter(Entity):
         person_id: UUID,
         movie_id: UUID,
         created_at: datetime,
-    ) -> "MovieScreenWriter":
-        return MovieScreenWriter(
+    ) -> "MovieScreenwriter":
+        return MovieScreenwriter(
             person_id=person_id,
             movie_id=movie_id,
             created_at=created_at,
