@@ -11,7 +11,6 @@ from amdb.domain.exceptions.series import season as series_season_exceptions
 
 @dataclass(slots=True)
 class SeriesSeason(Entity):
-
     series_id: UUID
     amdb_vote_count: int
     is_under_inspection: bool
@@ -44,12 +43,19 @@ class SeriesSeason(Entity):
         budget: Optional[Money] = None,
     ) -> "SeriesSeason":
         return SeriesSeason(
-            series_id=series_id, amdb_vote_count=0,
-            is_under_inspection=False, created_at=created_at,
-            episode_count=episode_count, amdb_rating=None,
-            total_runtime=total_runtime, release_date=release_date,
-            end_date=end_date, is_ongoing=is_ongoing, genres=genres,
-            countries=countries, production_status=production_status,
+            series_id=series_id,
+            amdb_vote_count=0,
+            is_under_inspection=False,
+            created_at=created_at,
+            episode_count=episode_count,
+            amdb_rating=None,
+            total_runtime=total_runtime,
+            release_date=release_date,
+            end_date=end_date,
+            is_ongoing=is_ongoing,
+            genres=genres,
+            countries=countries,
+            production_status=production_status,
             budget=budget,
         )
 
@@ -66,9 +72,14 @@ class SeriesSeason(Entity):
         budget: Union[Money, None, Type[Unset]] = Unset,
     ) -> None:
         self._update(
-            episode_count=episode_count, total_runtime=total_runtime,
-            release_date=release_date, end_date=end_date, is_ongoing=is_ongoing,
-            genres=genres, countries=countries, production_status=production_status,
+            episode_count=episode_count,
+            total_runtime=total_runtime,
+            release_date=release_date,
+            end_date=end_date,
+            is_ongoing=is_ongoing,
+            genres=genres,
+            countries=countries,
+            production_status=production_status,
             budget=budget,
         )
 
@@ -81,9 +92,8 @@ class SeriesSeason(Entity):
             self.amdb_vote_count = len(votes)
             return
 
-        self.amdb_rating = (
-            ((self.amdb_rating * self.amdb_vote_count) + sum(votes)) /
-            (self.amdb_vote_count + len(votes))
+        self.amdb_rating = ((self.amdb_rating * self.amdb_vote_count) + sum(votes)) / (
+            self.amdb_vote_count + len(votes)
         )
         self.amdb_vote_count += len(votes)
 
@@ -97,8 +107,8 @@ class SeriesSeason(Entity):
             return
 
         self.amdb_rating = (
-            ((self.amdb_rating * self.amdb_vote_count) - sum(votes)) /  # type: ignore
-            (self.amdb_vote_count - len(votes))
+            ((self.amdb_rating * self.amdb_vote_count) - sum(votes))  # type: ignore
+            / (self.amdb_vote_count - len(votes))
         )
         self.amdb_vote_count -= len(votes)
 

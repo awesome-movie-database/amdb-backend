@@ -8,7 +8,6 @@ from amdb.domain.constants import ReviewType
 
 @dataclass(slots=True)
 class MovieReview(Entity):
-
     movie_id: UUID
     reviewer_id: UUID
     type: ReviewType
@@ -21,14 +20,24 @@ class MovieReview(Entity):
 
     @classmethod
     def create(
-        cls, movie_id: UUID, review_id: UUID,
-        type: ReviewType, title: str, content: str,
-        is_approved: bool, created_at: datetime,
+        cls,
+        movie_id: UUID,
+        review_id: UUID,
+        type: ReviewType,
+        title: str,
+        content: str,
+        is_approved: bool,
+        created_at: datetime,
     ) -> "MovieReview":
         return MovieReview(
-            movie_id=movie_id, reviewer_id=review_id,
-            type=type, title=title, content=content,
-            likes=0, dislikes=0, is_approved=is_approved,
+            movie_id=movie_id,
+            reviewer_id=review_id,
+            type=type,
+            title=title,
+            content=content,
+            likes=0,
+            dislikes=0,
+            is_approved=is_approved,
             created_at=created_at,
         )
 

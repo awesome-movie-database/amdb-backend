@@ -11,7 +11,6 @@ from amdb.domain.exceptions import movie as movie_exceptions
 
 @dataclass(slots=True)
 class Movie(Entity):
-
     id: UUID
     title: Title
     amdb_vote_count: int
@@ -64,15 +63,30 @@ class Movie(Entity):
         kinopoisk_vote_count: Optional[int] = None,
     ) -> "Movie":
         return Movie(
-            id=id, title=title, amdb_vote_count=0,
-            is_under_inspection=False, created_at=created_at,
-            amdb_rating=None, runtime=runtime, release_date=release_date,
-            genres=genres, countries=countries, production_status=production_status,
-            description=description, summary=summary, budget=budget,
-            revenue=revenue, mpaa=mpaa, filming_start=filming_start,
-            filming_end=filming_end, imdb_id=imdb_id, imdb_rating=imdb_rating,
-            imdb_vote_count=imdb_vote_count, kinopoisk_id=kinopoisk_id,
-            kinopoisk_rating=kinopoisk_rating, kinopoisk_vote_count=kinopoisk_vote_count,
+            id=id,
+            title=title,
+            amdb_vote_count=0,
+            is_under_inspection=False,
+            created_at=created_at,
+            amdb_rating=None,
+            runtime=runtime,
+            release_date=release_date,
+            genres=genres,
+            countries=countries,
+            production_status=production_status,
+            description=description,
+            summary=summary,
+            budget=budget,
+            revenue=revenue,
+            mpaa=mpaa,
+            filming_start=filming_start,
+            filming_end=filming_end,
+            imdb_id=imdb_id,
+            imdb_rating=imdb_rating,
+            imdb_vote_count=imdb_vote_count,
+            kinopoisk_id=kinopoisk_id,
+            kinopoisk_rating=kinopoisk_rating,
+            kinopoisk_vote_count=kinopoisk_vote_count,
         )
 
     def update(
@@ -98,13 +112,25 @@ class Movie(Entity):
         kinopoisk_vote_count: Union[int, None, Type[Unset]] = Unset,
     ) -> None:
         self._update(
-            title=title, runtime=runtime, release_date=release_date,
-            genres=genres, countries=countries, production_status=production_status,
-            description=description, summary=summary, budget=budget,
-            revenue=revenue, mpaa=mpaa, filming_start=filming_start,
-            filming_end=filming_end, imdb_id=imdb_id, imdb_rating=imdb_rating,
-            imdb_vote_count=imdb_vote_count, kinopoisk_id=kinopoisk_id,
-            kinopoisk_rating=kinopoisk_rating, kinopoisk_vote_count=kinopoisk_vote_count,
+            title=title,
+            runtime=runtime,
+            release_date=release_date,
+            genres=genres,
+            countries=countries,
+            production_status=production_status,
+            description=description,
+            summary=summary,
+            budget=budget,
+            revenue=revenue,
+            mpaa=mpaa,
+            filming_start=filming_start,
+            filming_end=filming_end,
+            imdb_id=imdb_id,
+            imdb_rating=imdb_rating,
+            imdb_vote_count=imdb_vote_count,
+            kinopoisk_id=kinopoisk_id,
+            kinopoisk_rating=kinopoisk_rating,
+            kinopoisk_vote_count=kinopoisk_vote_count,
         )
 
     def add_amdb_votes(self, *votes: float) -> None:
@@ -116,9 +142,8 @@ class Movie(Entity):
             self.amdb_vote_count = len(votes)
             return
 
-        self.amdb_rating = (
-            ((self.amdb_rating * self.amdb_vote_count) + sum(votes)) /
-            (self.amdb_vote_count + len(votes))
+        self.amdb_rating = ((self.amdb_rating * self.amdb_vote_count) + sum(votes)) / (
+            self.amdb_vote_count + len(votes)
         )
         self.amdb_vote_count += len(votes)
 
@@ -132,8 +157,8 @@ class Movie(Entity):
             return
 
         self.amdb_rating = (
-            ((self.amdb_rating * self.amdb_vote_count) - sum(votes)) /  # type: ignore
-            (self.amdb_vote_count - len(votes))
+            ((self.amdb_rating * self.amdb_vote_count) - sum(votes))  # type: ignore
+            / (self.amdb_vote_count - len(votes))
         )
         self.amdb_vote_count -= len(votes)
 

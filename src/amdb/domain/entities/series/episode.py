@@ -11,7 +11,6 @@ from amdb.domain.exceptions.series import episode as series_episode_exceptions
 
 @dataclass(slots=True)
 class SeriesEpisode(Entity):
-
     series_id: UUID
     season: int
     title: Title
@@ -52,13 +51,24 @@ class SeriesEpisode(Entity):
         imdb_vote_count: Optional[int] = None,
     ) -> "SeriesEpisode":
         return SeriesEpisode(
-            series_id=series_id, season=season, title=title,
-            amdb_vote_count=0, is_under_inspection=False,
-            created_at=created_at, amdb_rating=None, runtime=runtime,
-            release_date=release_date, genres=genres, countries=countries,
-            production_status=production_status, description=description,
-            summary=summary, budget=budget, imdb_id=imdb_id,
-            imdb_rating=imdb_rating, imdb_vote_count=imdb_vote_count,
+            series_id=series_id,
+            season=season,
+            title=title,
+            amdb_vote_count=0,
+            is_under_inspection=False,
+            created_at=created_at,
+            amdb_rating=None,
+            runtime=runtime,
+            release_date=release_date,
+            genres=genres,
+            countries=countries,
+            production_status=production_status,
+            description=description,
+            summary=summary,
+            budget=budget,
+            imdb_id=imdb_id,
+            imdb_rating=imdb_rating,
+            imdb_vote_count=imdb_vote_count,
         )
 
     def update(
@@ -77,10 +87,18 @@ class SeriesEpisode(Entity):
         imdb_vote_count: Union[int, None, Type[Unset]] = Unset,
     ) -> None:
         self._update(
-            title=title, runtime=runtime, release_date=release_date,
-            genres=genres, countries=countries, production_status=production_status,
-            description=description, summary=summary, budget=budget,
-            imdb_id=imdb_id, imdb_rating=imdb_rating, imdb_vote_count=imdb_vote_count,
+            title=title,
+            runtime=runtime,
+            release_date=release_date,
+            genres=genres,
+            countries=countries,
+            production_status=production_status,
+            description=description,
+            summary=summary,
+            budget=budget,
+            imdb_id=imdb_id,
+            imdb_rating=imdb_rating,
+            imdb_vote_count=imdb_vote_count,
         )
 
     def add_amdb_votes(self, *votes: float) -> None:
@@ -92,9 +110,8 @@ class SeriesEpisode(Entity):
             self.amdb_vote_count = len(votes)
             return
 
-        self.amdb_rating = (
-            ((self.amdb_rating * self.amdb_vote_count) + sum(votes)) /
-            (self.amdb_vote_count + len(votes))
+        self.amdb_rating = ((self.amdb_rating * self.amdb_vote_count) + sum(votes)) / (
+            self.amdb_vote_count + len(votes)
         )
         self.amdb_vote_count += len(votes)
 
@@ -108,8 +125,8 @@ class SeriesEpisode(Entity):
             return
 
         self.amdb_rating = (
-            ((self.amdb_rating * self.amdb_vote_count) - sum(votes)) /  # type: ignore
-            (self.amdb_vote_count - len(votes))
+            ((self.amdb_rating * self.amdb_vote_count) - sum(votes))  # type: ignore
+            / (self.amdb_vote_count - len(votes))
         )
         self.amdb_vote_count -= len(votes)
 

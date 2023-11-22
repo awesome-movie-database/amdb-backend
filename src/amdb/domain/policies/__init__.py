@@ -1,1 +1,1 @@
-from .registration import RegistrationPolicy # noqa
+from .registration import RegistrationPolicy  # noqa

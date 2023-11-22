@@ -9,7 +9,6 @@ from amdb.domain.value_objects import Vote
 
 @dataclass(slots=True)
 class MovieVote(Entity):
-
     movie_id: UUID
     reviewer_id: UUID
     vote: Vote
@@ -20,12 +19,19 @@ class MovieVote(Entity):
 
     @classmethod
     def create(
-        cls, movie_id: UUID, reviewer_id: UUID,
-        vote: Vote, is_full: bool, created_at: datetime,
+        cls,
+        movie_id: UUID,
+        reviewer_id: UUID,
+        vote: Vote,
+        is_full: bool,
+        created_at: datetime,
     ) -> "MovieVote":
         return MovieVote(
-            movie_id=movie_id, reviewer_id=reviewer_id,
-            vote=vote, is_full=is_full, created_at=created_at,
+            movie_id=movie_id,
+            reviewer_id=reviewer_id,
+            vote=vote,
+            is_full=is_full,
+            created_at=created_at,
             updated_at=None,
         )
 

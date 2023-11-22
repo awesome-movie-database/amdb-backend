@@ -7,17 +7,19 @@ from amdb.domain.entities.base import Entity
 
 @dataclass(slots=True)
 class MovieProducer(Entity):
-
     person_id: UUID
     movie_id: UUID
     created_at: datetime
 
     @classmethod
     def create(
-        cls, person_id: UUID, movie_id: UUID,
+        cls,
+        person_id: UUID,
+        movie_id: UUID,
         created_at: datetime,
     ) -> "MovieProducer":
         return MovieProducer(
-            person_id=person_id, movie_id=movie_id,
+            person_id=person_id,
+            movie_id=movie_id,
             created_at=created_at,
         )

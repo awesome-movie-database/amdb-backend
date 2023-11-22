@@ -6,7 +6,6 @@ from .base import Entity
 
 @dataclass(slots=True)
 class Reviewer(Entity):
-
     id: UUID
     user_id: UUID
     folders: int
@@ -19,11 +18,22 @@ class Reviewer(Entity):
     achievements: int
 
     @classmethod
-    def create(cls, id: UUID, user_id: UUID,) -> "Reviewer":
+    def create(
+        cls,
+        id: UUID,
+        user_id: UUID,
+    ) -> "Reviewer":
         return Reviewer(
-            id=id, user_id=user_id, folders=0, movies_ratings=0,
-            movies_reviews=0, series_ratings=0, series_reviews=0,
-            subscriptions=0, subscribers=0, achievements=0,
+            id=id,
+            user_id=user_id,
+            folders=0,
+            movies_ratings=0,
+            movies_reviews=0,
+            series_ratings=0,
+            series_reviews=0,
+            subscriptions=0,
+            subscribers=0,
+            achievements=0,
         )
 
     def add_folder(self) -> None:

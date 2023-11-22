@@ -9,7 +9,6 @@ from .base import Entity
 
 @dataclass(slots=True)
 class User(Entity):
-
     id: UUID
     username: str
     password: str
@@ -26,16 +25,30 @@ class User(Entity):
 
     @classmethod
     def create(
-        cls, id: UUID, username: str, password: str,
-        created_at: datetime, sex: Optional[Sex] = None,
-        email: Optional[str] = None, country: Optional[str] = None,
-        city: Optional[str] = None, birth_date: Optional[date] = None,
+        cls,
+        id: UUID,
+        username: str,
+        password: str,
+        created_at: datetime,
+        sex: Optional[Sex] = None,
+        email: Optional[str] = None,
+        country: Optional[str] = None,
+        city: Optional[str] = None,
+        birth_date: Optional[date] = None,
     ) -> "User":
         return User(
-            id=id, username=username, password=password,
-            is_active=True, is_verified=False, created_at=created_at,
-            sex=sex, email=email, country=country, city=city,
-            birth_date=birth_date, updated_at=None,
+            id=id,
+            username=username,
+            password=password,
+            is_active=True,
+            is_verified=False,
+            created_at=created_at,
+            sex=sex,
+            email=email,
+            country=country,
+            city=city,
+            birth_date=birth_date,
+            updated_at=None,
         )
 
     def update(
@@ -50,8 +63,13 @@ class User(Entity):
         birth_date: Union[date, None, Type[Unset]] = Unset,
     ) -> None:
         self._update(
-            username=username, password=password, sex=sex, email=email,
-            country=country, city=city, birth_date=birth_date,
+            username=username,
+            password=password,
+            sex=sex,
+            email=email,
+            country=country,
+            city=city,
+            birth_date=birth_date,
         )
         self.updated_at = updated_at
 

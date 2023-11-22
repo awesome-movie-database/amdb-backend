@@ -16,13 +16,11 @@ class Unset:
 
 
 class Sex(IntEnum):
-
     MALE = 0
     FEMALE = 1
 
 
 class Genre(IntEnum):
-
     ACTION = 0
     COMEDY = 1
     DOCUMENTARY = 2
@@ -51,7 +49,6 @@ class Genre(IntEnum):
 
 
 class MPAA(IntEnum):
-
     G = 0
     PG = 1
     PG13 = 2
@@ -60,7 +57,6 @@ class MPAA(IntEnum):
 
 
 class ProductionStatus(IntEnum):
-
     FILMING = 0
     PRE_PRODUCTION = 1
     COMPLETED = 2
@@ -70,13 +66,11 @@ class ProductionStatus(IntEnum):
 
 
 class ReviewType(IntEnum):
-
     NEUTRAL = 0
     POSITIVE = 1
     NEGATIVE = 2
 
 
 class RatingType(IntEnum):
-
     LIKE = 0
     DISLIKE = 1

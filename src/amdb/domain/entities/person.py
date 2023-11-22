@@ -9,14 +9,11 @@ from .base import Entity
 
 @dataclass(frozen=True, slots=True)
 class PersonName:
-
     en_name: Optional[str]
     original_name: Optional[str]
 
     def __post_init__(self) -> None:
-        if (
-            self.en_name is None and self.original_name is None
-        ):
+        if self.en_name is None and self.original_name is None:
             raise ValueError(
                 "Name must at least include en_name or original_name",
             )
@@ -24,7 +21,6 @@ class PersonName:
 
 @dataclass(slots=True)
 class Person(Entity):
-
     id: UUID
     name: PersonName
     is_under_inspection: bool
@@ -49,9 +45,14 @@ class Person(Entity):
         kinopoisk_id: Optional[str] = None,
     ) -> "Person":
         return Person(
-            id=id, name=name, is_under_inspection=False,
-            created_at=created_at, sex=sex, birth_date=birth_date,
-            birth_place=birth_place, imdb_id=imdb_id,
+            id=id,
+            name=name,
+            is_under_inspection=False,
+            created_at=created_at,
+            sex=sex,
+            birth_date=birth_date,
+            birth_place=birth_place,
+            imdb_id=imdb_id,
             kinopoisk_id=kinopoisk_id,
         )
 
@@ -65,8 +66,11 @@ class Person(Entity):
         kinopoisk_id: Union[str, None, Type[Unset]] = Unset,
     ) -> None:
         self._update(
-            name=name, sex=sex, birth_date=birth_date,
-            birth_place=birth_place, imdb_id=imdb_id,
+            name=name,
+            sex=sex,
+            birth_date=birth_date,
+            birth_place=birth_place,
+            imdb_id=imdb_id,
             kinopoisk_id=kinopoisk_id,
         )
 
