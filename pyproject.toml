@@ -16,6 +16,15 @@ ruff = "^0.1.6"
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
 
+[tool.ruff]
+line-length = 99
+
+[tool.ruff.lint]
+select = ["COM812"]
+
+[tool.ruff.format]
+quote-style = "double"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

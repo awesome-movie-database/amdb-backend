@@ -17,11 +17,11 @@ class MovieReviewRating(Entity):
     @classmethod
     def create(
         cls, movie_id: UUID, reviewer_id: UUID,
-        type: RatingType, created_at: datetime
+        type: RatingType, created_at: datetime,
     ) -> "MovieReviewRating":
         return MovieReviewRating(
             movie_id=movie_id, reviewer_id=reviewer_id,
-            type=type, created_at=created_at
+            type=type, created_at=created_at,
         )
 
     def change_type(self, rating_type: RatingType) -> None:

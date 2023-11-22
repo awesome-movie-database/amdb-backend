@@ -15,9 +15,9 @@ class MovieArtDirector(Entity):
     @classmethod
     def create(
         cls, person_id: UUID, movie_id: UUID,
-        created_at: datetime
+        created_at: datetime,
     ) -> "MovieArtDirector":
         return MovieArtDirector(
             person_id=person_id, movie_id=movie_id,
-            created_at=created_at
+            created_at=created_at,
         )

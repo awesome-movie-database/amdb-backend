@@ -18,7 +18,7 @@ class PersonName:
             self.en_name is None and self.original_name is None
         ):
             raise ValueError(
-                "Name must at least include en_name or original_name"
+                "Name must at least include en_name or original_name",
             )
 
 

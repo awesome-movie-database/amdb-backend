@@ -32,6 +32,6 @@ class MovieActor(Entity):
     def update(
         self,
         role: Union[str, Type[Unset]] = Unset,
-        top_cast_number: Union[int, None, Type[Unset]] = Unset
+        top_cast_number: Union[int, None, Type[Unset]] = Unset,
     ) -> None:
-        self._update(role=role, top_cast_number=top_cast_number)
+        self._update(role=role, top_cast_number=top_cast_number,)

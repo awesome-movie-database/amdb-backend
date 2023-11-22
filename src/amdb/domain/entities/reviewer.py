@@ -23,7 +23,7 @@ class Reviewer(Entity):
         return Reviewer(
             id=id, user_id=user_id, folders=0, movies_ratings=0,
             movies_reviews=0, series_ratings=0, series_reviews=0,
-            subscriptions=0, subscribers=0, achievements=0
+            subscriptions=0, subscribers=0, achievements=0,
         )
 
     def add_folder(self) -> None:
