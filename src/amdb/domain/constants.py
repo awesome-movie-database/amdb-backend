@@ -9,7 +9,7 @@ class Unset:
     Example:
 
     .. code-block::python
-    def foo(bar: Union[int, None Type[Unset]]= Unset):
+    def foo(bar: Union[int, None, Type[Unset]] = Unset):
         if bar == Unset:
             ...
     """
