@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from .base import Policy
+from amdb.domain.policies.base import Policy
 
 
 @dataclass(slots=True)

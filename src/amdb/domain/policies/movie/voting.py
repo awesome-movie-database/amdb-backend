@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-from .base import Policy
+from amdb.domain.policies.base import Policy
 
 
 @dataclass(slots=True)
