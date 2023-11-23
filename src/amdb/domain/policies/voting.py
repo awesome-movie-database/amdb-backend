@@ -5,7 +5,7 @@ from amdb.domain.policies.base import Policy
 
 
 @dataclass(slots=True)
-class MovieVotingPolicy(Policy):
+class VotingPolicy(Policy):
     must_be_active: bool
     must_be_verified: bool
     required_days_since_registration: int
