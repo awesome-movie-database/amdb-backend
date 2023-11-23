@@ -11,14 +11,14 @@ class SeriesEpisodeVotingPolicy(Policy):
     required_days_since_registration: int
     required_vote_count: int
 
-    def check_reviewer_can_create_full_movie_vote(
+    def check_can_create_full_vote(
         self,
         is_active: bool,
         is_verified: bool,
         created_at: datetime,
         vote_count: int,
     ) -> bool:
-        cannot_create_full_movie = (
+        cannot_create_full_vote = (
             not is_active
             and self.must_be_active
             or not is_verified
@@ -27,4 +27,4 @@ class SeriesEpisodeVotingPolicy(Policy):
             < timedelta(days=self.required_days_since_registration)
             or vote_count < self.required_vote_count
         )
-        return not cannot_create_full_movie
+        return not cannot_create_full_vote
