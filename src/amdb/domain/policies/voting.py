@@ -18,7 +18,7 @@ class VotingPolicy(Policy):
         created_at: datetime,
         vote_count: int,
     ) -> bool:
-        cannot_create_full_мщеу = (
+        cannot_create_full_vote = (
             not is_active
             and self.must_be_active
             or not is_verified
@@ -27,4 +27,4 @@ class VotingPolicy(Policy):
             < timedelta(days=self.required_days_since_registration)
             or vote_count < self.required_vote_count
         )
-        return not cannot_create_full_мщеу
+        return not cannot_create_full_vote
