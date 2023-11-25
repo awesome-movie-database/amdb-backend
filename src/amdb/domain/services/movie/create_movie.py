@@ -9,7 +9,7 @@ from amdb.domain.value_objects import Date, Money, Runtime, Title
 
 
 class CreateMovie(Service):
-
+    
     def __call__(
         self,
         id: UUID,
@@ -32,7 +32,7 @@ class CreateMovie(Service):
         imdb_vote_count: Optional[int] = None,
         kinopoisk_id: Optional[str] = None,
         kinopoisk_rating: Optional[float] = None,
-        kinopoisk_vote_count: Optional[int]  = None,
+        kinopoisk_vote_count: Optional[int] = None,
     ) -> Movie:
         return Movie(
             id=id,

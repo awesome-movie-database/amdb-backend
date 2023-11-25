@@ -20,9 +20,9 @@ class Entity:
             bar: int
             baz: Optional[float]
 
-        
+
         class UpdateFoo(Service):
-        
+
             def __call__(
                 self,
                 foo: Foo,

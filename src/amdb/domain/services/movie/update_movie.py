@@ -7,7 +7,7 @@ from amdb.domain.value_objects import Date, Money, Runtime, Title
 
 
 class UpdateMovie(Service):
-
+    
     def __call__(
         self,
         movie: Movie,
