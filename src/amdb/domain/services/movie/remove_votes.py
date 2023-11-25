@@ -7,7 +7,7 @@ class RemoveVotesFromMovie(Service):
     def __call__(
         self,
         movie: Movie,
-        *votes: float
+        *votes: float,
     ) -> None:
         if movie.amdb_vote_count == 1:
             movie.amdb_rating = None

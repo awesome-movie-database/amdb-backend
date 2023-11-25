@@ -1,12 +1,11 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Type, Optional, Union
+from typing import Optional
 from uuid import UUID
 
 from amdb.domain.entities.base import Entity
-from amdb.domain.constants import Unset, Genre, MPAA, ProductionStatus
+from amdb.domain.constants import Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Money, Date, Title, Runtime
-from amdb.domain.exceptions import movie as movie_exceptions
 
 
 @dataclass(slots=True)
