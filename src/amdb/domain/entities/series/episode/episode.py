@@ -31,21 +31,6 @@ class SeriesEpisode(Entity):
     imdb_rating: Optional[float]
     imdb_vote_count: Optional[int]
 
-    def remove_amdb_votes(self, *votes: float) -> None:
-        if self.is_under_inspection:
-            raise series_episode_exceptions.SeriesEpisodeUnderInspection()
-
-        if self.amdb_vote_count == 1:
-            self.amdb_rating = None
-            self.amdb_vote_count = 0
-            return
-
-        self.amdb_rating = (
-            ((self.amdb_rating * self.amdb_vote_count) - sum(votes))  # type: ignore
-            / (self.amdb_vote_count - len(votes))
-        )
-        self.amdb_vote_count -= len(votes)
-
     def add_to_inspection(self) -> None:
         self.is_under_inspection = True
 
