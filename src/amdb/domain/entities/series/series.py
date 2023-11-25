@@ -38,20 +38,6 @@ class Series(Entity):
     kinopoisk_rating: Optional[float]
     kinopoisk_vote_count: Optional[int]
 
-    def add_amdb_votes(self, *votes: float) -> None:
-        if self.is_under_inspection:
-            raise series_exceptions.SeriesUnderInspection()
-
-        if self.amdb_rating is None:
-            self.amdb_rating = sum(votes) / len(votes)
-            self.amdb_vote_count = len(votes)
-            return
-
-        self.amdb_rating = ((self.amdb_rating * self.amdb_vote_count) + sum(votes)) / (
-            self.amdb_vote_count + len(votes)
-        )
-        self.amdb_vote_count += len(votes)
-
     def remove_amdb_votes(self, *votes: float) -> None:
         if self.is_under_inspection:
             raise series_exceptions.SeriesUnderInspection()
