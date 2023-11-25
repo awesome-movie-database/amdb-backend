@@ -35,9 +35,3 @@ class Movie(Entity):
     kinopoisk_id: Optional[str]
     kinopoisk_rating: Optional[float]
     kinopoisk_vote_count: Optional[int]
-
-    def add_to_inspection(self) -> None:
-        self.is_under_inspection = True
-
-    def remove_from_inspection(self) -> None:
-        self.is_under_inspection = False
