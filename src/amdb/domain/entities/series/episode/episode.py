@@ -6,7 +6,7 @@ from uuid import UUID
 from amdb.domain.entities.base import Entity
 from amdb.domain.constants import Unset, Genre, ProductionStatus
 from amdb.domain.value_objects import Money, Date, Title, Runtime
-from amdb.domain.exceptions.series import episode as series_episode_exceptions
+from amdb.domain.exceptions import series_episode as series_episode_exceptions
 
 
 @dataclass(slots=True)
