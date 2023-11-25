@@ -30,9 +30,3 @@ class SeriesEpisode(Entity):
     imdb_id: Optional[str]
     imdb_rating: Optional[float]
     imdb_vote_count: Optional[int]
-
-    def add_to_inspection(self) -> None:
-        self.is_under_inspection = True
-
-    def remove_from_inspection(self) -> None:
-        self.is_under_inspection = False
