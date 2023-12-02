@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Union
 
 from amdb.domain.services.base import Service
@@ -10,6 +11,7 @@ class UpdatePerson(Service):
     def __call__(
         self,
         person: Person,
+        updated_at: datetime,
         name: Union[PersonName, Unset] = unset,
         sex: Union[Sex, None, Unset] = unset,
         birth_date: Union[Date, None, Unset] = unset,
@@ -25,4 +27,5 @@ class UpdatePerson(Service):
             birth_place=birth_place,
             death_date=death_date,
             death_place=death_place,
+            updated_at=updated_at,
         )

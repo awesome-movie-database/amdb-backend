@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional, NewType
 from uuid import UUID
 
@@ -15,9 +16,11 @@ PersonName = NewType("PersonName", str)
 class Person(Entity):
     id: PersonId
     name: PersonName
+    created_at: datetime
 
     sex: Optional[Sex]
     birth_date: Optional[Date]
     birth_place: Optional[Place]
     death_date: Optional[Date]
     death_place: Optional[Place]
+    updated_at: Optional[datetime]

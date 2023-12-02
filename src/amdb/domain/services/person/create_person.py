@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from amdb.domain.services.base import Service
@@ -11,6 +12,7 @@ class CreatePerson(Service):
         self,
         id: PersonId,
         name: PersonName,
+        created_at: datetime,
         sex: Optional[Sex] = None,
         birth_date: Optional[Date] = None,
         birth_place: Optional[Place] = None,
@@ -21,8 +23,10 @@ class CreatePerson(Service):
             id=id,
             name=name,
             sex=sex,
+            created_at=created_at,
             birth_date=birth_date,
             birth_place=birth_place,
             death_date=death_date,
             death_place=death_place,
+            updated_at=None,
         )
