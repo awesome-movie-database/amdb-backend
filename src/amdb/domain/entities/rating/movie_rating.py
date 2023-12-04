@@ -12,8 +12,5 @@ class MovieRating(Entity):
     movie_id: MovieId
     user_id: UserId
     rating: Rating
+    is_counted: bool
     created_at: datetime
-
-
-class UncountedMovieRating(MovieRating):
-    ...

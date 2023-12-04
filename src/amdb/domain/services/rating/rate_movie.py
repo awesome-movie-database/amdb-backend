@@ -1,64 +1,37 @@
 from datetime import datetime
-from typing import Literal, Union, overload
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.movie.movie import Movie
 from amdb.domain.entities.user.user import User
-from amdb.domain.entities.rating.movie_rating import MovieRating, UncountedMovieRating
+from amdb.domain.entities.user.profile import Profile
+from amdb.domain.entities.rating.movie_rating import MovieRating
 from amdb.domain.value_objects import Rating
 
 
 class RateMovie(Service):
-    @overload
     def __call__(
         self,
         *,
         movie: Movie,
         user: User,
-        rating: Rating,
-        is_counted: Literal[True],
-        created_at: datetime,
-    ) -> MovieRating:
-        ...
-
-    @overload
-    def __call__(
-        self,
-        *,
-        movie: Movie,
-        user: User,
-        rating: Rating,
-        is_counted: Literal[False],
-        created_at: datetime,
-    ) -> UncountedMovieRating:
-        ...
-
-    def __call__(
-        self,
-        *,
-        movie: Movie,
-        user: User,
+        profile: Profile,
         rating: Rating,
         is_counted: bool,
         created_at: datetime,
-    ) -> Union[MovieRating, UncountedMovieRating]:
+    ) -> MovieRating:
+        profile.movie_ratings += 1
+
         if is_counted:
             self._add_rating_to_movie(
                 movie=movie,
                 rating=rating,
             )
 
-            return MovieRating(
-                movie_id=movie.id,
-                user_id=user.id,
-                rating=rating,
-                created_at=created_at,
-            )
-
-        return UncountedMovieRating(
+        return MovieRating(
             movie_id=movie.id,
             user_id=user.id,
             rating=rating,
+            is_counted=is_counted,
             created_at=created_at,
         )
 
