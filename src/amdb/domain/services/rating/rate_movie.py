@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal, overload
+from typing import Literal, Union, overload
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.movie.movie import Movie
@@ -41,7 +41,7 @@ class RateMovie(Service):
         rating: Rating,
         is_counted: bool,
         created_at: datetime,
-    ) -> MovieRating:
+    ) -> Union[MovieRating, UncountedMovieRating]:
         if is_counted:
             self._add_rating_to_movie(
                 movie=movie,
