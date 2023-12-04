@@ -10,6 +10,7 @@ class Profile(Entity):
     achievements: int
     movie_ratings: int
     series_episodes_ratings: int
+    approved_reviews: int
     movie_reviews: int
     series_reviews: int
     given_votes: int
