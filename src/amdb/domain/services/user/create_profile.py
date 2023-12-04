@@ -14,6 +14,7 @@ class CreateProfile(Service):
             achievements=0,
             movie_ratings=0,
             series_episodes_ratings=0,
+            approved_reviews=0,
             movie_reviews=0,
             series_reviews=0,
             given_votes=0,
