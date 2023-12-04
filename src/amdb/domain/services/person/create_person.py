@@ -10,6 +10,7 @@ from amdb.domain.entities.person.person import PersonId, PersonName, Person
 class CreatePerson(Service):
     def __call__(
         self,
+        *,
         id: PersonId,
         name: PersonName,
         created_at: datetime,

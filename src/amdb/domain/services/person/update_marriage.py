@@ -18,6 +18,7 @@ class Children:
 class UpdateMarriage(Service):
     def __call__(
         self,
+        *,
         marriage: Marriage,
         husband: Person,
         wife: Person,

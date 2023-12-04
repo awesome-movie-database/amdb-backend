@@ -10,6 +10,7 @@ from amdb.domain.entities.person.marriage import Marriage, MarriageStatus
 class CreateMarriage(Service):
     def __call__(
         self,
+        *,
         husband: Person,
         wife: Person,
         children: list[Person],

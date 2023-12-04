@@ -10,6 +10,7 @@ from amdb.domain.entities.person.person import PersonName, Person
 class UpdatePerson(Service):
     def __call__(
         self,
+        *,
         person: Person,
         updated_at: datetime,
         name: Union[PersonName, Unset] = unset,

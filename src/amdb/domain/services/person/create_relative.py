@@ -8,6 +8,7 @@ from amdb.domain.entities.person.relative import RelativeType, Relative
 class CreateRelative(Service):
     def __call__(
         self,
+        *,
         person: Person,
         relative: Person,
         type: RelativeType,
