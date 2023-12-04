@@ -13,3 +13,7 @@ class MovieRating(Entity):
     user_id: UserId
     rating: Rating
     created_at: datetime
+
+
+class UncountedMovieRating(MovieRating):
+    ...
