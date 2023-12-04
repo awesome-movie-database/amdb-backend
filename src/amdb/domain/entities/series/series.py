@@ -37,3 +37,4 @@ class Series(Entity):
     kinopoisk_id: Optional[str]
     kinopoisk_rating: Optional[float]
     kinopoisk_vote_count: Optional[int]
+    updated_at: Optional[datetime]
