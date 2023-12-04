@@ -10,13 +10,15 @@ class VoteMovieReview(Service):
         self,
         *,
         movie_review: MovieReview,
-        profile: Profile,
+        reviewer_profile: Profile,
+        voter_profile: Profile,
         type: VoteType
     ) -> MovieReviewVote:
-        profile.given_votes += 1
+        voter_profile.given_votes += 1
+        reviewer_profile.gained_votes += 1
 
         return MovieReviewVote(
             movie_review_id=movie_review.id,
-            user_id=profile.user_id,
+            user_id=voter_profile.user_id,
             type=type,
         )
