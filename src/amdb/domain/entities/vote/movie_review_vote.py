@@ -7,7 +7,7 @@ from amdb.domain.constants import VoteType
 
 
 @dataclass(slots=True)
-class MovieReviewType(Entity):
+class MovieReviewVote(Entity):
     movie_review_id: MovieReviewId
     user_id: UserId
     type: VoteType
