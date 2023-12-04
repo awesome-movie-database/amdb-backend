@@ -16,3 +16,15 @@ class Place:
 
     state: Optional[str]
     city: Optional[str]
+
+
+@dataclass(frozen=True, slots=True)
+class Money:
+    value: int
+    currency: str
+
+
+@dataclass(frozen=True, slots=True)
+class Runtime:
+    hours: int
+    minutes: int
