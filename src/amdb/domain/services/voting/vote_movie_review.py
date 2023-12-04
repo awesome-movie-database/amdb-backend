@@ -12,10 +12,15 @@ class VoteMovieReview(Service):
         movie_review: MovieReview,
         reviewer_profile: Profile,
         voter_profile: Profile,
-        type: VoteType
+        type: VoteType,
     ) -> MovieReviewVote:
         voter_profile.given_votes += 1
         reviewer_profile.gained_votes += 1
+
+        if type is VoteType.LIKE:
+            movie_review.likes += 1
+        elif type is VoteType.DISLIKE:
+            movie_review.dislikes += 1
 
         return MovieReviewVote(
             movie_review_id=movie_review.id,
