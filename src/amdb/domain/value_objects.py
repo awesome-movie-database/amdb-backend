@@ -28,3 +28,8 @@ class Money:
 class Runtime:
     hours: int
     minutes: int
+
+
+@dataclass(frozen=True, slots=True)
+class Rating:
+    value: float
