@@ -4,7 +4,7 @@ from typing import Optional, Literal, overload
 from amdb.domain.services.base import Service
 from amdb.domain.entities.movie.movie import Movie
 from amdb.domain.entities.user.profile import Profile
-from amdb.domain.entities.review.movie_review import MovieReview
+from amdb.domain.entities.review.movie_review import MovieReviewId, MovieReview
 from amdb.domain.constants import ReviewType
 
 
@@ -41,6 +41,7 @@ class ReviewMovie(Service):
         *,
         movie: Movie,
         profile: Profile,
+        id: MovieReviewId,
         type: ReviewType,
         title: str,
         content: str,
@@ -54,6 +55,7 @@ class ReviewMovie(Service):
             profile.approved_reviews += 1
 
             return MovieReview(
+                id=id,
                 movie_id=movie.id,
                 user_id=profile.user_id,
                 type=type,
@@ -66,6 +68,7 @@ class ReviewMovie(Service):
             )
 
         return MovieReview(
+            id=id,
             movie_id=movie.id,
             user_id=profile.user_id,
             type=type,
