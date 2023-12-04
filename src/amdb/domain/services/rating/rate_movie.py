@@ -13,7 +13,6 @@ class RateMovie(Service):
         self,
         *,
         movie: Movie,
-        user: User,
         profile: Profile,
         rating: Rating,
         is_counted: bool,
@@ -29,7 +28,7 @@ class RateMovie(Service):
 
         return MovieRating(
             movie_id=movie.id,
-            user_id=user.id,
+            user_id=profile.user_id,
             rating=rating,
             is_counted=is_counted,
             created_at=created_at,
