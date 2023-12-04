@@ -5,7 +5,7 @@ from uuid import UUID
 
 from amdb.domain.entities.base import Entity
 from amdb.domain.constants import Genre, MPAA, ProductionStatus
-from amdb.domain.value_objects import Money, Date, Runtime
+from amdb.domain.value_objects import Date, Runtime, Money
 
 
 SeriesId = NewType("SeriesId", UUID)
