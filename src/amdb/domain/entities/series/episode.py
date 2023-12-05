@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
-from uuid import UUID
 
 from amdb.domain.entities.base import Entity
 from amdb.domain.entities.person.person import PersonId

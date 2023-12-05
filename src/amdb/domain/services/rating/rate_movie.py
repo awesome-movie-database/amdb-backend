@@ -2,7 +2,6 @@ from datetime import datetime
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.movie.movie import Movie
-from amdb.domain.entities.user.user import User
 from amdb.domain.entities.user.profile import Profile
 from amdb.domain.entities.rating.movie_rating import MovieRating
 from amdb.domain.value_objects import Rating
