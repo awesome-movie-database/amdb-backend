@@ -15,7 +15,6 @@ class SeriesSeason(Entity):
     rating: float
     rating_count: int
     genres: list[Genre]
-    countries: list[str]
     created_at: datetime
 
     runtime: Optional[Runtime]

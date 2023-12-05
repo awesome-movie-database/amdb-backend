@@ -18,7 +18,6 @@ class SeriesEpisode(Entity):
     rating: float
     rating_count: int
     genres: list[Genre]
-    countries: list[str]
     director_ids: list[PersonId]
     art_director_ids: list[PersonId]
     casting_director_ids: list[PersonId]
