@@ -26,10 +26,10 @@ class CreateSeries(Service):
         mpaa: Optional[MPAA] = None,
         imdb_id: Optional[str] = None,
         imdb_rating: Optional[float] = None,
-        imdb_vote_count: Optional[int] = None,
+        imdb_rating_count: Optional[int] = None,
         kinopoisk_id: Optional[str] = None,
         kinopoisk_rating: Optional[float] = None,
-        kinopoisk_vote_count: Optional[int] = None,
+        kinopoisk_rating_count: Optional[int] = None,
     ) -> Series:
         return Series(
             id=id,
@@ -50,9 +50,9 @@ class CreateSeries(Service):
             mpaa=mpaa,
             imdb_id=imdb_id,
             imdb_rating=imdb_rating,
-            imdb_vote_count=imdb_vote_count,
+            imdb_rating_count=imdb_rating_count,
             kinopoisk_id=kinopoisk_id,
             kinopoisk_rating=kinopoisk_rating,
-            kinopoisk_vote_count=kinopoisk_vote_count,
+            kinopoisk_rating_count=kinopoisk_rating_count,
             updated_at=None,
         )

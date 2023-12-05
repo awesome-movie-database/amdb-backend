@@ -86,10 +86,10 @@ class UpdateMovie(Service):
         filming_end: Union[Date, None, Unset] = unset,
         imdb_id: Union[str, None, Unset] = unset,
         imdb_rating: Union[float, None, Unset] = unset,
-        imdb_vote_count: Union[int, None, Unset] = unset,
+        imdb_rating_count: Union[int, None, Unset] = unset,
         kinopoisk_id: Union[str, None, Unset] = unset,
         kinopoisk_rating: Union[float, None, Unset] = unset,
-        kinopoisk_vote_count: Union[int, None, Unset] = unset,
+        kinopoisk_rating_count: Union[int, None, Unset] = unset,
     ) -> None:
         if directors is not unset:
             director_ids = [director.id for director in directors.new_directors]
@@ -202,10 +202,10 @@ class UpdateMovie(Service):
             filming_end=filming_end,
             imdb_id=imdb_id,
             imdb_rating=imdb_rating,
-            imdb_vote_count=imdb_vote_count,
+            imdb_vote_count=imdb_rating_count,
             kinopoisk_id=kinopoisk_id,
             kinopoisk_rating=kinopoisk_rating,
-            kinopoisk_vote_count=kinopoisk_vote_count,
+            kinopoisk_vote_count=kinopoisk_rating_count,
             updated_at=updated_at,
         )
 

@@ -37,10 +37,10 @@ class CreateMovie(Service):
         filming_end: Optional[Date] = None,
         imdb_id: Optional[str] = None,
         imdb_rating: Optional[float] = None,
-        imdb_vote_count: Optional[int] = None,
+        imdb_rating_count: Optional[int] = None,
         kinopoisk_id: Optional[str] = None,
         kinopoisk_rating: Optional[float] = None,
-        kinopoisk_vote_count: Optional[int] = None,
+        kinopoisk_rating_count: Optional[int] = None,
     ) -> Movie:
         director_ids = self._update_persons_and_get_ids(
             persons=directors,
@@ -103,10 +103,10 @@ class CreateMovie(Service):
             filming_end=filming_end,
             imdb_id=imdb_id,
             imdb_rating=imdb_rating,
-            imdb_vote_count=imdb_vote_count,
+            imdb_rating_count=imdb_rating_count,
             kinopoisk_id=kinopoisk_id,
             kinopoisk_rating=kinopoisk_rating,
-            kinopoisk_vote_count=kinopoisk_vote_count,
+            kinopoisk_rating_count=kinopoisk_rating_count,
             updated_at=None,
         )
 

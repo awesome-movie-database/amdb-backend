@@ -24,9 +24,9 @@ class UpdateSeries(Service):
         mpaa: Union[MPAA, None, Unset] = unset,
         imdb_id: Union[str, None, Unset] = unset,
         imdb_rating: Union[float, None, Unset] = unset,
-        imdb_vote_count: Union[int, None, Unset] = unset,
+        imdb_rating_count: Union[int, None, Unset] = unset,
         kinopoisk_id: Union[str, None, Unset] = unset,
         kinopoisk_rating: Union[float, None, Unset] = unset,
-        kinopoisk_vote_count: Union[int, None, Unset] = unset,
+        kinopoisk_rating_count: Union[int, None, Unset] = unset,
     ) -> None:
         ...

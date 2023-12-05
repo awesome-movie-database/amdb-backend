@@ -34,5 +34,5 @@ class SeriesEpisode(Entity):
     budget: Optional[Money]
     imdb_id: Optional[str]
     imdb_rating: Optional[float]
-    imdb_vote_count: Optional[int]
+    imdb_rating_count: Optional[int]
     updated_at: Optional[datetime]

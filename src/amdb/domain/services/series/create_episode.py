@@ -34,7 +34,7 @@ class CreateSeriesEpisode(Service):
         budget: Optional[Money] = None,
         imdb_id: Optional[str] = None,
         imdb_rating: Optional[float] = None,
-        imdb_vote_count: Optional[int] = None,
+        imdb_rating_count: Optional[int] = None,
     ) -> SeriesEpisode:
         series.updated_at = created_at
         season.updated_at = created_at
@@ -114,7 +114,7 @@ class CreateSeriesEpisode(Service):
             budget=budget,
             imdb_id=imdb_id,
             imdb_rating=imdb_rating,
-            imdb_vote_count=imdb_vote_count,
+            imdb_rating_count=imdb_rating_count,
             updated_at=None,
         )
 
