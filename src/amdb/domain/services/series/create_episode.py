@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from amdb.domain.services.base import Service
-from amdb.domain.entities.person.person import Person
+from amdb.domain.entities.person.person import PersonId, Person
 from amdb.domain.entities.series.series import Series
 from amdb.domain.entities.series.season import SeriesSeason
 from amdb.domain.entities.series.episode import SeriesEpisode
@@ -39,73 +39,57 @@ class CreateSeriesEpisode(Service):
         series.updated_at = created_at
         season.updated_at = created_at
 
-        for genre in genres:
-            if genre not in season.genres:
-                season.genres.append(genre)
-            if genre not in series.genres:
-                series.genres.append(genre)
+        self._update_series_and_series_season_genres(
+            series=series,
+            series_season=season,
+            genres=genres,
+        )
 
         if runtime is not None:
-            if season.runtime is None:
-                season.runtime = runtime
-            else:
-                season.runtime += runtime
-
-            if series.runtime is None:
-                series.runtime = runtime
-            else:
-                series.runtime += runtime
-
+            self._add_runtime_to_series_and_series_season(
+                series=series,
+                series_season=season,
+                runtime=runtime,
+            )
         if budget is not None:
-            if season.budget is None:
-                season.budget = budget
-            else:
-                season.budget += budget
+            self._add_budget_to_series_and_series_season(
+                series=series,
+                series_season=season,
+                budget=budget,
+            )
 
-            if series.budget is None:
-                series.budget = budget
-            else:
-                series.budget += budget
-
-        director_ids = []
-        for director in directors:
-            director_ids.append(director.id)
-            director.updated_at = created_at
-
-        art_director_ids = []
-        for art_director in art_directors:
-            art_director_ids.append(art_director.id)
-            art_director.updated_at = created_at
-
-        casting_director_ids = []
-        for casting_director in casting_directors:
-            casting_director_ids.append(casting_director.id)
-            casting_director.updated_at = created_at
-
-        composer_ids = []
-        for composer in composers:
-            composer_ids.append(composer.id)
-            composer.updated_at = created_at
-
-        operator_ids = []
-        for operator in operators:
-            operator_ids.append(operator.id)
-            operator.updated_at = created_at
-
-        producer_ids = []
-        for producer in producers:
-            producer_ids.append(producer.id)
-            producer.updated_at = created_at
-
-        editor_ids = []
-        for editor in editors:
-            editor_ids.append(editor.id)
-            editor.updated_at = created_at
-
-        screenwiter_ids = []
-        for screenwiter in screenwriters:
-            screenwiter_ids.append(screenwiter.id)
-            screenwiter.updated_at = created_at
+        director_ids = self._update_persons_and_get_ids(
+            persons=directors,
+            updated_at=created_at,
+        )
+        art_director_ids = self._update_persons_and_get_ids(
+            persons=art_directors,
+            updated_at=created_at,
+        )
+        casting_director_ids = self._update_persons_and_get_ids(
+            persons=casting_directors,
+            updated_at=created_at,
+        )
+        composer_ids = self._update_persons_and_get_ids(
+            persons=composers,
+            updated_at=created_at,
+        )
+        operator_ids = self._update_persons_and_get_ids(
+            persons=operators,
+            updated_at=created_at,
+        )
+        producer_ids = self._update_persons_and_get_ids(
+            persons=producers,
+            updated_at=created_at,
+        )
+        editor_ids = self._update_persons_and_get_ids(
+            persons=editors,
+            updated_at=created_at,
+        )
+        screenwiter_ids = self._update_persons_and_get_ids(
+            persons=screenwriters,
+            updated_at=created_at,
+        )
 
         return SeriesEpisode(
             series_id=series.id,
@@ -133,3 +117,63 @@ class CreateSeriesEpisode(Service):
             imdb_vote_count=imdb_vote_count,
             updated_at=None,
         )
+
+    def _update_series_and_series_season_genres(
+        self,
+        *,
+        series: Series,
+        series_season: SeriesSeason,
+        genres: list[Genre],
+    ) -> None:
+        for genre in genres:
+            if genre not in series_season.genres:
+                series_season.genres.append(genre)
+            if genre not in series.genres:
+                series.genres.append(genre)
+
+    def _add_runtime_to_series_and_series_season(
+        self,
+        *,
+        series: Series,
+        series_season: SeriesSeason,
+        runtime: Runtime,
+    ) -> None:
+        if series_season.runtime is None:
+            series_season.runtime = runtime
+        else:
+            series_season.runtime += runtime
+
+        if series.runtime is None:
+            series.runtime = runtime
+        else:
+            series.runtime += runtime
+
+    def _add_budget_to_series_and_series_season(
+        self,
+        *,
+        series: Series,
+        series_season: SeriesSeason,
+        budget: Money,
+    ) -> None:
+        if series_season.budget is None:
+            series_season.budget = budget
+        else:
+            series_season.budget += budget
+
+        if series.budget is None:
+            series.budget = budget
+        else:
+            series.budget += budget
+
+    def _update_persons_and_get_ids(
+        self,
+        *,
+        persons: list[Person],
+        updated_at: datetime,
+    ) -> list[PersonId]:
+        person_ids = []
+        for person in persons:
+            person_ids.append(person.id)
+            person.updated_at = updated_at
+
+        return person_ids
