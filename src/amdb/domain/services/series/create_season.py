@@ -4,8 +4,8 @@ from typing import Optional
 from amdb.domain.services.base import Service
 from amdb.domain.entities.series.series import Series
 from amdb.domain.entities.series.season import SeriesSeason
-from amdb.domain.constants import Genre, ProductionStatus
-from amdb.domain.value_objects import Date, Runtime, Money
+from amdb.domain.constants import ProductionStatus
+from amdb.domain.value_objects import Date, Money
 
 
 class CreateSeriesSeason(Service):

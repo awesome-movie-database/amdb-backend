@@ -32,7 +32,6 @@ class SeriesEpisode(Entity):
     release_date: Optional[Date]
     production_status: Optional[ProductionStatus]
     description: Optional[str]
-    summary: Optional[str]
     budget: Optional[Money]
     imdb_id: Optional[str]
     imdb_rating: Optional[float]

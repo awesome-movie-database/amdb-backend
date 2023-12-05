@@ -92,6 +92,26 @@ class Runtime:
         if self.minutes <= 0:
             raise ValueError("Runtime minutes must be greater than 0")
 
+    def __add__(self, other: Any) -> "Runtime":
+        self._enusre_runtime(
+            obj=other,
+        )
+        return Runtime(
+            minutes=self.minutes + other.minutes,
+        )
+
+    def __sub__(self, other: Any) -> "Runtime":
+        self._enusre_runtime(
+            obj=other,
+        )
+        return Runtime(
+            minutes=self.minutes - other.minutes,
+        )
+
+    def _enusre_runtime(self, obj: Any) -> None:
+        if not isinstance(obj, Runtime):
+            raise ValueError("Object must be instance of `Runtime`")
+
 
 @dataclass(frozen=True, slots=True)
 class Rating:
