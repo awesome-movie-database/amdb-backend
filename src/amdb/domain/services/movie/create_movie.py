@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from amdb.domain.services.base import Service
-from amdb.domain.entities.person.person import Person
+from amdb.domain.entities.person.person import PersonId, Person
 from amdb.domain.entities.movie.movie import MovieId, MovieTitle, Movie
 from amdb.domain.constants import Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
@@ -42,45 +42,38 @@ class CreateMovie(Service):
         kinopoisk_rating: Optional[float] = None,
         kinopoisk_vote_count: Optional[int] = None,
     ) -> Movie:
-        director_ids = []
-        for director in directors:
-            director_ids.append(director.id)
-            director.updated_at = created_at
-
-        art_director_ids = []
-        for art_director in art_directors:
-            art_director_ids.append(art_director.id)
-            art_director.updated_at = created_at
-
-        casting_director_ids = []
-        for casting_director in casting_directors:
-            casting_director_ids.append(casting_director.id)
-            casting_director.updated_at = created_at
-
-        composer_ids = []
-        for composer in composers:
-            composer_ids.append(composer.id)
-            composer.updated_at = created_at
-
-        operator_ids = []
-        for operator in operators:
-            operator_ids.append(operator.id)
-            operator.updated_at = created_at
-
-        producer_ids = []
-        for producer in producers:
-            producer_ids.append(producer.id)
-            producer.updated_at = created_at
-
-        editor_ids = []
-        for editor in editors:
-            editor_ids.append(editor.id)
-            editor.updated_at = created_at
-
-        screenwiter_ids = []
-        for screenwiter in screenwriters:
-            screenwiter_ids.append(screenwiter.id)
-            screenwiter.updated_at = created_at
+        director_ids = self._update_persons_and_get_ids(
+            persons=directors,
+            updated_at=created_at,
+        )
+        art_director_ids = self._update_persons_and_get_ids(
+            persons=art_directors,
+            updated_at=created_at,
+        )
+        casting_director_ids = self._update_persons_and_get_ids(
+            persons=casting_directors,
+            updated_at=created_at,
+        )
+        composer_ids = self._update_persons_and_get_ids(
+            persons=composers,
+            updated_at=created_at,
+        )
+        operator_ids = self._update_persons_and_get_ids(
+            persons=operators,
+            updated_at=created_at,
+        )
+        producer_ids = self._update_persons_and_get_ids(
+            persons=producers,
+            updated_at=created_at,
+        )
+        editor_ids = self._update_persons_and_get_ids(
+            persons=editors,
+            updated_at=created_at,
+        )
+        screenwiter_ids = self._update_persons_and_get_ids(
+            persons=screenwriters,
+            updated_at=created_at,
+        )
 
         return Movie(
             id=id,
@@ -116,3 +109,16 @@ class CreateMovie(Service):
             kinopoisk_vote_count=kinopoisk_vote_count,
             updated_at=None,
         )
+
+    def _update_persons_and_get_ids(
+        self,
+        *,
+        persons: list[Person],
+        updated_at: datetime,
+    ) -> list[PersonId]:
+        person_ids = []
+        for person in persons:
+            person_ids.append(person.id)
+            person.updated_at = updated_at
+
+        return person_ids
