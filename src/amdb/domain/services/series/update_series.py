@@ -13,8 +13,8 @@ class UpdateSeries(Service):
         *,
         series: Series,
         updated_at: datetime,
-        countries: Union[list[str], Unset] = unset,
         title: Union[SeriesTitle, Unset] = unset,
+        countries: Union[list[str], Unset] = unset,
         release_date: Union[Date, None, Unset] = unset,
         end_date: Union[Date, None, Unset] = unset,
         is_ongoing: Union[bool, None, Unset] = unset,
@@ -29,4 +29,22 @@ class UpdateSeries(Service):
         kinopoisk_rating: Union[float, None, Unset] = unset,
         kinopoisk_rating_count: Union[int, None, Unset] = unset,
     ) -> None:
-        ...
+        self._update_entity(
+            entity=series,
+            title=title,
+            countries=countries,
+            release_date=release_date,
+            end_date=end_date,
+            is_ongoing=is_ongoing,
+            production_status=production_status,
+            description=description,
+            summary=summary,
+            mpaa=mpaa,
+            imdb_id=imdb_id,
+            imdb_rating=imdb_rating,
+            imdb_rating_count=imdb_rating_count,
+            kinopoisk_id=kinopoisk_id,
+            kinopoisk_rating=kinopoisk_rating,
+            kinopoisk_rating_count=kinopoisk_rating_count,
+            updated_at=updated_at,
+        )
