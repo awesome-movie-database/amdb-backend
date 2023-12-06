@@ -56,7 +56,7 @@ class ReviewSeriesEpisode(Service):
 
         if (
             self._auto_approve
-            and self._approved_reviews_for_auto_approve <= profile.series_episode_reviews  # type: ignore
+            and self._approved_reviews_for_auto_approve <= profile.approved_reviews  # type: ignore
         ):
             profile.approved_reviews += 1
             is_approved = True
