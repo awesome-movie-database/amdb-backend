@@ -51,12 +51,6 @@ class CreateSeriesEpisode(Service):
                 series_season=season,
                 runtime=runtime,
             )
-        if budget is not None:
-            self._add_budget_to_series_and_series_season(
-                series=series,
-                series_season=season,
-                budget=budget,
-            )
 
         director_ids = self._update_persons_and_get_ids(
             persons=directors,
@@ -147,23 +141,6 @@ class CreateSeriesEpisode(Service):
             series.runtime = runtime
         else:
             series.runtime += runtime
-
-    def _add_budget_to_series_and_series_season(
-        self,
-        *,
-        series: Series,
-        series_season: SeriesSeason,
-        budget: Money,
-    ) -> None:
-        if series_season.budget is None:
-            series_season.budget = budget
-        else:
-            series_season.budget += budget
-
-        if series.budget is None:
-            series.budget = budget
-        else:
-            series.budget += budget
 
     def _update_persons_and_get_ids(
         self,

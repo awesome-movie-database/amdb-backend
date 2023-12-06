@@ -99,6 +99,30 @@ class Runtime:
             msg = "Runtime minutes must be greater than 0"
             raise ValueError(msg)
 
+    def __le__(self, other: Any) -> bool:
+        self._enusre_runtime(
+            obj=other,
+        )
+        return self.minutes <= other.minutes
+
+    def __lt__(self, other: Any) -> bool:
+        self._enusre_runtime(
+            obj=other,
+        )
+        return self.minutes < other.minutes
+
+    def __ge__(self, other: Any) -> bool:
+        self._enusre_runtime(
+            obj=other,
+        )
+        return self.minutes >= other.minutes
+
+    def __gt__(self, other: Any) -> bool:
+        self._enusre_runtime(
+            obj=other,
+        )
+        return self.minutes > other.minutes
+
     def __add__(self, other: Any) -> "Runtime":
         self._enusre_runtime(
             obj=other,
