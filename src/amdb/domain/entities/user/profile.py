@@ -9,7 +9,7 @@ class Profile(Entity):
     user_id: UserId
     achievements: int
     movie_ratings: int
-    series_episodes_ratings: int
+    series_episode_ratings: int
     approved_reviews: int
     movie_reviews: int
     series_reviews: int

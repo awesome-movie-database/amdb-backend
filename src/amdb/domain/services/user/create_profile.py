@@ -13,7 +13,7 @@ class CreateProfile(Service):
             user_id=user.id,
             achievements=0,
             movie_ratings=0,
-            series_episodes_ratings=0,
+            series_episode_ratings=0,
             approved_reviews=0,
             movie_reviews=0,
             series_reviews=0,
