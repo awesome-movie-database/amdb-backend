@@ -5,6 +5,7 @@ from amdb.domain.services.base import Service
 from amdb.domain.entities.series.series import SeriesTitle, SeriesGenre, Series
 from amdb.domain.constants import Unset, unset, Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Date
+from amdb.domain.exceptions.series import UpdateSeriesError
 
 
 class UpdateSeries(Service):
@@ -65,13 +66,24 @@ class UpdateSeries(Service):
         series: Series,
         genres: list[Genre],
     ) -> list[SeriesGenre]:
-        updated_series_genres = []
+        updated_series_genres = series.genres.copy()
+
+        # Remove genres
+        for series_genre in series.genres:
+            if series_genre.genre not in genres:
+                if series_genre.episode_count != 0:
+                    raise UpdateSeriesError()
+                updated_series_genres.remove(series_genre)
+
+        # Add genres
+        series_genres_genres = [series_genre.genre for series_genre in series.genres]
         for genre in genres:
-            for series_genre in series.genres:
-                # Series genre doesn't belong to any episode, so it's not going
-                # to updated series genres
-                if series_genre.genre != genre and series_genre.episode_count == 0:
-                    continue
-                updated_series_genres.append(series_genre)
+            if genre not in series_genres_genres:
+                updated_series_genres.append(
+                    SeriesGenre(
+                        genre=genre,
+                        episode_count=0,
+                    ),
+                )
 
         return updated_series_genres
