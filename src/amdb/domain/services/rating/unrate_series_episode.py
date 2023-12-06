@@ -11,10 +11,10 @@ class UnrateSeriesEpisode(Service):
     def __call__(
         self,
         *,
+        episode_rating: SeriesEpisodeRating,
         series: Series,
         season: SeriesSeason,
         episode: SeriesEpisode,
-        episode_rating: SeriesEpisodeRating,
         profile: Profile,
     ) -> None:
         if episode_rating.is_counted:
