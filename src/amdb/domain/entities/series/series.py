@@ -13,12 +13,18 @@ SeriesTitle = NewType("SeriesTitle", str)
 
 
 @dataclass(slots=True)
+class SeriesGenre:
+    genre: Genre
+    episode_count: int
+
+
+@dataclass(slots=True)
 class Series(Entity):
     id: SeriesId
     title: SeriesTitle
     rating: float
     rating_count: int
-    genres: list[Genre]
+    genres: list[SeriesGenre]
     countries: list[str]
     created_at: datetime
 

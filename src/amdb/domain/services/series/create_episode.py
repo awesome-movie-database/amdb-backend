@@ -3,8 +3,8 @@ from typing import Optional
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.person.person import PersonId, Person
-from amdb.domain.entities.series.series import Series
-from amdb.domain.entities.series.season import SeriesSeason
+from amdb.domain.entities.series.series import SeriesGenre, Series
+from amdb.domain.entities.series.season import SeriesSeasonGenre, SeriesSeason
 from amdb.domain.entities.series.episode import SeriesEpisode
 from amdb.domain.constants import Genre, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
@@ -120,10 +120,26 @@ class CreateSeriesEpisode(Service):
         genres: list[Genre],
     ) -> None:
         for genre in genres:
-            if genre not in series_season.genres:
-                series_season.genres.append(genre)
-            if genre not in series.genres:
-                series.genres.append(genre)
+            for series_genre in series.genres:
+                if series_genre.genre == genre:
+                    series_genre.episode_count += 1
+                else:
+                    series.genres.append(
+                        SeriesGenre(
+                            genre=genre,
+                            episode_count=1,
+                        )
+                    )
+            for series_season_genre in series_season.genres:
+                if series_season_genre.genre == genre:
+                    series_season_genre.episode_count += 1
+                else:
+                    series_season.genres.append(
+                        SeriesSeasonGenre(
+                            genre=genre,
+                            episode_count=1,
+                        )
+                    )
 
     def _add_runtime_to_series_and_series_season(
         self,

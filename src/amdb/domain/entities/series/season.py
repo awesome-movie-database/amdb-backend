@@ -9,12 +9,18 @@ from .series import SeriesId
 
 
 @dataclass(slots=True)
+class SeriesSeasonGenre:
+    genre: Genre
+    episode_count: int
+
+
+@dataclass(slots=True)
 class SeriesSeason(Entity):
     series_id: SeriesId
     number: int
     rating: float
     rating_count: int
-    genres: list[Genre]
+    genres: list[SeriesSeasonGenre]
     created_at: datetime
 
     runtime: Optional[Runtime]

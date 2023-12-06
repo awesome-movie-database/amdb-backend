@@ -4,8 +4,8 @@ from typing import Optional, Union
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.person.person import Person
-from amdb.domain.entities.series.series import Series
-from amdb.domain.entities.series.season import SeriesSeason
+from amdb.domain.entities.series.series import SeriesGenre, Series
+from amdb.domain.entities.series.season import SeriesSeasonGenre, SeriesSeason
 from amdb.domain.entities.series.episode import SeriesEpisode
 from amdb.domain.constants import Unset, unset, Genre, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
@@ -93,11 +93,16 @@ class UpdateSeriesEpisode(Service):
             self._update_series_and_series_season_genres(
                 series=series,
                 series_season=season,
+                series_episode=episode,
                 genres=genres,
             )
         if runtime is not unset:
-            self._update_series_and_series_season_runtime(
+            self._update_series_runtime(
                 series=series,
+                episode=episode,
+                runtime=runtime,
+            )
+            self._update_series_season_runtime(
                 series_season=season,
                 episode=episode,
                 runtime=runtime,
@@ -233,30 +238,120 @@ class UpdateSeriesEpisode(Service):
         *,
         series: Series,
         series_season: SeriesSeason,
+        series_episode: SeriesEpisode,
         genres: list[Genre],
     ) -> None:
+        for series_episode_genre in series_episode.genres:
+            if series_episode_genre not in genres:
+                self._remove_genre_from_series(
+                    series=series,
+                    genre=series_episode_genre,
+                )
+                self._remove_genre_from_series_season(
+                    series_season=series_season,
+                    genre=series_episode_genre,
+                )
         for genre in genres:
-            if genre not in series_season.genres:
-                series_season.genres.append(genre)
-            if genre not in series.genres:
-                series.genres.append(genre)
+            if genre not in series_episode.genres:
+                self._add_genre_to_series(
+                    series=series,
+                    genre=genre,
+                )
+                self._add_genre_to_series_season(
+                    series_season=series_season,
+                    genre=genre,
+                )
 
-    def _update_series_and_series_season_runtime(
+    def _remove_genre_from_series(
         self,
         *,
         series: Series,
+        genre: Genre,
+    ) -> None:
+        for series_genre in series.genres:
+            if series_genre.genre == genre:
+                series_genre.episode_count -= 1
+                updated_series_genre = series_genre
+                break
+        if updated_series_genre.episode_count == 0:
+            series.genres.remove(updated_series_genre)
+
+    def _remove_genre_from_series_season(
+        self,
+        *,
+        series_season: SeriesSeason,
+        genre: Genre,
+    ) -> None:
+        for series_season_genre in series_season.genres:
+            if series_season_genre.genre == genre:
+                series_season_genre.episode_count -= 1
+                updated_series_season_genre = series_season_genre
+                break
+        if updated_series_season_genre.episode_count == 0:
+            series_season.genres.remove(updated_series_season_genre)
+
+    def _add_genre_to_series(
+        self,
+        *,
+        series: Series,
+        genre: Genre,
+    ) -> None:
+        for series_genre in series.genres:
+            if series_genre.genre == genre:
+                series_genre.episode_count += 1
+                break
+        else:
+            series.genres.append(
+                SeriesGenre(
+                    genre=genre,
+                    episode_count=1,
+                )
+            )
+
+    def _add_genre_to_series_season(
+        self,
+        *,
+        series_season: SeriesSeason,
+        genre: Genre,
+    ) -> None:
+        for series_season_genre in series_season.genres:
+            if series_season_genre.genre == genre:
+                series_season_genre.episode_count += 1
+                break
+        else:
+            series_season.genres.append(
+                SeriesSeasonGenre(
+                    genre=genre,
+                    episode_count=1,
+                )
+            )
+
+    def _update_series_runtime(
+        self,
+        *,
+        series: Series,
+        episode: SeriesEpisode,
+        runtime: Optional[Runtime],
+    ) -> None:
+        if series.runtime is None:
+            series.runtime = runtime
+            return
+
+        series.runtime -= episode.runtime
+        if runtime is not None:
+            series.runtime += runtime
+
+    def _update_series_season_runtime(
+        self,
+        *,
         series_season: SeriesSeason,
         episode: SeriesEpisode,
         runtime: Optional[Runtime],
     ) -> None:
         if series_season.runtime is None:
             series_season.runtime = runtime
-        else:
-            series_season.runtime -= episode.runtime
-            series_season.runtime += runtime
+            return
 
-        if series.runtime is None:
-            series.runtime = runtime
-        else:
-            series.runtime -= episode.runtime
-            series.runtime += runtime
+        series_season.runtime -= episode.runtime
+        if runtime is not None:
+            series_season.runtime += runtime

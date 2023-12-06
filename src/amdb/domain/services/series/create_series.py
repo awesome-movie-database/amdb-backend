@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from amdb.domain.services.base import Service
-from amdb.domain.entities.series.series import SeriesId, SeriesTitle, Series
+from amdb.domain.entities.series.series import SeriesId, SeriesTitle, SeriesGenre, Series
 from amdb.domain.constants import Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Date, Money
 
@@ -31,12 +31,20 @@ class CreateSeries(Service):
         kinopoisk_rating: Optional[float] = None,
         kinopoisk_rating_count: Optional[int] = None,
     ) -> Series:
+        series_genres = []
+        for genre in genres:
+            series_genre = SeriesGenre(
+                genre=genre,
+                episode_count=0,
+            )
+            series_genres.append(series_genre)
+
         return Series(
             id=id,
             title=title,
             rating=0,
             rating_count=0,
-            genres=genres,
+            genres=series_genres,
             countries=countries,
             created_at=created_at,
             runtime=None,
