@@ -13,5 +13,7 @@ class Profile(Entity):
     approved_reviews: int
     movie_reviews: int
     series_reviews: int
+    series_season_reviews: int
+    series_episode_reviews: int
     given_votes: int
     gained_votes: int
