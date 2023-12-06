@@ -18,6 +18,6 @@ class UnvoteMovieReview(Service):
         reviewer_profile.gained_votes -= 1
 
         if movie_review_vote.type is VoteType.LIKE:
-            movie_review.likes += 1
+            movie_review.likes -= 1
         elif movie_review_vote.type is VoteType.DISLIKE:
-            movie_review.dislikes += 1
+            movie_review.dislikes -= 1
