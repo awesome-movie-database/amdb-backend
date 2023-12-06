@@ -59,21 +59,9 @@ class ReviewSeriesEpisode(Service):
             and self._approved_reviews_for_auto_approve <= profile.series_episode_reviews  # type: ignore
         ):
             profile.approved_reviews += 1
-
-            return SeriesEpisodeReview(
-                id=id,
-                series_id=episode.series_id,
-                season_number=episode.season_number,
-                episode_number=episode.number,
-                user_id=profile.user_id,
-                type=type,
-                title=title,
-                content=content,
-                likes=likes,
-                dislikes=dislikes,
-                is_approved=True,
-                created_at=created_at,
-            )
+            is_approved = True
+        else:
+            is_approved = False
 
         return SeriesEpisodeReview(
             id=id,
@@ -86,6 +74,6 @@ class ReviewSeriesEpisode(Service):
             content=content,
             likes=likes,
             dislikes=dislikes,
-            is_approved=False,
+            is_approved=is_approved,
             created_at=created_at,
         )

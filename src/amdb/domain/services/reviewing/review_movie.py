@@ -53,19 +53,9 @@ class ReviewMovie(Service):
 
         if self._auto_approve and self._approved_reviews_for_auto_approve <= profile.movie_reviews:  # type: ignore
             profile.approved_reviews += 1
-
-            return MovieReview(
-                id=id,
-                movie_id=movie.id,
-                user_id=profile.user_id,
-                type=type,
-                title=title,
-                content=content,
-                likes=likes,
-                dislikes=dislikes,
-                is_approved=True,
-                created_at=created_at,
-            )
+            is_approved = True
+        else:
+            is_approved = False
 
         return MovieReview(
             id=id,
@@ -76,6 +66,6 @@ class ReviewMovie(Service):
             content=content,
             likes=likes,
             dislikes=dislikes,
-            is_approved=False,
+            is_approved=is_approved,
             created_at=created_at,
         )
