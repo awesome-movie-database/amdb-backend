@@ -46,8 +46,11 @@ class CreateSeriesEpisode(Service):
         )
 
         if runtime is not None:
-            self._add_runtime_to_series_and_series_season(
+            self._add_runtime_to_series(
                 series=series,
+                runtime=runtime,
+            )
+            self._add_runtime_to_series_season(
                 series_season=season,
                 runtime=runtime,
             )
@@ -120,31 +123,58 @@ class CreateSeriesEpisode(Service):
         genres: list[Genre],
     ) -> None:
         for genre in genres:
-            for series_genre in series.genres:
-                if series_genre.genre == genre:
-                    series_genre.episode_count += 1
-                else:
-                    series.genres.append(
-                        SeriesGenre(
-                            genre=genre,
-                            episode_count=1,
-                        )
-                    )
-            for series_season_genre in series_season.genres:
-                if series_season_genre.genre == genre:
-                    series_season_genre.episode_count += 1
-                else:
-                    series_season.genres.append(
-                        SeriesSeasonGenre(
-                            genre=genre,
-                            episode_count=1,
-                        )
-                    )
+            self._add_genre_to_series(
+                series=series,
+                genre=genre,
+            )
+            self._add_genre_to_series_season(
+                series_season=series_season,
+                genre=genre,
+            )
 
-    def _add_runtime_to_series_and_series_season(
+    def _add_genre_to_series(
         self,
         *,
         series: Series,
+        genre: Genre,
+    ) -> None:
+        for series_genre in series.genres:
+            if series_genre.genre == genre:
+                series_genre.episode_count += 1
+            else:
+                series.genres.append(
+                    SeriesGenre(
+                        genre=genre,
+                        episode_count=1,
+                    ),
+                )
+
+    def _add_genre_to_series_season(self, *, series_season: SeriesSeason, genre: Genre) -> None:
+        for series_season_genre in series_season.genres:
+            if series_season_genre.genre == genre:
+                series_season_genre.episode_count += 1
+            else:
+                series_season.genres.append(
+                    SeriesSeasonGenre(
+                        genre=genre,
+                        episode_count=1,
+                    ),
+                )
+
+    def _add_runtime_to_series(
+        self,
+        *,
+        series: Series,
+        runtime: Runtime,
+    ) -> None:
+        if series.runtime is None:
+            series.runtime = runtime
+        else:
+            series.runtime += runtime
+
+    def _add_runtime_to_series_season(
+        self,
+        *,
         series_season: SeriesSeason,
         runtime: Runtime,
     ) -> None:
@@ -152,11 +182,6 @@ class CreateSeriesEpisode(Service):
             series_season.runtime = runtime
         else:
             series_season.runtime += runtime
-
-        if series.runtime is None:
-            series.runtime = runtime
-        else:
-            series.runtime += runtime
 
     def _update_persons_and_get_ids(
         self,

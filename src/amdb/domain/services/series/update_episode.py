@@ -305,7 +305,7 @@ class UpdateSeriesEpisode(Service):
                 SeriesGenre(
                     genre=genre,
                     episode_count=1,
-                )
+                ),
             )
 
     def _add_genre_to_series_season(
@@ -323,7 +323,7 @@ class UpdateSeriesEpisode(Service):
                 SeriesSeasonGenre(
                     genre=genre,
                     episode_count=1,
-                )
+                ),
             )
 
     def _update_series_runtime(
