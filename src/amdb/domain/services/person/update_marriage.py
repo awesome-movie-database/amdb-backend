@@ -51,6 +51,7 @@ class UpdateMarriage(Service):
 
     def _update_children(
         self,
+        *,
         old_children: list[Person],
         new_children: list[Person],
         updated_at: datetime,

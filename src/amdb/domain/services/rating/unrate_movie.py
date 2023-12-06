@@ -8,6 +8,7 @@ from amdb.domain.value_objects import Rating
 class UnrateMovie(Service):
     def __call__(
         self,
+        *,
         movie_rating: MovieRating,
         movie: Movie,
         profile: Profile,
@@ -21,6 +22,7 @@ class UnrateMovie(Service):
 
     def _remove_rating_from_movie(
         self,
+        *,
         movie: Movie,
         rating: Rating,
     ) -> None:

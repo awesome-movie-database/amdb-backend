@@ -37,7 +37,7 @@ select = [
     "PIE794",
     "PIE796",
     "T201",
-    "SLF001",
+    "SLF001"
 ]
 
 [tool.ruff.format]

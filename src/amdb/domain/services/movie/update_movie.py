@@ -211,6 +211,7 @@ class UpdateMovie(Service):
 
     def _update_persons(
         self,
+        *,
         old_persons: list[Person],
         new_persons: list[Person],
         updated_at: datetime,

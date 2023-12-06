@@ -23,6 +23,7 @@ class CountMovieRating(Service):
 
     def _add_rating_to_movie(
         self,
+        *,
         movie: Movie,
         rating: Rating,
     ) -> None:

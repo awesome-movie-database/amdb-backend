@@ -10,6 +10,7 @@ from amdb.domain.value_objects import Rating
 class UnrateSeriesEpisode(Service):
     def __call__(
         self,
+        *,
         series: Series,
         season: SeriesSeason,
         episode: SeriesEpisode,
