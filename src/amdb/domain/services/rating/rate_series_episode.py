@@ -52,11 +52,11 @@ class RateSeriesEpisode(Service):
 
         if is_counted:
             self._add_rating_to_series(
-                series=series, # type: ignore[arg-type]
+                series=series,  # type: ignore[arg-type]
                 rating=rating,
             )
             self._add_rating_to_series_season(
-                series_season=season, # type: ignore[arg-type]
+                series_season=season,  # type: ignore[arg-type]
                 rating=rating,
             )
             self._add_rating_to_series_episode(
