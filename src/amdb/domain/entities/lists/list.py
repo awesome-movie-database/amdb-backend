@@ -15,8 +15,8 @@ class List(Entity):
     id: ListId
     user_id: UserId
     title: str
-    description: str
     is_private: bool
     created_at: datetime
 
+    description: Optional[str]
     updated_at: Optional[datetime]
