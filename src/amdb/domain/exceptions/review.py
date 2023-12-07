@@ -5,7 +5,7 @@ class MovieReviewNotApprovedError(DomainError):
     ...
 
 
-class SeriesNotApprovedError(DomainError):
+class SeriesReviewNotApprovedError(DomainError):
     ...
 
 
