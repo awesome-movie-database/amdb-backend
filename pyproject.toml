@@ -12,6 +12,7 @@ python = "^3.10"
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.7.0"
 ruff = "^0.1.6"
+pre-commit = "^3.5.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
@@ -37,7 +38,7 @@ select = [
     "PIE794",
     "PIE796",
     "T201",
-    "SLF001"
+    "SLF001",
 ]
 
 [tool.ruff.format]
