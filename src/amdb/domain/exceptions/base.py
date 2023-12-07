@@ -1,2 +1,2 @@
-class DomainException(Exception):
-    """Base class for Domain Exceptions"""
+class DomainError(Exception):
+    """Base class for Domain Errors"""

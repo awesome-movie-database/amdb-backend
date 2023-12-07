@@ -1,18 +1,8 @@
-from enum import IntEnum
+from enum import Enum, IntEnum
 
 
-class Unset:
-    """
-    Сlass needed to identify parameters
-    that were not passed.
-
-    Example:
-
-    .. code-block::python
-    def foo(bar: Union[int, None, Type[Unset]] = Unset):
-        if bar == Unset:
-            ...
-    """
+Unset = Enum("Unset", ["unset"])
+unset = Unset.unset
 
 
 class Sex(IntEnum):
@@ -71,6 +61,6 @@ class ReviewType(IntEnum):
     NEGATIVE = 2
 
 
-class RatingType(IntEnum):
+class VoteType(IntEnum):
     LIKE = 0
     DISLIKE = 1

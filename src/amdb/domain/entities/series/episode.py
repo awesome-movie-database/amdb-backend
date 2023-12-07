@@ -1,26 +1,22 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional, NewType
-from uuid import UUID
+from typing import Optional
 
 from amdb.domain.entities.base import Entity
 from amdb.domain.entities.person.person import PersonId
-from amdb.domain.constants import Genre, MPAA, ProductionStatus
+from amdb.domain.constants import Genre, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
-
-
-MovieId = NewType("MovieId", UUID)
-MovieTitle = NewType("MovieTitle", str)
+from .series import SeriesId
 
 
 @dataclass(slots=True)
-class Movie(Entity):
-    id: MovieId
-    title: MovieTitle
+class SeriesEpisode(Entity):
+    series_id: SeriesId
+    season_number: int
+    number: int
     rating: float
     rating_count: int
     genres: list[Genre]
-    countries: list[str]
     director_ids: list[PersonId]
     art_director_ids: list[PersonId]
     casting_director_ids: list[PersonId]
@@ -35,16 +31,8 @@ class Movie(Entity):
     release_date: Optional[Date]
     production_status: Optional[ProductionStatus]
     description: Optional[str]
-    summary: Optional[str]
     budget: Optional[Money]
-    revenue: Optional[Money]
-    mpaa: Optional[MPAA]
-    filming_start: Optional[Date]
-    filming_end: Optional[Date]
     imdb_id: Optional[str]
     imdb_rating: Optional[float]
     imdb_rating_count: Optional[int]
-    kinopoisk_id: Optional[str]
-    kinopoisk_rating: Optional[float]
-    kinopoisk_rating_count: Optional[int]
     updated_at: Optional[datetime]

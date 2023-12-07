@@ -1,13 +1,5 @@
-from amdb.domain.exceptions.base import DomainException
+from .base import DomainError
 
 
-class SeriesUnderInspection(DomainException):
-    """
-    Operation cannot be performed while series is under inspection
-    """
-
-
-class SeriesNotUnderInspection(DomainException):
-    """
-    Operation cannot be performed while series is not under inspection
-    """
+class UpdateSeriesError(DomainError):
+    ...

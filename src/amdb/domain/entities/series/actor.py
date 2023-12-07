@@ -3,12 +3,14 @@ from typing import Optional
 
 from amdb.domain.entities.base import Entity
 from amdb.domain.entities.person.person import PersonId
-from .movie import MovieId
+from .series import SeriesId
 
 
 @dataclass(slots=True)
-class MovieActor(Entity):
-    movie_id: MovieId
+class SeriesActor(Entity):
+    series_id: SeriesId
+    season_number: int
+    episode_number: int
     person_id: PersonId
 
     role: Optional[str]

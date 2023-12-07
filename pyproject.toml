@@ -20,7 +20,25 @@ pytest = "^7.4.3"
 line-length = 99
 
 [tool.ruff.lint]
-select = ["COM812"]
+extend-select = [
+    "N",
+    "EM",
+    "ISC",
+    "G",
+    "Q",
+]
+select = [
+    "F401",
+    "F406",
+    "COM812",
+    "DTZ003",
+    "EM102",
+    "INP001",
+    "PIE794",
+    "PIE796",
+    "T201",
+    "SLF001"
+]
 
 [tool.ruff.format]
 quote-style = "double"

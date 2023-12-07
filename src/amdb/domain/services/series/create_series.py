@@ -1,29 +1,24 @@
 from datetime import datetime
 from typing import Optional
-from uuid import UUID
 
 from amdb.domain.services.base import Service
-from amdb.domain.entities.series.series import Series
+from amdb.domain.entities.series.series import SeriesId, SeriesTitle, SeriesGenre, Series
 from amdb.domain.constants import Genre, MPAA, ProductionStatus
-from amdb.domain.value_objects import Date, Money, Runtime, Title
+from amdb.domain.value_objects import Date, Money
 
 
 class CreateSeries(Service):
-
     def __call__(
         self,
-        id: UUID,
-        title: Title,
+        *,
+        id: SeriesId,
+        title: SeriesTitle,
         created_at: datetime,
-        season_count: Optional[int] = None,
-        episode_count: Optional[int] = None,
-        amdb_rating: Optional[float] = None,
-        total_runtime: Optional[Runtime] = None,
+        genres: list[Genre] = [],
+        countries: list[str] = [],
         release_date: Optional[Date] = None,
         end_date: Optional[Date] = None,
         is_ongoing: Optional[bool] = None,
-        genres: Optional[list[Genre]] = None,
-        countries: Optional[list[str]] = None,
         production_status: Optional[ProductionStatus] = None,
         description: Optional[str] = None,
         summary: Optional[str] = None,
@@ -31,26 +26,31 @@ class CreateSeries(Service):
         mpaa: Optional[MPAA] = None,
         imdb_id: Optional[str] = None,
         imdb_rating: Optional[float] = None,
-        imdb_vote_count: Optional[int] = None,
+        imdb_rating_count: Optional[int] = None,
         kinopoisk_id: Optional[str] = None,
         kinopoisk_rating: Optional[float] = None,
-        kinopoisk_vote_count: Optional[int] = None,
+        kinopoisk_rating_count: Optional[int] = None,
     ) -> Series:
+        series_genres = []
+        for genre in genres:
+            series_genre = SeriesGenre(
+                genre=genre,
+                episode_count=0,
+            )
+            series_genres.append(series_genre)
+
         return Series(
             id=id,
             title=title,
-            amdb_vote_count=0,
-            is_under_inspection=False,
+            rating=0,
+            rating_count=0,
+            genres=series_genres,
+            countries=countries,
             created_at=created_at,
-            season_count=season_count,
-            episode_count=episode_count,
-            amdb_rating=None,
-            total_runtime=total_runtime,
+            runtime=None,
             release_date=release_date,
             end_date=end_date,
             is_ongoing=is_ongoing,
-            genres=genres,
-            countries=countries,
             production_status=production_status,
             description=description,
             summary=summary,
@@ -58,8 +58,9 @@ class CreateSeries(Service):
             mpaa=mpaa,
             imdb_id=imdb_id,
             imdb_rating=imdb_rating,
-            imdb_vote_count=imdb_vote_count,
+            imdb_rating_count=imdb_rating_count,
             kinopoisk_id=kinopoisk_id,
             kinopoisk_rating=kinopoisk_rating,
-            kinopoisk_vote_count=kinopoisk_vote_count,
+            kinopoisk_rating_count=kinopoisk_rating_count,
+            updated_at=None,
         )
