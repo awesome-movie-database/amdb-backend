@@ -11,7 +11,7 @@ FavouritesId = NewType("FavouritesId", UUID)
 
 
 @dataclass(slots=True)
-class Favorites(Entity):
+class Favourites(Entity):
     id: FavouritesId
     user_id: UserId
     is_private: bool
