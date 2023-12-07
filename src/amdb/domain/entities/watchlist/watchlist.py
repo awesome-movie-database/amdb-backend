@@ -15,6 +15,5 @@ class Watchlist(Entity):
     id: WatchlistId
     user_id: UserId
     is_private: bool
-    created_at: datetime
 
     updated_at: Optional[datetime]
