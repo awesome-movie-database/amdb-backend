@@ -14,8 +14,8 @@ class CreateSeries(Service):
         id: SeriesId,
         title: SeriesTitle,
         created_at: datetime,
-        genres: list[Genre] = [],
-        countries: list[str] = [],
+        genres: Optional[list[Genre]] = None,
+        countries: Optional[list[str]] = None,
         release_date: Optional[Date] = None,
         end_date: Optional[Date] = None,
         is_ongoing: Optional[bool] = None,
@@ -32,12 +32,13 @@ class CreateSeries(Service):
         kinopoisk_rating_count: Optional[int] = None,
     ) -> Series:
         series_genres = []
-        for genre in genres:
-            series_genre = SeriesGenre(
-                genre=genre,
-                episode_count=0,
-            )
-            series_genres.append(series_genre)
+        if genres is not None:
+            for genre in genres:
+                series_genre = SeriesGenre(
+                    genre=genre,
+                    episode_count=0,
+                )
+                series_genres.append(series_genre)
 
         return Series(
             id=id,
@@ -45,7 +46,7 @@ class CreateSeries(Service):
             rating=0,
             rating_count=0,
             genres=series_genres,
-            countries=countries,
+            countries=countries or [],
             created_at=created_at,
             runtime=None,
             release_date=release_date,

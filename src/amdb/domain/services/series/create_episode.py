@@ -18,15 +18,15 @@ class CreateSeriesEpisode(Service):
         season: SeriesSeason,
         number: int,
         created_at: datetime,
-        genres: list[Genre] = [],
-        directors: list[Person] = [],
-        art_directors: list[Person] = [],
-        casting_directors: list[Person] = [],
-        composers: list[Person] = [],
-        operators: list[Person] = [],
-        producers: list[Person] = [],
-        editors: list[Person] = [],
-        screenwriters: list[Person] = [],
+        genres: Optional[list[Genre]] = None,
+        directors: Optional[list[Person]] = None,
+        art_directors: Optional[list[Person]] = None,
+        casting_directors: Optional[list[Person]] = None,
+        composers: Optional[list[Person]] = None,
+        operators: Optional[list[Person]] = None,
+        producers: Optional[list[Person]] = None,
+        editors: Optional[list[Person]] = None,
+        screenwriters: Optional[list[Person]] = None,
         runtime: Optional[Runtime] = None,
         release_date: Optional[Date] = None,
         production_status: Optional[ProductionStatus] = None,
@@ -42,7 +42,7 @@ class CreateSeriesEpisode(Service):
         self._update_series_and_series_season_genres(
             series=series,
             series_season=season,
-            genres=genres,
+            genres=genres or [],
         )
 
         if runtime is not None:
@@ -56,35 +56,35 @@ class CreateSeriesEpisode(Service):
             )
 
         director_ids = self._update_persons_and_get_ids(
-            persons=directors,
+            persons=directors or [],
             updated_at=created_at,
         )
         art_director_ids = self._update_persons_and_get_ids(
-            persons=art_directors,
+            persons=art_directors or [],
             updated_at=created_at,
         )
         casting_director_ids = self._update_persons_and_get_ids(
-            persons=casting_directors,
+            persons=casting_directors or [],
             updated_at=created_at,
         )
         composer_ids = self._update_persons_and_get_ids(
-            persons=composers,
+            persons=composers or [],
             updated_at=created_at,
         )
         operator_ids = self._update_persons_and_get_ids(
-            persons=operators,
+            persons=operators or [],
             updated_at=created_at,
         )
         producer_ids = self._update_persons_and_get_ids(
-            persons=producers,
+            persons=producers or [],
             updated_at=created_at,
         )
         editor_ids = self._update_persons_and_get_ids(
-            persons=editors,
+            persons=editors or [],
             updated_at=created_at,
         )
         screenwiter_ids = self._update_persons_and_get_ids(
-            persons=screenwriters,
+            persons=screenwriters or [],
             updated_at=created_at,
         )
 
@@ -94,7 +94,7 @@ class CreateSeriesEpisode(Service):
             number=number,
             rating=0,
             rating_count=0,
-            genres=genres,
+            genres=genres or [],
             director_ids=director_ids,
             art_director_ids=art_director_ids,
             casting_director_ids=casting_director_ids,
