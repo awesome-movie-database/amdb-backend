@@ -1,23 +1,23 @@
 from datetime import datetime
 
 from amdb.domain.services.base import Service
-from amdb.domain.entities.lists.list import List
+from amdb.domain.entities.custom_list.custom_list import CustomList
 from amdb.domain.entities.series.series import Series
-from amdb.domain.entities.lists.series import ListSeries
+from amdb.domain.entities.custom_list.series import CustomListSeries
 
 
 class AddSeriesToList(Service):
     def __call__(
         self,
         *,
-        list: List,
+        custom_list: CustomList,
         series: Series,
         created_at: datetime,
-    ) -> ListSeries:
-        list.updated_at = created_at
+    ) -> CustomListSeries:
+        custom_list.updated_at = created_at
 
-        return ListSeries(
-            list_id=list.id,
+        return CustomListSeries(
+            custom_list_id=custom_list.id,
             series_id=series.id,
             created_at=created_at,
         )

@@ -2,22 +2,22 @@ from datetime import datetime
 from typing import Optional
 
 from amdb.domain.services.base import Service
-from amdb.domain.entities.lists.list import ListId, List
+from amdb.domain.entities.custom_list.custom_list import CustomListId, CustomList
 from amdb.domain.entities.user.profile import Profile
 
 
-class CreateList(Service):
+class CreateCustomList(Service):
     def __call__(
         self,
         *,
         profile: Profile,
-        id: ListId,
+        id: CustomListId,
         title: str,
         is_private: bool,
         created_at: datetime,
         description: Optional[str] = None,
-    ) -> List:
-        return List(
+    ) -> CustomList:
+        return CustomList(
             id=id,
             user_id=profile.user_id,
             title=title,

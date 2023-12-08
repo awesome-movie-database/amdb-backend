@@ -3,11 +3,11 @@ from datetime import datetime
 
 from amdb.domain.entities.base import Entity
 from amdb.domain.entities.movie.movie import MovieId
-from .list import ListId
+from .custom_list import CustomListId
 
 
 @dataclass(slots=True)
-class ListMovie(Entity):
-    list_id: ListId
+class CustomListMovie(Entity):
+    custom_list_id: CustomListId
     movie_id: MovieId
     created_at: datetime

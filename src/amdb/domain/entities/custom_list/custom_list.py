@@ -7,12 +7,12 @@ from amdb.domain.entities.base import Entity
 from amdb.domain.entities.user.user import UserId
 
 
-ListId = NewType("ListId", UUID)
+CustomListId = NewType("CustomListId", UUID)
 
 
 @dataclass(slots=True)
-class List(Entity):
-    id: ListId
+class CustomList(Entity):
+    id: CustomListId
     user_id: UserId
     title: str
     is_private: bool
