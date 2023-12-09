@@ -12,12 +12,12 @@ class AddMovieToCustomList(Service):
         *,
         custom_list: CustomList,
         movie: Movie,
-        created_at: datetime,
+        timestamp: datetime,
     ) -> CustomListMovie:
-        custom_list.updated_at = created_at
+        custom_list.updated_at = timestamp
 
         return CustomListMovie(
             custom_list_id=custom_list.id,
             movie_id=movie.id,
-            created_at=created_at,
+            created_at=timestamp,
         )

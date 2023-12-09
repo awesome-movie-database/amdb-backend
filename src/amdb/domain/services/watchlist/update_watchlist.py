@@ -10,7 +10,7 @@ class UpdateWatchlist(Service):
         *,
         watchlist: Watchlist,
         is_private: bool,
-        updated_at: datetime,
+        timestamp: datetime,
     ) -> None:
         watchlist.is_private = is_private
-        watchlist.updated_at = updated_at
+        watchlist.updated_at = timestamp

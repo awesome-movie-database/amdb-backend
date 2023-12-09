@@ -10,7 +10,7 @@ class UpdateFavourites(Service):
         *,
         favourites: Favourites,
         is_private: bool,
-        updated_at: datetime,
+        timestamp: datetime,
     ) -> None:
         favourites.is_private = is_private
-        favourites.updated_at = updated_at
+        favourites.updated_at = timestamp

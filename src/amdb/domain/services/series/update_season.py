@@ -14,14 +14,14 @@ class UpdateSeriesSeason(Service):
         *,
         series: Series,
         season: SeriesSeason,
-        updated_at: datetime,
+        timestamp: datetime,
         number: Union[ProductionStatus, Unset] = unset,
         release_date: Union[Date, None, Unset] = unset,
         end_date: Union[Date, None, Unset] = unset,
         is_ongoing: Union[bool, None, Unset] = unset,
         production_status: Union[ProductionStatus, None, Unset] = unset,
     ) -> None:
-        series.updated_at = updated_at
+        series.updated_at = timestamp
 
         self._update_entity(
             entity=season,
@@ -30,5 +30,5 @@ class UpdateSeriesSeason(Service):
             end_date=end_date,
             is_ongoing=is_ongoing,
             production_status=production_status,
-            updated_at=updated_at,
+            updated_at=timestamp,
         )

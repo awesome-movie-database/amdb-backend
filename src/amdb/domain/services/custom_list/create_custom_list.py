@@ -14,7 +14,7 @@ class CreateCustomList(Service):
         id: CustomListId,
         title: str,
         is_private: bool,
-        created_at: datetime,
+        timestamp: datetime,
         description: Optional[str] = None,
     ) -> CustomList:
         return CustomList(
@@ -22,7 +22,7 @@ class CreateCustomList(Service):
             user_id=profile.user_id,
             title=title,
             is_private=is_private,
-            created_at=created_at,
+            created_at=timestamp,
             description=description,
             updated_at=None,
         )

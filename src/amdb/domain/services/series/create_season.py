@@ -14,14 +14,14 @@ class CreateSeriesSeason(Service):
         *,
         series: Series,
         number: int,
-        created_at: datetime,
+        timestamp: datetime,
         release_date: Optional[Date] = None,
         end_date: Optional[Date] = None,
         is_ongoing: Optional[bool] = None,
         production_status: Optional[ProductionStatus] = None,
         budget: Optional[Money] = None,
     ) -> SeriesSeason:
-        series.updated_at = created_at
+        series.updated_at = timestamp
 
         return SeriesSeason(
             series_id=series.id,
@@ -29,7 +29,7 @@ class CreateSeriesSeason(Service):
             rating=0,
             rating_count=0,
             genres=[],
-            created_at=created_at,
+            created_at=timestamp,
             runtime=None,
             release_date=release_date,
             end_date=end_date,

@@ -12,12 +12,12 @@ class AddSeriesToFavourites(Service):
         *,
         favourites: Favourites,
         series: Series,
-        created_at: datetime,
+        timestamp: datetime,
     ) -> FavouriteSeries:
-        favourites.updated_at = created_at
+        favourites.updated_at = timestamp
 
         return FavouriteSeries(
             favourites_id=favourites.id,
             series_id=series.id,
-            created_at=created_at,
+            created_at=timestamp,
         )

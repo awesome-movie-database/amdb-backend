@@ -11,7 +11,7 @@ class UpdateCustomList(Service):
         self,
         *,
         custom_list: CustomList,
-        updated_at: datetime,
+        timestamp: datetime,
         title: Union[str, Unset] = unset,
         description: Union[str, None, Unset] = unset,
         is_private: Union[bool, Unset] = unset,
@@ -21,5 +21,5 @@ class UpdateCustomList(Service):
             title=title,
             description=description,
             is_private=is_private,
-            updated_at=updated_at,
+            updated_at=timestamp,
         )

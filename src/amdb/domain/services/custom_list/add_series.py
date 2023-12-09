@@ -12,12 +12,12 @@ class AddSeriesToList(Service):
         *,
         custom_list: CustomList,
         series: Series,
-        created_at: datetime,
+        timestamp: datetime,
     ) -> CustomListSeries:
-        custom_list.updated_at = created_at
+        custom_list.updated_at = timestamp
 
         return CustomListSeries(
             custom_list_id=custom_list.id,
             series_id=series.id,
-            created_at=created_at,
+            created_at=timestamp,
         )

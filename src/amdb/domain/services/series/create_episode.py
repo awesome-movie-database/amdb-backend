@@ -17,7 +17,7 @@ class CreateSeriesEpisode(Service):
         series: Series,
         season: SeriesSeason,
         number: int,
-        created_at: datetime,
+        timestamp: datetime,
         genres: Optional[list[Genre]] = None,
         directors: Optional[list[Person]] = None,
         art_directors: Optional[list[Person]] = None,
@@ -36,8 +36,8 @@ class CreateSeriesEpisode(Service):
         imdb_rating: Optional[float] = None,
         imdb_rating_count: Optional[int] = None,
     ) -> SeriesEpisode:
-        series.updated_at = created_at
-        season.updated_at = created_at
+        series.updated_at = timestamp
+        season.updated_at = timestamp
 
         self._update_series_and_series_season_genres(
             series=series,
@@ -57,35 +57,35 @@ class CreateSeriesEpisode(Service):
 
         director_ids = self._update_persons_and_get_ids(
             persons=directors or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         art_director_ids = self._update_persons_and_get_ids(
             persons=art_directors or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         casting_director_ids = self._update_persons_and_get_ids(
             persons=casting_directors or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         composer_ids = self._update_persons_and_get_ids(
             persons=composers or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         operator_ids = self._update_persons_and_get_ids(
             persons=operators or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         producer_ids = self._update_persons_and_get_ids(
             persons=producers or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         editor_ids = self._update_persons_and_get_ids(
             persons=editors or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         screenwiter_ids = self._update_persons_and_get_ids(
             persons=screenwriters or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
 
         return SeriesEpisode(
@@ -103,7 +103,7 @@ class CreateSeriesEpisode(Service):
             producer_ids=producer_ids,
             editor_ids=editor_ids,
             screenwriter_ids=screenwiter_ids,
-            created_at=created_at,
+            created_at=timestamp,
             runtime=runtime,
             release_date=release_date,
             production_status=production_status,

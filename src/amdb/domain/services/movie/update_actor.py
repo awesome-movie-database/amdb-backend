@@ -15,12 +15,12 @@ class UpdateMovieActor(Service):
         actor: MovieActor,
         movie: Movie,
         person: Person,
-        updated_at: datetime,
+        timestamp: datetime,
         role: Union[str, None, Unset] = unset,
         is_star: Union[bool, None, Unset] = unset,
     ) -> None:
-        movie.updated_at = updated_at
-        person.updated_at = updated_at
+        movie.updated_at = timestamp
+        person.updated_at = timestamp
 
         self._update_entity(
             entity=actor,

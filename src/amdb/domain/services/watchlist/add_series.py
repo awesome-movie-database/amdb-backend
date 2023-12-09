@@ -12,12 +12,12 @@ class AddSeriesToWatchlist(Service):
         *,
         watchlist: Watchlist,
         series: Series,
-        created_at: datetime,
+        timestamp: datetime,
     ) -> WatchlistSeries:
-        watchlist.updated_at = created_at
+        watchlist.updated_at = timestamp
 
         return WatchlistSeries(
             watchlist_id=watchlist.id,
             series_id=series.id,
-            created_at=created_at,
+            created_at=timestamp,
         )

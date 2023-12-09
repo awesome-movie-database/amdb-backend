@@ -12,10 +12,10 @@ class CreateRelative(Service):
         person: Person,
         relative: Person,
         type: RelativeType,
-        created_at: datetime,
+        timestamp: datetime,
     ) -> Relative:
-        person.updated_at = created_at
-        relative.updated_at = created_at
+        person.updated_at = timestamp
+        relative.updated_at = timestamp
 
         return Relative(
             person_id=person.id,

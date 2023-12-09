@@ -12,12 +12,12 @@ class AddMovieToWatchlist(Service):
         *,
         watchlist: Watchlist,
         movie: Movie,
-        created_at: datetime,
+        timestamp: datetime,
     ) -> WatchlistMovie:
-        watchlist.updated_at = created_at
+        watchlist.updated_at = timestamp
 
         return WatchlistMovie(
             watchlist_id=watchlist.id,
             movie_id=movie.id,
-            created_at=created_at,
+            created_at=timestamp,
         )

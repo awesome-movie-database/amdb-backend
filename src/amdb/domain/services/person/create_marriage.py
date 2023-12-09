@@ -16,16 +16,16 @@ class CreateMarriage(Service):
         children: list[Person],
         status: MarriageStatus,
         start_date: Date,
-        created_at: datetime,
+        timestamp: datetime,
         end_date: Optional[Date] = None,
     ) -> Marriage:
-        husband.updated_at = created_at
-        wife.updated_at = created_at
+        husband.updated_at = timestamp
+        wife.updated_at = timestamp
 
         child_ids = []
         for child in children:
             child_ids.append(child.id)
-            child.updated_at = created_at
+            child.updated_at = timestamp
 
         return Marriage(
             husband_id=husband.id,

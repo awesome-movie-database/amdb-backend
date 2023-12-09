@@ -22,21 +22,21 @@ class UpdateMarriage(Service):
         marriage: Marriage,
         husband: Person,
         wife: Person,
-        updated_at: datetime,
+        timestamp: datetime,
         children: Union[Children, Unset] = unset,
         status: Union[MarriageStatus, Unset] = unset,
         start_date: Union[Date, Unset] = unset,
         end_date: Union[Date, None, Unset] = unset,
     ) -> None:
-        husband.updated_at = updated_at
-        wife.updated_at = updated_at
+        husband.updated_at = timestamp
+        wife.updated_at = timestamp
 
         if children is not unset:
             child_ids = [child.id for child in children.new_children]
             self._update_children(
                 old_children=children.old_children,
                 new_children=children.new_children,
-                updated_at=updated_at,
+                updated_at=timestamp,
             )
         else:
             child_ids = marriage.child_ids

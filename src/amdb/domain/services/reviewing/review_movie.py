@@ -18,7 +18,7 @@ class ReviewMovie(Service):
         title: str,
         content: str,
         is_approved: bool,
-        created_at: datetime,
+        timestamp: datetime,
     ) -> MovieReview:
         profile.movie_reviews += 1
 
@@ -35,5 +35,5 @@ class ReviewMovie(Service):
             likes=0,
             dislikes=0,
             is_approved=is_approved,
-            created_at=created_at,
+            created_at=timestamp,
         )

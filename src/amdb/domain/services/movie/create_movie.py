@@ -14,7 +14,7 @@ class CreateMovie(Service):
         *,
         id: MovieId,
         title: MovieTitle,
-        created_at: datetime,
+        timestamp: datetime,
         genres: Optional[list[Genre]] = None,
         countries: Optional[list[str]] = None,
         directors: Optional[list[Person]] = None,
@@ -44,35 +44,35 @@ class CreateMovie(Service):
     ) -> Movie:
         director_ids = self._update_persons_and_get_ids(
             persons=directors or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         art_director_ids = self._update_persons_and_get_ids(
             persons=art_directors or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         casting_director_ids = self._update_persons_and_get_ids(
             persons=casting_directors or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         composer_ids = self._update_persons_and_get_ids(
             persons=composers or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         operator_ids = self._update_persons_and_get_ids(
             persons=operators or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         producer_ids = self._update_persons_and_get_ids(
             persons=producers or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         editor_ids = self._update_persons_and_get_ids(
             persons=editors or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
         screenwiter_ids = self._update_persons_and_get_ids(
             persons=screenwriters or [],
-            updated_at=created_at,
+            updated_at=timestamp,
         )
 
         return Movie(
@@ -90,7 +90,7 @@ class CreateMovie(Service):
             producer_ids=producer_ids,
             editor_ids=editor_ids,
             screenwriter_ids=screenwiter_ids,
-            created_at=created_at,
+            created_at=timestamp,
             runtime=runtime,
             release_date=release_date,
             production_status=production_status,

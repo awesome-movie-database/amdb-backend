@@ -21,7 +21,7 @@ class RateSeriesEpisode(Service):
         profile: Profile,
         rating: Rating,
         is_counted: Literal[True],
-        created_at: datetime,
+        timestamp: datetime,
     ) -> SeriesEpisodeRating:
         ...
 
@@ -33,7 +33,7 @@ class RateSeriesEpisode(Service):
         profile: Profile,
         rating: Rating,
         is_counted: Literal[False],
-        created_at: datetime,
+        timestamp: datetime,
     ) -> SeriesEpisodeRating:
         ...
 
@@ -44,7 +44,7 @@ class RateSeriesEpisode(Service):
         profile: Profile,
         rating: Rating,
         is_counted: bool,
-        created_at: datetime,
+        timestamp: datetime,
         series: Optional[Series] = None,
         season: Optional[SeriesSeason] = None,
     ) -> SeriesEpisodeRating:
@@ -71,7 +71,7 @@ class RateSeriesEpisode(Service):
             user_id=profile.user_id,
             rating=rating,
             is_counted=is_counted,
-            created_at=created_at,
+            created_at=timestamp,
         )
 
     def _add_rating_to_series(

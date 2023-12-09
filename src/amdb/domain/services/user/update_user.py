@@ -12,7 +12,7 @@ class UpdateUser(Service):
         self,
         *,
         user: User,
-        updated_at: datetime,
+        timestamp: datetime,
         name: Union[UserName, Unset] = unset,
         password: Union[str, Unset] = unset,
         sex: Union[Sex, None, Unset] = unset,
@@ -26,5 +26,5 @@ class UpdateUser(Service):
             sex=sex,
             birth_date=birth_date,
             location=location,
-            updated_at=updated_at,
+            updated_at=timestamp,
         )

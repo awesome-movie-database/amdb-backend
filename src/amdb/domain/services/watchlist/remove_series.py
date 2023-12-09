@@ -9,6 +9,6 @@ class RemoveSeriesFromWatchlist(Service):
         self,
         *,
         watchlist: Watchlist,
-        updated_at: datetime,
+        timestamp: datetime,
     ) -> None:
-        watchlist.updated_at = updated_at
+        watchlist.updated_at = timestamp

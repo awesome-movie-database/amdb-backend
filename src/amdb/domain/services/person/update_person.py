@@ -12,7 +12,7 @@ class UpdatePerson(Service):
         self,
         *,
         person: Person,
-        updated_at: datetime,
+        timestamp: datetime,
         name: Union[PersonName, Unset] = unset,
         sex: Union[Sex, None, Unset] = unset,
         birth_date: Union[Date, None, Unset] = unset,
@@ -28,5 +28,5 @@ class UpdatePerson(Service):
             birth_place=birth_place,
             death_date=death_date,
             death_place=death_place,
-            updated_at=updated_at,
+            updated_at=timestamp,
         )

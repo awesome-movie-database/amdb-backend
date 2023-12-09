@@ -13,12 +13,12 @@ class CreateMovieActor(Service):
         *,
         movie: Movie,
         person: Person,
-        created_at: datetime,
+        timestamp: datetime,
         role: Optional[str] = None,
         is_star: Optional[bool] = None,
     ) -> MovieActor:
-        movie.updated_at = created_at
-        person.updated_at = created_at
+        movie.updated_at = timestamp
+        person.updated_at = timestamp
 
         return MovieActor(
             movie_id=movie.id,

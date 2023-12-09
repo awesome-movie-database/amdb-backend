@@ -62,7 +62,7 @@ class UpdateMovie(Service):
         self,
         *,
         movie: Movie,
-        updated_at: datetime,
+        timestamp: datetime,
         title: Union[MovieTitle, Unset] = unset,
         genres: Union[list[Genre], Unset] = unset,
         countries: Union[list[str], Unset] = unset,
@@ -96,7 +96,7 @@ class UpdateMovie(Service):
             self._update_persons(
                 old_persons=directors.old_directors,
                 new_persons=directors.new_directors,
-                updated_at=updated_at,
+                updated_at=timestamp,
             )
         else:
             director_ids = movie.director_ids
@@ -108,7 +108,7 @@ class UpdateMovie(Service):
             self._update_persons(
                 old_persons=art_directors.old_art_directors,
                 new_persons=art_directors.new_art_directors,
-                updated_at=updated_at,
+                updated_at=timestamp,
             )
         else:
             art_director_ids = movie.art_director_ids
@@ -120,7 +120,7 @@ class UpdateMovie(Service):
             self._update_persons(
                 old_persons=casting_directors.old_casting_directors,
                 new_persons=casting_directors.new_casting_directors,
-                updated_at=updated_at,
+                updated_at=timestamp,
             )
         else:
             casting_director_ids = movie.casting_director_ids
@@ -130,7 +130,7 @@ class UpdateMovie(Service):
             self._update_persons(
                 old_persons=composers.old_composers,
                 new_persons=composers.new_composers,
-                updated_at=updated_at,
+                updated_at=timestamp,
             )
         else:
             composer_ids = movie.composer_ids
@@ -140,7 +140,7 @@ class UpdateMovie(Service):
             self._update_persons(
                 old_persons=operators.old_operators,
                 new_persons=operators.new_operators,
-                updated_at=updated_at,
+                updated_at=timestamp,
             )
         else:
             operator_ids = movie.operator_ids
@@ -150,7 +150,7 @@ class UpdateMovie(Service):
             self._update_persons(
                 old_persons=producers.old_producers,
                 new_persons=producers.new_producers,
-                updated_at=updated_at,
+                updated_at=timestamp,
             )
         else:
             producer_ids = movie.producer_ids
@@ -160,7 +160,7 @@ class UpdateMovie(Service):
             self._update_persons(
                 old_persons=editors.old_editors,
                 new_persons=editors.new_editors,
-                updated_at=updated_at,
+                updated_at=timestamp,
             )
         else:
             editor_ids = movie.editor_ids
@@ -172,7 +172,7 @@ class UpdateMovie(Service):
             self._update_persons(
                 old_persons=screenwriters.old_screenwriters,
                 new_persons=screenwriters.new_screenwriters,
-                updated_at=updated_at,
+                updated_at=timestamp,
             )
         else:
             screenwriter_ids = movie.screenwriter_ids
@@ -206,7 +206,7 @@ class UpdateMovie(Service):
             kinopoisk_id=kinopoisk_id,
             kinopoisk_rating=kinopoisk_rating,
             kinopoisk_vote_count=kinopoisk_rating_count,
-            updated_at=updated_at,
+            updated_at=timestamp,
         )
 
     def _update_persons(

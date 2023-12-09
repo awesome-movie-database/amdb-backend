@@ -12,12 +12,12 @@ class GiveAchievement(Service):
         *,
         profile: Profile,
         achievement: Achievement,
-        created_at: datetime,
+        timestamp: datetime,
     ) -> GainedAchievement:
         profile.achievements += 1
 
         return GainedAchievement(
             achievement_id=achievement.id,
             user_id=profile.user_id,
-            created_at=created_at,
+            created_at=timestamp,
         )

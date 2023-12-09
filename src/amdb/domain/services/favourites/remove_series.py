@@ -9,6 +9,6 @@ class RemoveSeriesFromFavourites(Service):
         self,
         *,
         favourites: Favourites,
-        updated_at: datetime,
+        timestamp: datetime,
     ) -> None:
-        favourites.updated_at = updated_at
+        favourites.updated_at = timestamp

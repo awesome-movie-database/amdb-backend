@@ -12,12 +12,12 @@ class AddMovieToFavourites(Service):
         *,
         favourites: Favourites,
         movie: Movie,
-        created_at: datetime,
+        timestamp: datetime,
     ) -> FavouriteMovie:
-        favourites.updated_at = created_at
+        favourites.updated_at = timestamp
 
         return FavouriteMovie(
             favourites_id=favourites.id,
             movie_id=movie.id,
-            created_at=created_at,
+            created_at=timestamp,
         )

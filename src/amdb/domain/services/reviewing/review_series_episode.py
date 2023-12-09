@@ -21,7 +21,7 @@ class ReviewSeriesEpisode(Service):
         title: str,
         content: str,
         is_approved: bool,
-        created_at: datetime,
+        timestamp: datetime,
     ) -> SeriesEpisodeReview:
         profile.series_episode_reviews += 1
 
@@ -40,5 +40,5 @@ class ReviewSeriesEpisode(Service):
             likes=0,
             dislikes=0,
             is_approved=is_approved,
-            created_at=created_at,
+            created_at=timestamp,
         )

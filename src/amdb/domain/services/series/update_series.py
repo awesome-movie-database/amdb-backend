@@ -13,7 +13,7 @@ class UpdateSeries(Service):
         self,
         *,
         series: Series,
-        updated_at: datetime,
+        timestamp: datetime,
         title: Union[SeriesTitle, Unset] = unset,
         genres: Union[list[Genre], Unset] = unset,
         countries: Union[list[str], Unset] = unset,
@@ -57,7 +57,7 @@ class UpdateSeries(Service):
             kinopoisk_id=kinopoisk_id,
             kinopoisk_rating=kinopoisk_rating,
             kinopoisk_rating_count=kinopoisk_rating_count,
-            updated_at=updated_at,
+            updated_at=timestamp,
         )
 
     def _get_updated_series_genres(

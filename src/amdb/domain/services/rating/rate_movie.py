@@ -15,7 +15,7 @@ class RateMovie(Service):
         profile: Profile,
         rating: Rating,
         is_counted: bool,
-        created_at: datetime,
+        timestamp: datetime,
     ) -> MovieRating:
         profile.movie_ratings += 1
 
@@ -30,7 +30,7 @@ class RateMovie(Service):
             user_id=profile.user_id,
             rating=rating,
             is_counted=is_counted,
-            created_at=created_at,
+            created_at=timestamp,
         )
 
     def _add_rating_to_movie(
