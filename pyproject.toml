@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "amdb-backend"
-version = "0.1.0"   
+version = "0.1.0"
 description = "Awesome Movie Database backend"
 authors = ["Madnoberson"]
 readme = "README.md"
+packages = [{include = "src/"}]
 license = "Apache"
 
 [tool.poetry.dependencies]
