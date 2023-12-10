@@ -4,7 +4,7 @@ from typing import Union
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.person.person import Person
-from amdb.domain.entities.movie.movie import Movie, MovieTitle
+from amdb.domain.entities.movie.movie import Movie
 from amdb.domain.constants import Unset, unset, Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
 
@@ -63,7 +63,7 @@ class UpdateMovie(Service):
         *,
         movie: Movie,
         timestamp: datetime,
-        title: Union[MovieTitle, Unset] = unset,
+        title: Union[str, Unset] = unset,
         genres: Union[list[Genre], Unset] = unset,
         countries: Union[list[str], Unset] = unset,
         directors: Union[Directors, Unset] = unset,

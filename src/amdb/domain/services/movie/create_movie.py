@@ -3,7 +3,7 @@ from typing import Optional
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.person.person import PersonId, Person
-from amdb.domain.entities.movie.movie import MovieId, MovieTitle, Movie
+from amdb.domain.entities.movie.movie import MovieId, Movie
 from amdb.domain.constants import Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
 
@@ -13,7 +13,7 @@ class CreateMovie(Service):
         self,
         *,
         id: MovieId,
-        title: MovieTitle,
+        title: str,
         timestamp: datetime,
         genres: Optional[list[Genre]] = None,
         countries: Optional[list[str]] = None,

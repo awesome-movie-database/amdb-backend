@@ -9,13 +9,12 @@ from amdb.domain.value_objects import Place
 
 
 UserId = NewType("UserId", UUID)
-UserName = NewType("UserName", str)
 
 
 @dataclass(slots=True)
 class User(Entity):
     id: UserId
-    name: UserName
+    name: str
     password: str
     is_active: bool
     is_verified: bool

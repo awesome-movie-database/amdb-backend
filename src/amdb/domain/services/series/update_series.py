@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Union
 
 from amdb.domain.services.base import Service
-from amdb.domain.entities.series.series import SeriesTitle, SeriesGenre, Series
+from amdb.domain.entities.series.series import SeriesGenre, Series
 from amdb.domain.constants import Unset, unset, Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Date
 from amdb.domain.exceptions.series import UpdateSeriesError
@@ -14,7 +14,7 @@ class UpdateSeries(Service):
         *,
         series: Series,
         timestamp: datetime,
-        title: Union[SeriesTitle, Unset] = unset,
+        title: Union[str, Unset] = unset,
         genres: Union[list[Genre], Unset] = unset,
         countries: Union[list[str], Unset] = unset,
         release_date: Union[Date, None, Unset] = unset,

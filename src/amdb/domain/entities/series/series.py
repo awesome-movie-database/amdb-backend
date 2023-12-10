@@ -9,7 +9,6 @@ from amdb.domain.value_objects import Date, Runtime, Money
 
 
 SeriesId = NewType("SeriesId", UUID)
-SeriesTitle = NewType("SeriesTitle", str)
 
 
 @dataclass(slots=True)
@@ -21,7 +20,7 @@ class SeriesGenre:
 @dataclass(slots=True)
 class Series(Entity):
     id: SeriesId
-    title: SeriesTitle
+    title: str
     rating: float
     rating_count: int
     genres: list[SeriesGenre]

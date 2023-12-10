@@ -2,7 +2,7 @@ from datetime import date, datetime
 from typing import Optional
 
 from amdb.domain.services.base import Service
-from amdb.domain.entities.user.user import UserId, UserName, User
+from amdb.domain.entities.user.user import UserId, User
 from amdb.domain.constants import Sex
 from amdb.domain.value_objects import Place
 
@@ -12,7 +12,7 @@ class CreateUser(Service):
         self,
         *,
         id: UserId,
-        name: UserName,
+        name: str,
         password: str,
         timestamp: datetime,
         email: Optional[str] = None,

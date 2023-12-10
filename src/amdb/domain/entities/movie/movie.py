@@ -10,13 +10,12 @@ from amdb.domain.value_objects import Date, Runtime, Money
 
 
 MovieId = NewType("MovieId", UUID)
-MovieTitle = NewType("MovieTitle", str)
 
 
 @dataclass(slots=True)
 class Movie(Entity):
     id: MovieId
-    title: MovieTitle
+    title: str
     rating: float
     rating_count: int
     genres: list[Genre]
