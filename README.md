@@ -8,3 +8,9 @@
         <img src="https://img.shields.io/badge/code_style-ruff-%236b00ff" alt="Code style">
     </a>
 </p>
+
+<p align="center">
+    <a href="/docs/architecture_log.md">Architecture Log</a>
+    <span> | </span>
+    <a href="/docs/CHANGELOG.md">Changelog</a>
+</p>
