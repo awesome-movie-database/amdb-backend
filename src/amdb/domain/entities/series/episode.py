@@ -3,7 +3,6 @@ from datetime import datetime
 from typing import Optional
 
 from amdb.domain.entities.base import Entity
-from amdb.domain.entities.person.person import PersonId
 from amdb.domain.constants import Genre, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
 from .series import SeriesId
@@ -17,14 +16,6 @@ class SeriesEpisode(Entity):
     rating: float
     rating_count: int
     genres: list[Genre]
-    director_ids: list[PersonId]
-    art_director_ids: list[PersonId]
-    casting_director_ids: list[PersonId]
-    composer_ids: list[PersonId]
-    operator_ids: list[PersonId]
-    producer_ids: list[PersonId]
-    editor_ids: list[PersonId]
-    screenwriter_ids: list[PersonId]
     created_at: datetime
 
     runtime: Optional[Runtime]

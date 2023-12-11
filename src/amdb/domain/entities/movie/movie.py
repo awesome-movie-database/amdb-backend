@@ -4,7 +4,6 @@ from typing import Optional, NewType
 from uuid import UUID
 
 from amdb.domain.entities.base import Entity
-from amdb.domain.entities.person.person import PersonId
 from amdb.domain.constants import Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
 
@@ -20,14 +19,6 @@ class Movie(Entity):
     rating_count: int
     genres: list[Genre]
     countries: list[str]
-    director_ids: list[PersonId]
-    art_director_ids: list[PersonId]
-    casting_director_ids: list[PersonId]
-    composer_ids: list[PersonId]
-    operator_ids: list[PersonId]
-    producer_ids: list[PersonId]
-    editor_ids: list[PersonId]
-    screenwriter_ids: list[PersonId]
     created_at: datetime
 
     runtime: Optional[Runtime]

@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Optional
 
 from amdb.domain.services.base import Service
-from amdb.domain.entities.person.person import PersonId, Person
 from amdb.domain.entities.movie.movie import MovieId, Movie
 from amdb.domain.constants import Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
@@ -17,14 +16,6 @@ class CreateMovie(Service):
         timestamp: datetime,
         genres: Optional[list[Genre]] = None,
         countries: Optional[list[str]] = None,
-        directors: Optional[list[Person]] = None,
-        art_directors: Optional[list[Person]] = None,
-        casting_directors: Optional[list[Person]] = None,
-        composers: Optional[list[Person]] = None,
-        operators: Optional[list[Person]] = None,
-        producers: Optional[list[Person]] = None,
-        editors: Optional[list[Person]] = None,
-        screenwriters: Optional[list[Person]] = None,
         runtime: Optional[Runtime] = None,
         release_date: Optional[Date] = None,
         production_status: Optional[ProductionStatus] = None,
@@ -42,39 +33,6 @@ class CreateMovie(Service):
         kinopoisk_rating: Optional[float] = None,
         kinopoisk_rating_count: Optional[int] = None,
     ) -> Movie:
-        director_ids = self._update_persons_and_get_ids(
-            persons=directors or [],
-            updated_at=timestamp,
-        )
-        art_director_ids = self._update_persons_and_get_ids(
-            persons=art_directors or [],
-            updated_at=timestamp,
-        )
-        casting_director_ids = self._update_persons_and_get_ids(
-            persons=casting_directors or [],
-            updated_at=timestamp,
-        )
-        composer_ids = self._update_persons_and_get_ids(
-            persons=composers or [],
-            updated_at=timestamp,
-        )
-        operator_ids = self._update_persons_and_get_ids(
-            persons=operators or [],
-            updated_at=timestamp,
-        )
-        producer_ids = self._update_persons_and_get_ids(
-            persons=producers or [],
-            updated_at=timestamp,
-        )
-        editor_ids = self._update_persons_and_get_ids(
-            persons=editors or [],
-            updated_at=timestamp,
-        )
-        screenwiter_ids = self._update_persons_and_get_ids(
-            persons=screenwriters or [],
-            updated_at=timestamp,
-        )
-
         return Movie(
             id=id,
             title=title,
@@ -82,14 +40,6 @@ class CreateMovie(Service):
             rating_count=0,
             genres=genres or [],
             countries=countries or [],
-            director_ids=director_ids,
-            art_director_ids=art_director_ids,
-            casting_director_ids=casting_director_ids,
-            composer_ids=composer_ids,
-            operator_ids=operator_ids,
-            producer_ids=producer_ids,
-            editor_ids=editor_ids,
-            screenwriter_ids=screenwiter_ids,
             created_at=timestamp,
             runtime=runtime,
             release_date=release_date,
@@ -109,16 +59,3 @@ class CreateMovie(Service):
             kinopoisk_rating_count=kinopoisk_rating_count,
             updated_at=None,
         )
-
-    def _update_persons_and_get_ids(
-        self,
-        *,
-        persons: list[Person],
-        updated_at: datetime,
-    ) -> list[PersonId]:
-        person_ids = []
-        for person in persons:
-            person_ids.append(person.id)
-            person.updated_at = updated_at
-
-        return person_ids
