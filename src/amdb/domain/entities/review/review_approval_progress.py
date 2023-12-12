@@ -6,7 +6,7 @@ from amdb.domain.entities.base import Entity
 
 
 @dataclass(slots=True)
-class ReviewApprovalPolicy(Entity):
+class ReviewApprovalProgress(Entity):
     is_verified: bool
     time_from_creating: datetime
     approved_review_count: int

@@ -6,7 +6,7 @@ from amdb.domain.entities.base import Entity
 
 
 @dataclass(slots=True)
-class RatingCountingPolicy(Entity):
+class RatingCountingProgress(Entity):
     is_verified: bool
     time_from_creating: timedelta
     rating_count: int
