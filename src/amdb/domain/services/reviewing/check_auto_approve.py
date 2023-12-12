@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 
 from amdb.domain.services.base import Service
-from amdb.domain.entities.access_policy import AccessPolicy
+from amdb.domain.entities.user.access_policy import AccessPolicy
 from amdb.domain.entities.user.profile import Profile
 
 
