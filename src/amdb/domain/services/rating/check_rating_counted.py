@@ -12,7 +12,7 @@ class CheckRatingCounted(Service):
         if (
             required_rating_counting_progress.is_verified
             and not current_rating_counting_progress.is_verified
-            and required_rating_counting_progress.time_from_verification  # type: ignore
+            or required_rating_counting_progress.time_from_verification  # type: ignore
             > current_rating_counting_progress.time_from_verification
         ):
             return False

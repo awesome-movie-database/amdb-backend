@@ -12,7 +12,7 @@ class CheckReviewApproved(Service):
         if (
             required_review_approval_progress.is_verified
             and not current_review_approval_progress.is_verified
-            and required_review_approval_progress.time_from_verification  # type: ignore
+            or required_review_approval_progress.time_from_verification  # type: ignore
             > current_review_approval_progress.time_from_verification
         ):
             return False
