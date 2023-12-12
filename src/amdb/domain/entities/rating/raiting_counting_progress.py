@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Optional
 
 from amdb.domain.entities.base import Entity
@@ -11,4 +11,4 @@ class RatingCountingProgress(Entity):
     time_from_creating: timedelta
     rating_count: int
 
-    time_from_verification: Optional[datetime]
+    time_from_verification: Optional[timedelta]

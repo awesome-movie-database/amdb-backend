@@ -1,5 +1,5 @@
 from amdb.domain.services.base import Service
-from amdb.domain.entities.rating.raiting_counting_policy import RatingCountingProgress
+from amdb.domain.entities.rating.raiting_counting_progress import RatingCountingProgress
 
 
 class CheckRatingCounted(Service):
