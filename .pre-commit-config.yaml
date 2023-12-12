@@ -16,3 +16,4 @@ repos:
     rev: v1.7.1
     hooks:
       - id: mypy
+        files: ^src/
