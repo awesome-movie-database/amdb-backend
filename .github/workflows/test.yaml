@@ -1,5 +1,5 @@
-name: lint
-run-name: linting
+name: test
+run-name: testing
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
     paths: ["*.py"]
 
 jobs:
-  format-and-lint:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -21,7 +21,5 @@ jobs:
           python-version: "3.10"
       - name: install dependencies
         run: pipx install poetry && poetry install
-      - name: run format
-        run: ./scripts/format.sh
-      - name: run lint
-        run: ./scripts/lint.sh
+      - name: run test
+        run: ./scripts/test.sh
