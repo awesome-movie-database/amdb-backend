@@ -1,0 +1,27 @@
+name: lint
+run-name: linting
+
+on:
+  push:
+    branches: [main]
+    paths: ["*.py"]
+  pull_request:
+    types: [opened]
+    paths: ["*.py"]
+
+jobs:
+  format-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: install python3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: install dependencies
+        run: pipx install poetry & poetry install
+      - name: run format
+        run: ./scripts/format.sh
+      - name: run lint
+        run: ./scripts/lint.sh
