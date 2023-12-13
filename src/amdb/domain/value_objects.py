@@ -150,6 +150,6 @@ class Rating:
     value: float
 
     def __post_init__(self) -> None:
-        if 0 >= self.value > 10 and self.value % 0.5 != 0:
+        if 0 >= self.value > 10 or self.value % 0.5 != 0:
             msg = "Rating must be greater than 0, less than or equal to 10 and a multiple of 0.5"
             raise ValueError(msg)
