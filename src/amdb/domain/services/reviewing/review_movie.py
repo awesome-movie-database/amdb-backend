@@ -4,7 +4,7 @@ from amdb.domain.services.base import Service
 from amdb.domain.entities.movie.movie import Movie
 from amdb.domain.entities.user.profile import Profile
 from amdb.domain.entities.review.movie_review import MovieReviewId, MovieReview
-from amdb.domain.constants import ReviewType
+from amdb.domain.constants.common import ReviewType
 
 
 class ReviewMovie(Service):

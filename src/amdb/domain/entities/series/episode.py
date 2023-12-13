@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 
 from amdb.domain.entities.base import Entity
-from amdb.domain.constants import Genre, ProductionStatus
+from amdb.domain.constants.common import Genre, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
 from .series import SeriesId
 

@@ -3,9 +3,10 @@ from typing import Union
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.series.series import SeriesGenre, Series
-from amdb.domain.constants import Unset, unset, Genre, MPAA, ProductionStatus
+from amdb.domain.constants.common import Unset, unset, Genre, MPAA, ProductionStatus
+from amdb.domain.constants.exceptions import CANNOT_REMOVE_GENRE_FROM_SERIES
 from amdb.domain.value_objects import Date
-from amdb.domain.exceptions.series import UpdateSeriesError
+from amdb.domain.exception import DomainError
 
 
 class UpdateSeries(Service):
@@ -72,7 +73,7 @@ class UpdateSeries(Service):
         for series_genre in series.genres:
             if series_genre.genre not in genres:
                 if series_genre.episode_count != 0:
-                    raise UpdateSeriesError()
+                    raise DomainError(CANNOT_REMOVE_GENRE_FROM_SERIES)
                 updated_series_genres.remove(series_genre)
 
         # Add genres

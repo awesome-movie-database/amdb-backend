@@ -1,8 +1,9 @@
 from amdb.domain.services.base import Service
 from amdb.domain.entities.movie.movie import Movie
 from amdb.domain.entities.rating.movie_rating import MovieRating
+from amdb.domain.constants.exceptions import MOVIE_RATING_ALREADY_COUNTED
 from amdb.domain.value_objects import Rating
-from amdb.domain.exceptions.rating import MovieRatingAlreadyCountedError
+from amdb.domain.exception import DomainError
 
 
 class CountMovieRating(Service):
@@ -13,7 +14,7 @@ class CountMovieRating(Service):
         movie: Movie,
     ) -> None:
         if movie_rating.is_counted:
-            raise MovieRatingAlreadyCountedError()
+            raise DomainError(MOVIE_RATING_ALREADY_COUNTED)
 
         self._add_rating_to_movie(
             movie=movie,

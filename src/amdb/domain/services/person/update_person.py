@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Union
 
 from amdb.domain.services.base import Service
-from amdb.domain.constants import Sex, Unset, unset
+from amdb.domain.constants.common import Sex, Unset, unset
 from amdb.domain.value_objects import Date, Place
 from amdb.domain.entities.person.person import PersonName, Person
 

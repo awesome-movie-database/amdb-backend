@@ -2,7 +2,7 @@ from amdb.domain.services.base import Service
 from amdb.domain.entities.review.movie_review import MovieReview
 from amdb.domain.entities.user.profile import Profile
 from amdb.domain.entities.vote.movie_review_vote import MovieReviewVote
-from amdb.domain.constants import VoteType
+from amdb.domain.constants.common import VoteType
 
 
 class UnvoteMovieReview(Service):

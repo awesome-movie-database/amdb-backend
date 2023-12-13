@@ -2,7 +2,8 @@ from datetime import datetime
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.user.user import User
-from amdb.domain.exceptions.user import UserAlreadyVerifiedError
+from amdb.domain.constants.exceptions import USER_ALREADY_VERIFIED
+from amdb.domain.exception import DomainError
 
 
 class VerifyUser(Service):
@@ -13,5 +14,5 @@ class VerifyUser(Service):
         timestamp: datetime,
     ) -> None:
         if user.is_verified:
-            raise UserAlreadyVerifiedError()
+            raise DomainError(USER_ALREADY_VERIFIED)
         user.verified_at = timestamp

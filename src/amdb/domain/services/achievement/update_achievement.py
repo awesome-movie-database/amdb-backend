@@ -2,7 +2,7 @@ from typing import Union
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.achievement.achievement import Achievement
-from amdb.domain.constants import Unset, unset
+from amdb.domain.constants.common import Unset, unset
 
 
 class UpdateAchievement(Service):

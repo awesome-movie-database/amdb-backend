@@ -4,7 +4,7 @@ from amdb.domain.services.base import Service
 from amdb.domain.entities.series.series import Series
 from amdb.domain.entities.user.profile import Profile
 from amdb.domain.entities.review.series_review import SeriesReviewId, SeriesReview
-from amdb.domain.constants import ReviewType
+from amdb.domain.constants.common import ReviewType
 
 
 class ReviewSeries(Service):

@@ -2,7 +2,7 @@ from amdb.domain.services.base import Service
 from amdb.domain.entities.review.series_season_review import SeriesSeasonReview
 from amdb.domain.entities.user.profile import Profile
 from amdb.domain.entities.vote.series_season_review_vote import SeriesSeasonReviewVote
-from amdb.domain.constants import VoteType
+from amdb.domain.constants.common import VoteType
 
 
 class UnvoteSeriesSeasonReview(Service):

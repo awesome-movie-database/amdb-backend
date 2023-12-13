@@ -5,7 +5,7 @@ from amdb.domain.services.base import Service
 from amdb.domain.entities.series.series import SeriesGenre, Series
 from amdb.domain.entities.series.season import SeriesSeasonGenre, SeriesSeason
 from amdb.domain.entities.series.episode import SeriesEpisode
-from amdb.domain.constants import Genre, ProductionStatus
+from amdb.domain.constants.common import Genre, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
 
 

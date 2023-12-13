@@ -3,7 +3,7 @@ from typing import Optional
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.user.user import UserId, User
-from amdb.domain.constants import Sex
+from amdb.domain.constants.common import Sex
 from amdb.domain.value_objects import Place
 
 

@@ -7,7 +7,7 @@ from amdb.domain.entities.review.series_episode_review import (
     SeriesEpisodeReviewId,
     SeriesEpisodeReview,
 )
-from amdb.domain.constants import ReviewType
+from amdb.domain.constants.common import ReviewType
 
 
 class ReviewSeriesEpisode(Service):

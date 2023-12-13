@@ -3,7 +3,7 @@ from typing import Optional
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.movie.movie import MovieId, Movie
-from amdb.domain.constants import Genre, MPAA, ProductionStatus
+from amdb.domain.constants.common import Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
 
 

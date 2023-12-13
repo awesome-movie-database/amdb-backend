@@ -4,7 +4,7 @@ from typing import Union
 from amdb.domain.services.base import Service
 from amdb.domain.entities.series.series import Series
 from amdb.domain.entities.series.season import SeriesSeason
-from amdb.domain.constants import Unset, unset, ProductionStatus
+from amdb.domain.constants.common import Unset, unset, ProductionStatus
 from amdb.domain.value_objects import Date
 
 

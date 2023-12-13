@@ -1,6 +1,6 @@
 from typing import Union, TypeVar, Any
 
-from amdb.domain.constants import Unset, unset
+from amdb.domain.constants.common import Unset, unset
 from amdb.domain.entities.base import Entity_T
 
 

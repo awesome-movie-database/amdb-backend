@@ -3,7 +3,7 @@ from typing import Union
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.user.user import User
-from amdb.domain.constants import Unset, unset, Sex
+from amdb.domain.constants.common import Unset, unset, Sex
 from amdb.domain.value_objects import Place
 
 

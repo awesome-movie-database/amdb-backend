@@ -3,7 +3,7 @@ from typing import Optional
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.series.series import SeriesId, SeriesGenre, Series
-from amdb.domain.constants import Genre, MPAA, ProductionStatus
+from amdb.domain.constants.common import Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Date, Money
 
 

@@ -6,7 +6,7 @@ from uuid import UUID
 from amdb.domain.entities.base import Entity
 from amdb.domain.entities.series.series import SeriesId
 from amdb.domain.entities.user.user import UserId
-from amdb.domain.constants import ReviewType
+from amdb.domain.constants.common import ReviewType
 
 
 SeriesEpisodeReviewId = NewType("SeriesEpisodeReviewId", UUID)

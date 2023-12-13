@@ -3,8 +3,9 @@ from amdb.domain.entities.series.series import Series
 from amdb.domain.entities.series.season import SeriesSeason
 from amdb.domain.entities.series.episode import SeriesEpisode
 from amdb.domain.entities.rating.series_episode_rating import SeriesEpisodeRating
+from amdb.domain.constants.exceptions import SERIES_EPISODE_ALREADY_COUNTED
 from amdb.domain.value_objects import Rating
-from amdb.domain.exceptions.rating import SeriesEpisodeRatingAlreadyCountedError
+from amdb.domain.exception import DomainError
 
 
 class CountSeriesEpisodeRating(Service):
@@ -17,7 +18,7 @@ class CountSeriesEpisodeRating(Service):
         episode: SeriesEpisode,
     ) -> None:
         if episode_rating.is_counted:
-            raise SeriesEpisodeRatingAlreadyCountedError()
+            raise DomainError(SERIES_EPISODE_ALREADY_COUNTED)
 
         self._add_rating_to_series(
             series=series,

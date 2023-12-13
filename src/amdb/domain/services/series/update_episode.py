@@ -1,62 +1,12 @@
-from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional, Union
 
 from amdb.domain.services.base import Service
-from amdb.domain.entities.person.person import Person
 from amdb.domain.entities.series.series import SeriesGenre, Series
 from amdb.domain.entities.series.season import SeriesSeasonGenre, SeriesSeason
 from amdb.domain.entities.series.episode import SeriesEpisode
-from amdb.domain.constants import Unset, unset, Genre, ProductionStatus
+from amdb.domain.constants.common import Unset, unset, Genre, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
-
-
-@dataclass(frozen=True, slots=True)
-class Directors:
-    old_directors: list[Person]
-    new_directors: list[Person]
-
-
-@dataclass(frozen=True, slots=True)
-class ArtDirectors:
-    old_art_directors: list[Person]
-    new_art_directors: list[Person]
-
-
-@dataclass(frozen=True, slots=True)
-class CastingDirectors:
-    old_casting_directors: list[Person]
-    new_casting_directors: list[Person]
-
-
-@dataclass(frozen=True, slots=True)
-class Composers:
-    old_composers: list[Person]
-    new_composers: list[Person]
-
-
-@dataclass(frozen=True, slots=True)
-class Operators:
-    old_operators: list[Person]
-    new_operators: list[Person]
-
-
-@dataclass(frozen=True, slots=True)
-class Producers:
-    old_producers: list[Person]
-    new_producers: list[Person]
-
-
-@dataclass(frozen=True, slots=True)
-class Editors:
-    old_editors: list[Person]
-    new_editors: list[Person]
-
-
-@dataclass(frozen=True, slots=True)
-class Screenwriters:
-    old_screenwriters: list[Person]
-    new_screenwriters: list[Person]
 
 
 class UpdateSeriesEpisode(Service):

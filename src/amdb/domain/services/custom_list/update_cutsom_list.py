@@ -3,7 +3,7 @@ from typing import Union
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.custom_list.custom_list import CustomList
-from amdb.domain.constants import Unset, unset
+from amdb.domain.constants.common import Unset, unset
 
 
 class UpdateCustomList(Service):

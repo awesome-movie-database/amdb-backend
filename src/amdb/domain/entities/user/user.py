@@ -4,7 +4,7 @@ from typing import Optional, NewType
 from uuid import UUID
 
 from amdb.domain.entities.base import Entity
-from amdb.domain.constants import Sex
+from amdb.domain.constants.common import Sex
 from amdb.domain.value_objects import Place
 
 

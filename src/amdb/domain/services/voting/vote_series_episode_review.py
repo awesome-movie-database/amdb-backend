@@ -2,8 +2,9 @@ from amdb.domain.services.base import Service
 from amdb.domain.entities.review.series_episode_review import SeriesEpisodeReview
 from amdb.domain.entities.user.profile import Profile
 from amdb.domain.entities.vote.series_episode_review_vote import SeriesEpisodeReviewVote
-from amdb.domain.constants import VoteType
-from amdb.domain.exceptions.review import SeriesEpisodeReviewNotApprovedError
+from amdb.domain.constants.common import VoteType
+from amdb.domain.constants.exceptions import SERIES_EPISODE_REVIEW_NOT_APPROVED
+from amdb.domain.exception import DomainError
 
 
 class VoteSeriesEpisodeReview(Service):
@@ -16,7 +17,7 @@ class VoteSeriesEpisodeReview(Service):
         type: VoteType,
     ) -> SeriesEpisodeReviewVote:
         if not episode_review.is_approved:
-            raise SeriesEpisodeReviewNotApprovedError()
+            raise DomainError(SERIES_EPISODE_REVIEW_NOT_APPROVED)
 
         voter_profile.given_votes += 1
         reviewer_profile.gained_votes += 1

@@ -5,7 +5,7 @@ from amdb.domain.services.base import Service
 from amdb.domain.entities.person.person import Person
 from amdb.domain.entities.movie.movie import Movie
 from amdb.domain.entities.movie.actor import MovieActor
-from amdb.domain.constants import Unset, unset
+from amdb.domain.constants.common import Unset, unset
 
 
 class UpdateMovieActor(Service):

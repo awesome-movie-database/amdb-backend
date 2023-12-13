@@ -4,7 +4,7 @@ from typing import Optional, NewType
 from uuid import UUID
 
 from amdb.domain.entities.base import Entity
-from amdb.domain.constants import Genre, MPAA, ProductionStatus
+from amdb.domain.constants.common import Genre, MPAA, ProductionStatus
 from amdb.domain.value_objects import Date, Runtime, Money
 
 
