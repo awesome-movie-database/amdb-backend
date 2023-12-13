@@ -4,10 +4,10 @@ run-name: linting
 on:
   push:
     branches: [main]
-    paths: ["**.py"]
+    paths: ["*.py"]
   pull_request:
     types: [opened]
-    paths: ["**.py"]
+    paths: ["*.py"]
 
 jobs:
   format-and-lint:
