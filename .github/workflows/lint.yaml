@@ -4,14 +4,14 @@ run-name: linting
 on:
   push:
     branches: [main]
-    paths: ["*.py"]
+    paths: ["src/**", "tests/**"]
   pull_request:
     types: [opened]
-    paths: ["*.py"]
+    paths: ["src/**", "tests/**"]
   workflow_dispatch:
 
 jobs:
-  format-and-lint:
+  format:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -24,5 +24,16 @@ jobs:
         run: pipx install poetry && poetry install
       - name: run format
         run: poetry run ./scripts/format.sh
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: install python3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: install dependencies
+        run: pipx install poetry && poetry install
       - name: run lint
         run: poetry run ./scripts/lint.sh
