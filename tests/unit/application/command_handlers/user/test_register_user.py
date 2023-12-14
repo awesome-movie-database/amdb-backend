@@ -20,8 +20,8 @@ def test_register_user(
     profile_gateway: ProfileGateway,
     unit_of_work: UnitOfWork,
 ) -> None:
-    user_gateway.check_exists_with_name = Mock(
-        return_value=False,
+    user_gateway.with_name = Mock(
+        return_value=None,
     )
     create_user: CreateUser = Mock(
         return_value=user,
@@ -47,14 +47,16 @@ def test_register_user(
 
 def test_register_user_raises_error_when_username_already_exists(
     user: User,
+    other_user: User,
     create_user: CreateUser,
     create_profile: CreateProfile,
     user_gateway: UserGateway,
     profile_gateway: ProfileGateway,
     unit_of_work: UnitOfWork,
 ) -> None:
-    user_gateway.check_exists_with_name = Mock(
-        return_value=True,
+    other_user.name = user.name
+    user_gateway.with_name = Mock(
+        return_value=other_user,
     )
 
     register_user_command = RegisterUserCommand(

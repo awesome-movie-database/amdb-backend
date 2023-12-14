@@ -24,6 +24,19 @@ USER_LOCATION = None
 USER_VERIFIED_AT = None
 USER_UPDATED_AT = None
 
+OTHER_USER_ID = UserId(uuid4())
+OTHER_USER_NAME = "JaneDoe"
+OTHER_USER_PASSWORD = "password"
+OTHER_USER_IS_ACTIVE = True
+OTHER_USER_IS_VERIFIED = False
+OTHER_USER_CREATED_AT = datetime.now(timezone.utc)
+OTHER_USER_EMAIL = None
+OTHER_USER_SEX = None
+OTHER_USER_BIRTH_DATE = None
+OTHER_USER_LOCATION = None
+OTHER_USER_VERIFIED_AT = None
+OTHER_USER_UPDATED_AT = None
+
 PROFILE_ACHIEVEMENTS = 0
 PROFILE_MOVIE_RATINGS = 0
 PROFILE_SERIES_EPISODE_RATINGS = 0
@@ -51,6 +64,24 @@ def user() -> User:
         location=USER_LOCATION,
         verified_at=USER_VERIFIED_AT,
         updated_at=USER_UPDATED_AT,
+    )
+
+
+@pytest.fixture
+def other_user() -> User:
+    return User(
+        id=OTHER_USER_ID,
+        name=OTHER_USER_NAME,
+        password=OTHER_USER_PASSWORD,
+        is_active=OTHER_USER_IS_ACTIVE,
+        is_verified=OTHER_USER_IS_VERIFIED,
+        created_at=OTHER_USER_CREATED_AT,
+        email=OTHER_USER_EMAIL,
+        sex=OTHER_USER_SEX,
+        birth_date=OTHER_USER_BIRTH_DATE,
+        location=OTHER_USER_LOCATION,
+        verified_at=OTHER_USER_VERIFIED_AT,
+        updated_at=OTHER_USER_UPDATED_AT,
     )
 
 

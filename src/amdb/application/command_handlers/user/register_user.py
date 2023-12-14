@@ -29,9 +29,10 @@ class RegisterUserHandler:
         self._unit_of_work = unit_of_work
 
     def execute(self, command: RegisterUserCommand) -> UserId:
-        if self._user_gateway.check_exists_with_name(
+        user = self._user_gateway.with_name(
             user_name=command.name,
-        ):
+        )
+        if user:
             raise ApplicationError(USER_NAME_ALREADY_EXISTS)
 
         user = self._create_user(

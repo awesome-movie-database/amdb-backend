@@ -29,8 +29,8 @@ def access_policy_gateway() -> InMemoryAccessPolicyGateway:
 @pytest.fixture
 def user_gateway() -> Annotated[UserGateway, Mock]:
     user_gateway_mock = Mock()
-    user_gateway_mock.check_with_name = Mock()
     user_gateway_mock.with_id = Mock()
+    user_gateway_mock.with_name = Mock()
     user_gateway_mock.save = Mock()
     user_gateway_mock.update = Mock()
     return user_gateway_mock
