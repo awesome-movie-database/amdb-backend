@@ -8,6 +8,7 @@ on:
   pull_request:
     types: [opened]
     paths: ["*.py"]
+  workflow_dispatch:
 
 jobs:
   format-and-lint:
