@@ -2,6 +2,10 @@ import pytest
 from datetime import datetime, timezone
 from uuid import uuid4
 
+from amdb.domain.services.user.access_concern import AccessConcern
+from amdb.domain.services.user.create_user import CreateUser
+from amdb.domain.services.user.update_user import UpdateUser
+from amdb.domain.services.user.create_profile import CreateProfile
 from amdb.domain.entities.user.user import UserId, User
 from amdb.domain.entities.user.profile import Profile
 
@@ -49,6 +53,21 @@ def user() -> User:
     )
 
 
+@pytest.fixture(scope="session")
+def access_concern() -> AccessConcern:
+    return AccessConcern()
+
+
+@pytest.fixture(scope="session")
+def create_user() -> CreateUser:
+    return CreateUser()
+
+
+@pytest.fixture(scope="session")
+def update_user() -> UpdateUser:
+    return UpdateUser()
+
+
 @pytest.fixture
 def profile() -> Profile:
     return Profile(
@@ -64,3 +83,8 @@ def profile() -> Profile:
         given_votes=PROFILE_GIVEN_VOTES,
         gained_votes=PROFILE_GAINED_VOTES,
     )
+
+
+@pytest.fixture(scope="session")
+def create_profile() -> CreateProfile:
+    return CreateProfile()

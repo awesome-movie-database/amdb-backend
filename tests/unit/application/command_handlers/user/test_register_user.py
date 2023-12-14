@@ -2,7 +2,6 @@ import pytest
 from unittest.mock import Mock
 
 from amdb.domain.entities.user.user import User
-from amdb.domain.entities.user.profile import Profile
 from amdb.domain.services.user.create_user import CreateUser
 from amdb.domain.services.user.create_profile import CreateProfile
 from amdb.application.common.interfaces.gateways.user.user import UserGateway
@@ -16,19 +15,16 @@ from amdb.application.command_handlers.user.register_user import RegisterUserHan
 
 def test_register_user(
     user: User,
-    profile: Profile,
+    create_profile: CreateProfile,
     user_gateway: UserGateway,
     profile_gateway: ProfileGateway,
     unit_of_work: UnitOfWork,
 ) -> None:
-    create_user: CreateUser = Mock(
-        return_value=user,
-    )
-    create_profile: CreateProfile = Mock(
-        return_value=profile,
-    )
     user_gateway.check_exists_with_name = Mock(
         return_value=False,
+    )
+    create_user: CreateUser = Mock(
+        return_value=user,
     )
 
     register_user_command = RegisterUserCommand(
@@ -51,12 +47,12 @@ def test_register_user(
 
 def test_register_user_raises_error_when_username_already_exists(
     user: User,
+    create_user: CreateUser,
+    create_profile: CreateProfile,
     user_gateway: UserGateway,
     profile_gateway: ProfileGateway,
     unit_of_work: UnitOfWork,
 ) -> None:
-    create_user: CreateUser = Mock()
-    create_profile: CreateProfile = Mock()
     user_gateway.check_exists_with_name = Mock(
         return_value=True,
     )
