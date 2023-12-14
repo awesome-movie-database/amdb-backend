@@ -10,6 +10,8 @@ from amdb.domain.entities.user.user import UserId, User
 from amdb.domain.entities.user.profile import Profile
 
 
+SYSTEM_USER_ID = uuid4()
+
 USER_ID = UserId(uuid4())
 USER_NAME = "JohnDoe"
 USER_PASSWORD = "password"
@@ -55,7 +57,9 @@ def user() -> User:
 
 @pytest.fixture(scope="session")
 def access_concern() -> AccessConcern:
-    return AccessConcern()
+    return AccessConcern(
+        system_user_id=SYSTEM_USER_ID,
+    )
 
 
 @pytest.fixture(scope="session")
