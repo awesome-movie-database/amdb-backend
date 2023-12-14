@@ -37,7 +37,7 @@ jobs:
       - name: install dependencies
         run: pipx install poetry && poetry install
       - name: generate coverage report
-        run: poetry run coverage run -m pytest
+        run: poetry run coverage run --data-file=coverage.json -m pytest
       - name: upload coverage report to Codecov
         uses: codecov/codecov-action@v3
         env:

@@ -25,6 +25,7 @@ jobs:
       - name: run format
         run: poetry run ./scripts/format.sh
   lint:
+    needs: [format]
     runs-on: ubuntu-latest
     steps:
       - name: checkout
