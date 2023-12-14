@@ -1,6 +1,7 @@
-import pytest
 from datetime import datetime, timezone
 from uuid import uuid4
+
+import pytest
 
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.user.create_user import CreateUser

@@ -1,7 +1,8 @@
-import pytest
 from unittest.mock import Mock
 from typing import Annotated
 from uuid import uuid4
+
+import pytest
 
 from amdb.domain.entities.user.user import UserId
 from amdb.application.common.interfaces.gateways.user.user import UserGateway

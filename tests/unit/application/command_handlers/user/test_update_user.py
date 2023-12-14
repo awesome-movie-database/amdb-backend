@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import Mock
+
+import pytest
 
 from amdb.domain.entities.user.access_policy import AccessPolicyWithIdentity
 from amdb.domain.entities.user.user import User
