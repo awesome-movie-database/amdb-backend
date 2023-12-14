@@ -6,16 +6,14 @@ from amdb.domain.entities.user.user import UserId
 
 
 @dataclass(slots=True)
-class AccessPolicy(Entity):
+class AccessPolicyWithIdentity(Entity):
+    id: UserId
     is_active: bool
     is_verified: bool
 
 
 @dataclass(slots=True)
-class AccessPolicyWithIdentity(AccessPolicy):
-    id: UserId
-
-
-@dataclass(slots=True)
-class RequiredAccessPolicy(AccessPolicy):
+class RequiredAccessPolicy(Entity):
     id: Optional[UserId]
+    is_active: Optional[bool]
+    is_verified: Optional[bool]

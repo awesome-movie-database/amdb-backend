@@ -5,12 +5,11 @@ from uuid import uuid4
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.user.create_user import CreateUser
 from amdb.domain.services.user.update_user import UpdateUser
+from amdb.domain.services.user.verify_user import VerifyUser
 from amdb.domain.services.user.create_profile import CreateProfile
 from amdb.domain.entities.user.user import UserId, User
 from amdb.domain.entities.user.profile import Profile
 
-
-SYSTEM_USER_ID = uuid4()
 
 USER_ID = UserId(uuid4())
 USER_NAME = "JohnDoe"
@@ -57,9 +56,7 @@ def user() -> User:
 
 @pytest.fixture(scope="session")
 def access_concern() -> AccessConcern:
-    return AccessConcern(
-        system_user_id=SYSTEM_USER_ID,
-    )
+    return AccessConcern()
 
 
 @pytest.fixture(scope="session")
@@ -70,6 +67,11 @@ def create_user() -> CreateUser:
 @pytest.fixture(scope="session")
 def update_user() -> UpdateUser:
     return UpdateUser()
+
+
+@pytest.fixture(scope="session")
+def verify_user() -> VerifyUser:
+    return VerifyUser()
 
 
 @pytest.fixture

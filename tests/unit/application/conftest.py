@@ -1,19 +1,29 @@
 import pytest
 from unittest.mock import Mock
 from typing import Annotated
+from uuid import uuid4
 
-from amdb.application.common.interfaces.gateways.user.access_policy import AccessPolicyGateway
+from amdb.domain.entities.user.user import UserId
 from amdb.application.common.interfaces.gateways.user.user import UserGateway
 from amdb.application.common.interfaces.gateways.user.profile import ProfileGateway
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
+from amdb.infrastructure.in_memory.access_policy_gateway import InMemoryAccessPolicyGateway
 
 
-@pytest.fixture
-def access_policy_gateway() -> Annotated[AccessPolicyGateway, Mock]:
-    access_policy_gateway_mock = Mock()
-    access_policy_gateway_mock.for_update_user = Mock()
-    return access_policy_gateway_mock
+SYSTEM_USER_ID = UserId(uuid4())
+
+
+@pytest.fixture(scope="session")
+def system_user_id() -> UserId:
+    return SYSTEM_USER_ID
+
+
+@pytest.fixture(scope="session")
+def access_policy_gateway() -> InMemoryAccessPolicyGateway:
+    return InMemoryAccessPolicyGateway(
+        system_user_id=SYSTEM_USER_ID,
+    )
 
 
 @pytest.fixture
