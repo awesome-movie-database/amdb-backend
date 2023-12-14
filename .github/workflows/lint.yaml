@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: "3.10"
       - name: install dependencies
-        run: pipx install poetry && poetry install
+        run: pipx install poetry && poetry install && poetry shell
       - name: run format
         run: ./scripts/format.sh
       - name: run lint
