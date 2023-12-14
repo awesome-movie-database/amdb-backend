@@ -11,8 +11,8 @@
         <img src="https://img.shields.io/github/actions/workflow/status/Awesome-Movie-Database/amdb-backend/lint.yaml?label=mypy" alt="Mypy status">
     </a>
     <a>
-        <img src="https://img.shields.io/github/actions/workflow/status/Awesome-Movie-Database/amdb-backend/lint.yaml?label=test"
-        alt="Test">
+        <img src="https://img.shields.io/github/actions/workflow/status/Awesome-Movie-Database/amdb-backend/test.yaml?label=test"
+        alt="Test status">
     </a>
 </p>
 
