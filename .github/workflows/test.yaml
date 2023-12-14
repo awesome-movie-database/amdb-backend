@@ -37,8 +37,9 @@ jobs:
       - name: install dependencies
         run: pipx install poetry && poetry install
       - name: generate coverage report
-        run: poetry run coverage run --data-file=coverage.json -m pytest
+        run: poetry run coverage run --data-file=coverage.txt -m pytest
       - name: upload coverage report to Codecov
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          files: "./coverage.txt"

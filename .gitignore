@@ -3,6 +3,5 @@ __pycache__
 .mypy_cache
 .ruff_cache
 .pytest_cache
-.coverage
-coverage.json
+coverage.txt
 poetry.lock

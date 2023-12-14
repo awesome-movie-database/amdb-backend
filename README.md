@@ -14,6 +14,9 @@
         <img src="https://img.shields.io/github/actions/workflow/status/Awesome-Movie-Database/amdb-backend/test.yaml?label=test"
         alt="Test status">
     </a>
+    <a href="https://codecov.io/github/Awesome-Movie-Database/amdb-backend" >
+        <img src="https://codecov.io/github/Awesome-Movie-Database/amdb-backend/graph/badge.svg?token=7JK9QG9N0X"/>
+    </a>
 </p>
 
 <p align="center">
