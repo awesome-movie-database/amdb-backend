@@ -7,10 +7,7 @@ from amdb.application.common.interfaces.gateways.user.access_policy import Acces
 from amdb.application.common.interfaces.gateways.user.user import UserGateway
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.constants.exceptions import (
-    UPDATE_USER_ACCESS_DENIED,
-    USER_DOES_NOT_EXIST,
-)
+from amdb.application.common.constants.exceptions import UPDATE_USER_ACCESS_DENIED
 from amdb.application.common.exception import ApplicationError
 
 
@@ -43,13 +40,10 @@ class UpdateUserHandler:
             raise ApplicationError(UPDATE_USER_ACCESS_DENIED)
 
         user = self._user_gateway.with_id(
-            user_id=current_access_policy.id,  # type: ignore
+            user_id=current_access_policy.id,
         )
-        if not user:
-            raise ApplicationError(USER_DOES_NOT_EXIST)
-
         self._update_user(
-            user=user,
+            user=user,  # type: ignore[arg-type]
             timestamp=datetime.now(timezone.utc),
             name=command.name,
             password=command.password,
@@ -58,7 +52,7 @@ class UpdateUserHandler:
             location=command.location,
         )
         self._user_gateway.update(
-            user=user,
+            user=user,  # type: ignore[arg-type]
         )
 
         self._unit_of_work.commit()
