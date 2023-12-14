@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: "3.10"
       - name: generate coverage report
-        run: pipx install coverage && coverage run -m pytest
+        run: pipx install coverage && pipx install pytest && coverage run -m pytest
       - name: upload coverage report to Codecov
         uses: codecov/codecov-action@v3
         env:
