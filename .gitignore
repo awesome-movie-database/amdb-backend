@@ -4,5 +4,6 @@ __pycache__
 .ruff_cache
 .pytest_cache
 .coverage
+.env
 coverage.xml
 poetry.lock

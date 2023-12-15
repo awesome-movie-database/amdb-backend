@@ -9,6 +9,9 @@ license = "Apache"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+sqlalchemy = "^2.0.23"
+alembic = "^1.13.0"
+psycopg2-binary = "^2.9.9"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.7.0"
@@ -45,6 +48,9 @@ select = [
     "PIE796",
     "T201",
     "SLF001",
+]
+ignore = [
+    "N999",
 ]
 
 [tool.ruff.format]
