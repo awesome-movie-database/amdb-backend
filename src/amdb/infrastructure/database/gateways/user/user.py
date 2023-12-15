@@ -60,7 +60,9 @@ class SQLAlchemyUserGateway(UserGateway):
         self._session.add(
             instance=user_model,
         )
-        self._session.flush(objects=(user_model,))
+        self._session.flush(
+            objects=(user_model,),
+        )
 
     def update(
         self,
