@@ -60,7 +60,7 @@ def test_update_user(
 
 
 @pytest.mark.usefixtures("clear_database")
-def test_update_user_raises_error_when_user_does_not_have_access(
+def test_update_user_raises_error_when_access_is_denied(
     user: User,
     access_concern: AccessConcern,
     update_user: UpdateUser,

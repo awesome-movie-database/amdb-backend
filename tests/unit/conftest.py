@@ -61,7 +61,7 @@ def sqlalchemy_session(
 @pytest.fixture
 def clear_database(
     sqlalchemy_engine: Engine,
-) -> None:
+) -> Iterator[None]:
     Model.metadata.create_all(
         bind=sqlalchemy_engine,
     )
