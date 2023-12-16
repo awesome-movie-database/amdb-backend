@@ -13,6 +13,16 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          TEST_DATABASE_POSTGRES_USER: postgres
+          TEST_DATABASE_POSTGRES_PASSWORD: 1234
+          TEST_DATABASE_POSTGRES_HOST: postgres
+          TEST_DATABASE_POSTGRES_PORT: 5432
+          TEST_DATABASE_POSTGRES_NAME: amdb_test
+        ports: ["5432:5432"]
     steps:
       - name: checkout
         uses: actions/checkout@v4
