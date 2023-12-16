@@ -19,6 +19,7 @@ from amdb.application.common.exception import ApplicationError
 NEW_USER_NAME = "JohnDoe2"
 
 
+@pytest.mark.usefixtures("clear_database")
 def test_update_user(
     user: User,
     access_concern: AccessConcern,
@@ -36,9 +37,10 @@ def test_update_user(
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
     )
-    user_gateway.with_id = Mock(
-        return_value=user,
+    user_gateway.save(
+        user=user,
     )
+    unit_of_work.commit()
 
     update_user_command = UpdateUserCommand(
         name=NEW_USER_NAME,
@@ -57,6 +59,7 @@ def test_update_user(
     )
 
 
+@pytest.mark.usefixtures("clear_database")
 def test_update_user_raises_error_when_user_does_not_have_access(
     user: User,
     access_concern: AccessConcern,
@@ -74,9 +77,10 @@ def test_update_user_raises_error_when_user_does_not_have_access(
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
     )
-    user_gateway.with_id = Mock(
-        return_value=user,
+    user_gateway.save(
+        user=user,
     )
+    unit_of_work.commit()
 
     update_user_command = UpdateUserCommand(
         name=NEW_USER_NAME,

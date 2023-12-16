@@ -14,6 +14,7 @@ from amdb.application.commands.user.register_user import RegisterUserCommand
 from amdb.application.command_handlers.user.register_user import RegisterUserHandler
 
 
+@pytest.mark.usefixtures("clear_database")
 def test_register_user(
     user: User,
     create_profile: CreateProfile,
@@ -21,9 +22,6 @@ def test_register_user(
     profile_gateway: ProfileGateway,
     unit_of_work: UnitOfWork,
 ) -> None:
-    user_gateway.with_name = Mock(
-        return_value=None,
-    )
     create_user: CreateUser = Mock(
         return_value=user,
     )
@@ -46,6 +44,7 @@ def test_register_user(
     assert user_id == user.id
 
 
+@pytest.mark.usefixtures("clear_database")
 def test_register_user_raises_error_when_username_already_exists(
     user: User,
     other_user: User,
@@ -56,9 +55,10 @@ def test_register_user_raises_error_when_username_already_exists(
     unit_of_work: UnitOfWork,
 ) -> None:
     other_user.name = user.name
-    user_gateway.with_name = Mock(
-        return_value=other_user,
+    user_gateway.save(
+        user=other_user,
     )
+    unit_of_work.commit()
 
     register_user_command = RegisterUserCommand(
         name=user.name,
