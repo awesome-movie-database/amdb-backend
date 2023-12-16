@@ -31,39 +31,41 @@ def access_policy_gateway() -> InMemoryAccessPolicyGateway:
 
 
 @pytest.fixture(scope="session")
-def user_mapper() -> UserMapper:
+def sqlalchemy_user_mapper() -> UserMapper:
     return UserMapper()
 
 
 @pytest.fixture(scope="session")
-def profile_mapper() -> ProfileMapper:
+def sqlalchemy_profile_mapper() -> ProfileMapper:
     return ProfileMapper()
 
 
 @pytest.fixture
 def user_gateway(
     sqlalchemy_session: Session,
-    user_mapper: UserMapper,
+    sqlalchemy_user_mapper: UserMapper,
 ) -> SQLAlchemyUnitOfWork:
     return SQLAlchemyUserGateway(
         session=sqlalchemy_session,
-        mapper=user_mapper,
+        mapper=sqlalchemy_user_mapper,
     )
 
 
 @pytest.fixture
 def profile_gateway(
     sqlalchemy_session: Session,
-    profile_mapper: ProfileMapper,
+    sqlalchemy_profile_mapper: ProfileMapper,
 ) -> SQLAlchemyProfileGateway:
     return SQLAlchemyProfileGateway(
         session=sqlalchemy_session,
-        mapper=profile_mapper,
+        mapper=sqlalchemy_profile_mapper,
     )
 
 
 @pytest.fixture
-def unit_of_work(sqlalchemy_session: Session) -> SQLAlchemyUnitOfWork:
+def unit_of_work(
+    sqlalchemy_session: Session,
+) -> SQLAlchemyUnitOfWork:
     return SQLAlchemyUnitOfWork(
         session=sqlalchemy_session,
     )
