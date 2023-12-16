@@ -4,7 +4,7 @@ from typing import Optional
 from amdb.domain.services.base import Service
 from amdb.domain.constants.common import Sex
 from amdb.domain.value_objects import Date, Place
-from amdb.domain.entities.person.person import PersonId, PersonName, Person
+from amdb.domain.entities.person.person import PersonId, Person
 
 
 class CreatePerson(Service):
@@ -12,7 +12,7 @@ class CreatePerson(Service):
         self,
         *,
         id: PersonId,
-        name: PersonName,
+        name: str,
         timestamp: datetime,
         sex: Optional[Sex] = None,
         birth_date: Optional[Date] = None,

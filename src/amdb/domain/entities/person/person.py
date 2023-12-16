@@ -9,13 +9,12 @@ from amdb.domain.value_objects import Date, Place
 
 
 PersonId = NewType("PersonId", UUID)
-PersonName = NewType("PersonName", str)
 
 
 @dataclass(slots=True)
 class Person(Entity):
     id: PersonId
-    name: PersonName
+    name: str
     created_at: datetime
 
     sex: Optional[Sex]

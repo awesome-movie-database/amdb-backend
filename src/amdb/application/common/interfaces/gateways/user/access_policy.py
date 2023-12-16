@@ -9,3 +9,6 @@ class AccessPolicyGateway(Protocol):
 
     def for_verify_user(self) -> RequiredAccessPolicy:
         raise NotImplementedError
+
+    def for_create_person(self) -> RequiredAccessPolicy:
+        raise NotImplementedError
