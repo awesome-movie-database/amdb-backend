@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import IntEnum
 
+from amdb.domain.entities.base import Entity
 from .person import PersonId
 
 
@@ -12,7 +13,7 @@ class RelativeType(IntEnum):
 
 
 @dataclass(slots=True)
-class Relative:
+class Relation(Entity):
     person_id: PersonId
     relative_id: PersonId
     type: RelativeType

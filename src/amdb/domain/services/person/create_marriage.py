@@ -15,8 +15,8 @@ class CreateMarriage(Service):
         wife: Person,
         children: list[Person],
         status: MarriageStatus,
-        start_date: Date,
         timestamp: datetime,
+        start_date: Optional[Date] = None,
         end_date: Optional[Date] = None,
     ) -> Marriage:
         husband.updated_at = timestamp

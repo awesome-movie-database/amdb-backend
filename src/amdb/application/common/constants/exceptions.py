@@ -7,3 +7,5 @@ USER_NAME_ALREADY_EXISTS = "Name of user already exists"
 
 USER_DOES_NOT_EXIST = "User doesn't exist"
 PERSON_DOES_NOT_EXIST = "Person doesn't exist"
+PERSONS_DO_NOT_EXIST = "Persons don't exist"
+NO_HOMO = "No homo"

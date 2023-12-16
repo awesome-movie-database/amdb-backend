@@ -22,6 +22,6 @@ class Marriage(Entity):
     wife_id: PersonId
     child_ids: list[PersonId]
     status: MarriageStatus
-    start_date: Date
 
+    start_date: Optional[Date]
     end_date: Optional[Date]

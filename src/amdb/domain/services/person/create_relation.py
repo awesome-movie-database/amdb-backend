@@ -2,10 +2,10 @@ from datetime import datetime
 
 from amdb.domain.services.base import Service
 from amdb.domain.entities.person.person import Person
-from amdb.domain.entities.person.relative import RelativeType, Relative
+from amdb.domain.entities.person.relation import RelativeType, Relation
 
 
-class CreateRelative(Service):
+class CreateRelation(Service):
     def __call__(
         self,
         *,
@@ -13,11 +13,11 @@ class CreateRelative(Service):
         relative: Person,
         type: RelativeType,
         timestamp: datetime,
-    ) -> Relative:
+    ) -> Relation:
         person.updated_at = timestamp
         relative.updated_at = timestamp
 
-        return Relative(
+        return Relation(
             person_id=person.id,
             relative_id=relative.id,
             type=type,

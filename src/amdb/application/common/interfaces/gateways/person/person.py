@@ -11,6 +11,12 @@ class PersonGateway(Protocol):
     ) -> Optional[Person]:
         raise NotImplementedError
 
+    def list_with_ids(
+        self,
+        *person_ids: PersonId,
+    ) -> list[Person]:
+        raise NotImplementedError
+
     def save(
         self,
         *,
@@ -22,5 +28,12 @@ class PersonGateway(Protocol):
         self,
         *,
         person: Person,
+    ) -> None:
+        raise NotImplementedError
+
+    def update_list(
+        self,
+        *,
+        persons: list[Person],
     ) -> None:
         raise NotImplementedError

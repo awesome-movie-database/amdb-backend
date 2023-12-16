@@ -25,7 +25,7 @@ class UpdateMarriage(Service):
         timestamp: datetime,
         children: Union[Children, Unset] = unset,
         status: Union[MarriageStatus, Unset] = unset,
-        start_date: Union[Date, Unset] = unset,
+        start_date: Union[Date, None, Unset] = unset,
         end_date: Union[Date, None, Unset] = unset,
     ) -> None:
         husband.updated_at = timestamp
