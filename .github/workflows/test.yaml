@@ -31,27 +31,13 @@ jobs:
       - name: install dependencies
         run: pipx install poetry && poetry install
       - name: run test
-        run: poetry run ./scripts/test.sh
+        run: poetry run pytest --cov=./ --cov-report=xml
         env:
           TEST_DATABASE_POSTGRES_USER: postgres
           TEST_DATABASE_POSTGRES_PASSWORD: 1234
           TEST_DATABASE_POSTGRES_HOST: 127.0.0.1
           TEST_DATABASE_POSTGRES_PORT: 5432
           TEST_DATABASE_POSTGRES_NAME: amdb_test
-  codecov:
-    needs: [test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: install python3.10
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-      - name: install dependencies
-        run: pipx install poetry && poetry install
-      - name: generate coverage report
-        run: poetry run pytest --cov=./ --cov-report=xml
       - name: upload coverage report to Codecov
         uses: codecov/codecov-action@v3
         env:
