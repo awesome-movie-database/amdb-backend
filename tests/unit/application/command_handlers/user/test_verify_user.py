@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from amdb.domain.entities.user.access_policy import no_matter, AccessPolicy
+from amdb.domain.entities.user.access_policy import AccessPolicy
 from amdb.domain.entities.user.user import UserId, User
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.user.verify_user import VerifyUser
@@ -115,8 +115,8 @@ def test_verify_user_raises_error_when_user_does_not_exist(
 ) -> None:
     current_access_policy = AccessPolicy(
         id=system_user_id,
-        is_active=no_matter,
-        is_verified=no_matter,
+        is_active=True,
+        is_verified=True,
     )
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
