@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from amdb.domain.entities.user.access_policy import AccessPolicyWithIdentity
+from amdb.domain.entities.user.access_policy import no_matter, AccessPolicy
 from amdb.domain.entities.user.user import UserId, User
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.user.verify_user import VerifyUser
@@ -30,10 +30,10 @@ def test_verify_user(
     identity_provider: IdentityProvider,
     unit_of_work: UnitOfWork,
 ) -> None:
-    current_access_policy = AccessPolicyWithIdentity(
-        is_active=True,
-        is_verified=True,
+    current_access_policy = AccessPolicy(
         id=system_user_id,
+        is_active=True,
+        is_verified=False,
     )
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
@@ -70,10 +70,10 @@ def test_verify_user_raises_error_when_access_is_denied(
     identity_provider: IdentityProvider,
     unit_of_work: UnitOfWork,
 ) -> None:
-    current_access_policy = AccessPolicyWithIdentity(
-        is_active=True,
-        is_verified=True,
+    current_access_policy = AccessPolicy(
         id=user.id,
+        is_active=True,
+        is_verified=False,
     )
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
@@ -113,10 +113,10 @@ def test_verify_user_raises_error_when_user_does_not_exist(
     identity_provider: IdentityProvider,
     unit_of_work: UnitOfWork,
 ) -> None:
-    current_access_policy = AccessPolicyWithIdentity(
-        is_active=True,
-        is_verified=True,
+    current_access_policy = AccessPolicy(
         id=system_user_id,
+        is_active=no_matter,
+        is_verified=no_matter,
     )
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
