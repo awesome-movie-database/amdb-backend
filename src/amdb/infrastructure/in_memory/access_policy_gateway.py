@@ -24,3 +24,17 @@ class InMemoryAccessPolicyGateway(AccessPolicyGateway):
             is_active=no_matter,
             is_verified=no_matter,
         )
+
+    def for_create_person(self) -> RequiredAccessPolicy:
+        return RequiredAccessPolicy(
+            id=self._system_user_id,
+            is_active=no_matter,
+            is_verified=no_matter,
+        )
+
+    def for_update_person(self) -> RequiredAccessPolicy:
+        return RequiredAccessPolicy(
+            id=self._system_user_id,
+            is_active=no_matter,
+            is_verified=no_matter,
+        )

@@ -15,9 +15,9 @@ PersonId = NewType("PersonId", UUID)
 class Person(Entity):
     id: PersonId
     name: str
+    sex: Sex
     created_at: datetime
 
-    sex: Optional[Sex]
     birth_date: Optional[Date]
     birth_place: Optional[Place]
     death_date: Optional[Date]

@@ -1,17 +1,11 @@
 from dataclasses import dataclass
 from typing import Optional
-from enum import IntEnum
 
 from amdb.domain.entities.person.person import PersonId
 from amdb.domain.entities.person.relation import RelativeType
 from amdb.domain.entities.person.marriage import MarriageStatus
 from amdb.domain.constants.common import Sex
 from amdb.domain.value_objects import Date, Place
-
-
-class SpouseType(IntEnum):
-    HUSBAND = 0
-    WIFE = 1
 
 
 @dataclass(frozen=True, slots=True)
@@ -24,7 +18,6 @@ class RelationData:
 class MarriageData:
     person_id: PersonId
     status: MarriageStatus
-    spouse_type: SpouseType
     child_ids: list[PersonId]
     start_date: Optional[Date] = None
     end_date: Optional[Date] = None
@@ -33,7 +26,7 @@ class MarriageData:
 @dataclass(frozen=True, slots=True)
 class CreatePersonCommand:
     name: str
-    sex: Optional[Sex] = None
+    sex: Sex
     birth_date: Optional[Date] = None
     birth_place: Optional[Place] = None
     death_date: Optional[Date] = None

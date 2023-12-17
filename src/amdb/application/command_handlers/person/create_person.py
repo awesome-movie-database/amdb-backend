@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from uuid import uuid4
 
@@ -14,7 +13,6 @@ from amdb.domain.services.person.create_marriage import CreateMarriage
 from amdb.application.commands.person.create_person import (
     RelationData,
     MarriageData,
-    SpouseType,
     CreatePersonCommand,
 )
 from amdb.application.common.interfaces.gateways.user.access_policy import AccessPolicyGateway
@@ -29,12 +27,6 @@ from amdb.application.common.constants.exceptions import (
     NO_HOMO,
 )
 from amdb.application.common.exception import ApplicationError
-
-
-@dataclass(slots=True)
-class AssignedSpouses:
-    husband: Person
-    wife: Person
 
 
 class CreatePersonHandler:
@@ -80,8 +72,8 @@ class CreatePersonHandler:
         person = self._create_person(
             id=PersonId(uuid4()),
             name=command.name,
-            timestamp=current_timestamp,
             sex=command.sex,
+            timestamp=current_timestamp,
             birth_date=command.birth_date,
             birth_place=command.birth_place,
             death_date=command.death_date,
@@ -158,15 +150,18 @@ class CreatePersonHandler:
                 *(child_id for child_id in marriage_data.child_ids),
             )
 
-            assigned_spouses = self._assign_spouses(
-                person=person,
-                spouse=spouse,
-                spouse_type=marriage_data.spouse_type,
-                timestamp=timestamp,
-            )
+            if person.sex is Sex.MALE and spouse.sex is Sex.FEMALE:
+                husband = person
+                wife = spouse
+            elif person.sex is Sex.FEMALE and spouse.sex is Sex.MALE:
+                husband = spouse
+                wife = person
+            else:
+                raise ApplicationError(NO_HOMO)
+
             marriage = self._create_marriage(
-                husband=assigned_spouses.husband,
-                wife=assigned_spouses.wife,
+                husband=husband,
+                wife=wife,
                 children=children,
                 status=marriage_data.status,
                 timestamp=timestamp,
@@ -175,9 +170,6 @@ class CreatePersonHandler:
             )
             marriages.append(marriage)
 
-            self._person_gateway.update(
-                person=spouse,
-            )
             self._person_gateway.update_list(
                 persons=children,
             )
@@ -192,14 +184,14 @@ class CreatePersonHandler:
         self,
         *person_ids: PersonId,
     ) -> list[Person]:
-        relatives = self._person_gateway.list_with_ids(*person_ids)
+        persons = self._person_gateway.list_with_ids(*person_ids)
 
-        if len(person_ids) != len(relatives):
-            relative_ids = [relative.id for relative in relatives]
+        if len(person_ids) != len(persons):
+            person_ids_from_gateway = [person.id for person in persons]
 
             invalid_person_ids = []
             for person_id in person_ids:
-                if person_id in relative_ids:
+                if person_id in person_ids_from_gateway:
                     continue
                 invalid_person_ids.append(person_id)
 
@@ -208,80 +200,4 @@ class CreatePersonHandler:
                 extra={"invalid_person_ids": invalid_person_ids},
             )
 
-        return relatives
-
-    def _assign_spouses(
-        self,
-        *,
-        person: Person,
-        spouse: Person,
-        spouse_type: SpouseType,
-        timestamp: datetime,
-    ) -> AssignedSpouses:
-        if (
-            spouse_type is SpouseType.HUSBAND
-            and person.sex is not None
-            and person.sex is Sex.FEMALE
-            and spouse.sex is not Sex.FEMALE
-        ):
-            if spouse.sex is None:
-                self._determine_sex(
-                    person=person,
-                    spouse=spouse,
-                    spouse_type=spouse_type,
-                    timestamp=timestamp,
-                )
-            return AssignedSpouses(
-                husband=spouse,
-                wife=person,
-            )
-        elif (
-            spouse_type is SpouseType.WIFE
-            and person.sex is not None
-            and person.sex is Sex.MALE
-            and spouse.sex is not Sex.MALE
-        ):
-            if spouse.sex is None:
-                self._determine_sex(
-                    person=person,
-                    spouse=spouse,
-                    spouse_type=spouse_type,
-                    timestamp=timestamp,
-                )
-            return AssignedSpouses(
-                husband=person,
-                wife=spouse,
-            )
-
-        raise ApplicationError(NO_HOMO)
-
-    def _determine_sex(
-        self,
-        *,
-        person: Person,
-        spouse: Person,
-        spouse_type: SpouseType,
-        timestamp: datetime,
-    ) -> None:
-        if spouse_type is SpouseType.HUSBAND:
-            self._update_person(
-                person=person,
-                sex=Sex.FEMALE,
-                timestamp=timestamp,
-            )
-            self._update_person(
-                person=spouse,
-                sex=Sex.MALE,
-                timestamp=timestamp,
-            )
-        elif spouse_type is SpouseType.WIFE:
-            self._update_person(
-                person=person,
-                sex=Sex.MALE,
-                timestamp=timestamp,
-            )
-            self._update_person(
-                person=spouse,
-                sex=Sex.FEMALE,
-                timestamp=timestamp,
-            )
+        return persons
