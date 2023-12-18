@@ -38,6 +38,7 @@ class MarriageMapper:
             children.append(child)
 
         return model.Marriage(
+            id=entity.id,
             husband_id=entity.husband_id,
             wife_id=entity.wife_id,
             children=children,
@@ -74,6 +75,7 @@ class MarriageMapper:
             end_date = None
 
         return entity.Marriage(
+            id=entity.MarriageId(model.id),
             husband_id=PersonId(model.husband_id),
             wife_id=PersonId(model.wife_id),
             child_ids=[PersonId(child.child_id) for child in model.children],

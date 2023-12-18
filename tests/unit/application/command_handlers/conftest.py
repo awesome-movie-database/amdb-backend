@@ -3,13 +3,22 @@ from uuid import uuid4
 
 import pytest
 
+from amdb.domain.entities.user.user import UserId, User
+from amdb.domain.entities.user.profile import Profile
+from amdb.domain.entities.person.person import PersonId, Person
+from amdb.domain.entities.person.marriage import MarriageStatus, Marriage
+from amdb.domain.constants.common import Sex
+from amdb.domain.value_objects import Date, Place
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.user.create_user import CreateUser
 from amdb.domain.services.user.update_user import UpdateUser
 from amdb.domain.services.user.verify_user import VerifyUser
 from amdb.domain.services.user.create_profile import CreateProfile
-from amdb.domain.entities.user.user import UserId, User
-from amdb.domain.entities.user.profile import Profile
+from amdb.domain.services.person.create_person import CreatePerson
+from amdb.domain.services.person.update_person import UpdatePerson
+from amdb.domain.services.person.create_marriage import CreateMarriage
+from amdb.domain.services.person.update_marriage import UpdateMarriage
+from amdb.domain.services.person.create_relation import CreateRelation
 
 
 USER_ID = UserId(uuid4())
@@ -48,6 +57,33 @@ PROFILE_SERIES_SEASON_REVIEWS = 0
 PROFILE_SERIES_EPISODE_REVIEWS = 0
 PROFILE_GIVEN_VOTES = 0
 PROFILE_GAINED_VOTES = 0
+
+PERSON_ID = PersonId(uuid4())
+PERSON_NAME = "John Doe"
+PERSON_SEX = Sex.MALE
+PERSON_CREATED_AT = datetime.now(timezone.utc)
+PERSON_BIRTH_DATE = Date(year=1920, month=None, day=None)
+PERSON_BIRTH_PLACE = Place(country="USA", state="Texas", city=None)
+PERSON_DEATH_DATE = Date(year=2004, month=1, day=7)
+PERSON_DEATH_PLACE = Place(country="USA", state="Oklahoma", city=None)
+PERSON_UPDATED_AT = datetime.now(timezone.utc)
+
+OTHER_PERSON_ID = PersonId(uuid4())
+OTHER_PERSON_NAME = "Jane Doe"
+OTHER_PERSON_SEX = Sex.FEMALE
+OTHER_PERSON_CREATED_AT = datetime.now(timezone.utc)
+OTHER_PERSON_BIRTH_DATE = Date(year=1935, month=3, day=5)
+OTHER_PERSON_BIRTH_PLACE = Place(country="USA", state="Oklahoma", city=None)
+OTHER_PERSON_DEATH_DATE = Date(year=2014, month=10, day=14)
+OTHER_PERSON_DEATH_PLACE = Place(country="USA", state="Texas", city=None)
+OTHER_PERSON_UPDATED_AT = datetime.now(timezone.utc)
+
+MARRIAGE_HUSBAND_ID = PERSON_ID
+MARRIAGE_WIFE_ID = OTHER_PERSON_ID
+MARRIAGE_CHILD_IDS: list[PersonId] = []
+MARRIAGE_STATUS = MarriageStatus.MARRIAGE
+MARRIAGE_START_DATE = Date(year=2010, month=12, day=31)
+MARRIAGE_END_DATE = None
 
 
 @pytest.fixture
@@ -126,3 +162,70 @@ def profile() -> Profile:
 @pytest.fixture(scope="session")
 def create_profile() -> CreateProfile:
     return CreateProfile()
+
+
+@pytest.fixture
+def person() -> Person:
+    return Person(
+        id=PERSON_ID,
+        name=PERSON_NAME,
+        sex=PERSON_SEX,
+        created_at=PERSON_CREATED_AT,
+        birth_date=PERSON_BIRTH_DATE,
+        birth_place=PERSON_BIRTH_PLACE,
+        death_date=PERSON_DEATH_DATE,
+        death_place=PERSON_DEATH_PLACE,
+        updated_at=PERSON_UPDATED_AT,
+    )
+
+
+@pytest.fixture
+def other_person() -> Person:
+    return Person(
+        id=OTHER_PERSON_ID,
+        name=OTHER_PERSON_NAME,
+        sex=OTHER_PERSON_SEX,
+        created_at=OTHER_PERSON_CREATED_AT,
+        birth_date=OTHER_PERSON_BIRTH_DATE,
+        birth_place=OTHER_PERSON_BIRTH_PLACE,
+        death_date=OTHER_PERSON_DEATH_DATE,
+        death_place=OTHER_PERSON_DEATH_PLACE,
+        updated_at=OTHER_PERSON_UPDATED_AT,
+    )
+
+
+@pytest.fixture(scope="session")
+def create_person() -> CreatePerson:
+    return CreatePerson()
+
+
+@pytest.fixture(scope="session")
+def update_person() -> UpdatePerson:
+    return UpdatePerson()
+
+
+@pytest.fixture
+def marriage() -> Marriage:
+    return Marriage(
+        husband_id=MARRIAGE_HUSBAND_ID,
+        wife_id=MARRIAGE_WIFE_ID,
+        child_ids=MARRIAGE_CHILD_IDS,
+        status=MARRIAGE_STATUS,
+        start_date=MARRIAGE_START_DATE,
+        end_date=MARRIAGE_END_DATE,
+    )
+
+
+@pytest.fixture(scope="session")
+def create_marriage() -> CreateMarriage:
+    return CreateMarriage()
+
+
+@pytest.fixture(scope="session")
+def update_marriage() -> UpdateMarriage:
+    return UpdateMarriage()
+
+
+@pytest.fixture(scope="session")
+def create_relation() -> CreateRelation:
+    return CreateRelation()

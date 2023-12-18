@@ -10,6 +10,9 @@ from amdb.infrastructure.database.models.base import Model
 class Marriage(Model):
     __tablename__ = "marriages"
 
+    id: Mapped[UUID] = mapped_column(
+        primary_key=True,
+    )
     husband_id: Mapped[UUID] = mapped_column(
         ForeignKey(column="persons.id", ondelete="CASCADE"),
     )
@@ -29,14 +32,11 @@ class Marriage(Model):
 class MarriageChild(Model):
     __tablename__ = "marriage_children"
 
+    marriage_id: Mapped[UUID] = mapped_column(
+        ForeignKey(column="marriages.id", ondelete="CASCADE"),
+    )
     child_id: Mapped[UUID] = mapped_column(
         ForeignKey(column="persons.id", ondelete="CASCADE"),
     )
-    father_id: Mapped[UUID] = mapped_column(
-        ForeignKey(column="persons.id", ondelete="CASCADE"),
-    )
-    mother_id: Mapped[UUID] = mapped_column(
-        ForeignKey(column="persons.id", ondelete="CASCADE"),
-    )
 
-    __table_args__ = (PrimaryKeyConstraint(child_id, father_id, mother_id),)
+    __table_args__ = (PrimaryKeyConstraint(marriage_id, child_id),)

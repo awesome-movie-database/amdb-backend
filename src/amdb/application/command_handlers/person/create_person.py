@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from amdb.domain.entities.person.person import PersonId, Person
 from amdb.domain.entities.person.relation import Relation
-from amdb.domain.entities.person.marriage import Marriage
+from amdb.domain.entities.person.marriage import MarriageId, Marriage
 from amdb.domain.constants.common import Sex
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.person.create_person import CreatePerson
@@ -160,6 +160,7 @@ class CreatePersonHandler:
                 raise ApplicationError(NO_HOMO)
 
             marriage = self._create_marriage(
+                id=MarriageId(uuid4()),
                 husband=husband,
                 wife=wife,
                 children=children,

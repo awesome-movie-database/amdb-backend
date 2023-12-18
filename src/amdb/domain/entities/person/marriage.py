@@ -1,10 +1,14 @@
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Optional
+from typing import Optional, NewType
+from uuid import UUID
 
 from amdb.domain.entities.base import Entity
 from amdb.domain.value_objects import Date
 from .person import PersonId
+
+
+MarriageId = NewType("MarriageId", UUID)
 
 
 class MarriageStatus(IntEnum):
@@ -18,6 +22,7 @@ class MarriageStatus(IntEnum):
 
 @dataclass(slots=True)
 class Marriage(Entity):
+    id: MarriageId
     husband_id: PersonId
     wife_id: PersonId
     child_ids: list[PersonId]

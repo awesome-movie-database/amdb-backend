@@ -10,9 +10,15 @@ from amdb.application.common.interfaces.identity_provider import IdentityProvide
 from amdb.infrastructure.in_memory.access_policy_gateway import InMemoryAccessPolicyGateway
 from amdb.infrastructure.database.gateways.user.user import SQLAlchemyUserGateway
 from amdb.infrastructure.database.gateways.user.profile import SQLAlchemyProfileGateway
+from amdb.infrastructure.database.gateways.person.person import SQLAlchemyPersonGateway
+from amdb.infrastructure.database.gateways.person.marriage import SQLAlchemyMarriageGateway
+from amdb.infrastructure.database.gateways.person.relation import SQLAlchemyRelationGateway
 from amdb.infrastructure.database.unit_of_work import SQLAlchemyUnitOfWork
 from amdb.infrastructure.database.mappers.user.user import UserMapper
 from amdb.infrastructure.database.mappers.user.profile import ProfileMapper
+from amdb.infrastructure.database.mappers.person.person import PersonMapper
+from amdb.infrastructure.database.mappers.person.marriage import MarriageMapper
+from amdb.infrastructure.database.mappers.person.relation import RelationMapper
 
 
 SYSTEM_USER_ID = UserId(uuid4())
@@ -30,35 +36,53 @@ def access_policy_gateway() -> InMemoryAccessPolicyGateway:
     )
 
 
-@pytest.fixture(scope="session")
-def sqlalchemy_user_mapper() -> UserMapper:
-    return UserMapper()
-
-
-@pytest.fixture(scope="session")
-def sqlalchemy_profile_mapper() -> ProfileMapper:
-    return ProfileMapper()
-
-
 @pytest.fixture
 def user_gateway(
     sqlalchemy_session: Session,
-    sqlalchemy_user_mapper: UserMapper,
 ) -> SQLAlchemyUnitOfWork:
     return SQLAlchemyUserGateway(
         session=sqlalchemy_session,
-        mapper=sqlalchemy_user_mapper,
+        mapper=UserMapper(),
     )
 
 
 @pytest.fixture
 def profile_gateway(
     sqlalchemy_session: Session,
-    sqlalchemy_profile_mapper: ProfileMapper,
 ) -> SQLAlchemyProfileGateway:
     return SQLAlchemyProfileGateway(
         session=sqlalchemy_session,
-        mapper=sqlalchemy_profile_mapper,
+        mapper=ProfileMapper(),
+    )
+
+
+@pytest.fixture
+def person_gateway(
+    sqlalchemy_session: Session,
+) -> SQLAlchemyPersonGateway:
+    return SQLAlchemyPersonGateway(
+        session=sqlalchemy_session,
+        mapper=PersonMapper(),
+    )
+
+
+@pytest.fixture
+def marriage_gateway(
+    sqlalchemy_session: Session,
+) -> SQLAlchemyMarriageGateway:
+    return SQLAlchemyMarriageGateway(
+        session=sqlalchemy_session,
+        mapper=MarriageMapper(),
+    )
+
+
+@pytest.fixture
+def relation_gateway(
+    sqlalchemy_session: Session,
+) -> SQLAlchemyRelationGateway:
+    return SQLAlchemyRelationGateway(
+        session=sqlalchemy_session,
+        mapper=RelationMapper(),
     )
 
 
