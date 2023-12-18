@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from uuid import uuid4
 
 import pytest
@@ -27,12 +27,12 @@ USER_PASSWORD = "password"
 USER_IS_ACTIVE = True
 USER_IS_VERIFIED = False
 USER_CREATED_AT = datetime.now(timezone.utc)
-USER_EMAIL = None
-USER_SEX = None
-USER_BIRTH_DATE = None
-USER_LOCATION = None
-USER_VERIFIED_AT = None
-USER_UPDATED_AT = None
+USER_EMAIL = "john@doe.com"
+USER_SEX = Sex.MALE
+USER_BIRTH_DATE = date(year=1999, month=10, day=30)
+USER_LOCATION = Place(country="Germany", state=None, city="Berlin")
+USER_VERIFIED_AT = datetime.now(timezone.utc)
+USER_UPDATED_AT = datetime.now(timezone.utc)
 
 OTHER_USER_ID = UserId(uuid4())
 OTHER_USER_NAME = "JaneDoe"
@@ -40,12 +40,12 @@ OTHER_USER_PASSWORD = "password"
 OTHER_USER_IS_ACTIVE = True
 OTHER_USER_IS_VERIFIED = False
 OTHER_USER_CREATED_AT = datetime.now(timezone.utc)
-OTHER_USER_EMAIL = None
-OTHER_USER_SEX = None
-OTHER_USER_BIRTH_DATE = None
-OTHER_USER_LOCATION = None
-OTHER_USER_VERIFIED_AT = None
-OTHER_USER_UPDATED_AT = None
+OTHER_USER_EMAIL = "jane@doe.com"
+OTHER_USER_SEX = Sex.FEMALE
+OTHER_USER_BIRTH_DATE = date(year=2000, month=7, day=2)
+OTHER_USER_LOCATION = Place(country="France", state=None, city="Paris")
+OTHER_USER_VERIFIED_AT = datetime.now(timezone.utc)
+OTHER_USER_UPDATED_AT = datetime.now(timezone.utc)
 
 PROFILE_ACHIEVEMENTS = 0
 PROFILE_MOVIE_RATINGS = 0
@@ -57,6 +57,17 @@ PROFILE_SERIES_SEASON_REVIEWS = 0
 PROFILE_SERIES_EPISODE_REVIEWS = 0
 PROFILE_GIVEN_VOTES = 0
 PROFILE_GAINED_VOTES = 0
+
+OTHER_PROFILE_ACHIEVEMENTS = 0
+OTHER_PROFILE_MOVIE_RATINGS = 0
+OTHER_PROFILE_SERIES_EPISODE_RATINGS = 0
+OTHER_PROFILE_APPROVED_REVIEWS = 0
+OTHER_PROFILE_MOVIE_REVIEWS = 0
+OTHER_PROFILE_SERIES_REVIEWS = 0
+OTHER_PROFILE_SERIES_SEASON_REVIEWS = 0
+OTHER_PROFILE_SERIES_EPISODE_REVIEWS = 0
+OTHER_PROFILE_GIVEN_VOTES = 0
+OTHER_PROFILE_GAINED_VOTES = 0
 
 PERSON_ID = PersonId(uuid4())
 PERSON_NAME = "John Doe"
@@ -156,6 +167,23 @@ def profile() -> Profile:
         series_episode_reviews=PROFILE_SERIES_EPISODE_REVIEWS,
         given_votes=PROFILE_GIVEN_VOTES,
         gained_votes=PROFILE_GAINED_VOTES,
+    )
+
+
+@pytest.fixture
+def other_profile() -> Profile:
+    return Profile(
+        user_id=OTHER_USER_ID,
+        achievements=OTHER_PROFILE_ACHIEVEMENTS,
+        movie_ratings=OTHER_PROFILE_MOVIE_RATINGS,
+        series_episode_ratings=OTHER_PROFILE_SERIES_EPISODE_RATINGS,
+        approved_reviews=OTHER_PROFILE_APPROVED_REVIEWS,
+        movie_reviews=OTHER_PROFILE_MOVIE_REVIEWS,
+        series_reviews=OTHER_PROFILE_SERIES_REVIEWS,
+        series_season_reviews=OTHER_PROFILE_SERIES_SEASON_REVIEWS,
+        series_episode_reviews=OTHER_PROFILE_SERIES_EPISODE_REVIEWS,
+        given_votes=OTHER_PROFILE_GIVEN_VOTES,
+        gained_votes=OTHER_PROFILE_GAINED_VOTES,
     )
 
 
