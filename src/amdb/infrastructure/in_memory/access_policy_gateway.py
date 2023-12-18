@@ -1,6 +1,6 @@
 from amdb.domain.entities.user.user import UserId
-from amdb.application.common.interfaces.gateways.user.access_policy import AccessPolicyGateway
 from amdb.domain.entities.user.access_policy import no_matter, RequiredAccessPolicy
+from amdb.application.common.interfaces.gateways.user.access_policy import AccessPolicyGateway
 
 
 class InMemoryAccessPolicyGateway(AccessPolicyGateway):
@@ -33,6 +33,13 @@ class InMemoryAccessPolicyGateway(AccessPolicyGateway):
         )
 
     def for_update_person(self) -> RequiredAccessPolicy:
+        return RequiredAccessPolicy(
+            id=self._system_user_id,
+            is_active=no_matter,
+            is_verified=no_matter,
+        )
+
+    def for_create_marriage(self) -> RequiredAccessPolicy:
         return RequiredAccessPolicy(
             id=self._system_user_id,
             is_active=no_matter,

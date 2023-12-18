@@ -6,7 +6,7 @@ import pytest
 from amdb.domain.entities.user.user import UserId, User
 from amdb.domain.entities.user.profile import Profile
 from amdb.domain.entities.person.person import PersonId, Person
-from amdb.domain.entities.person.marriage import MarriageStatus, Marriage
+from amdb.domain.entities.person.marriage import MarriageId, MarriageStatus, Marriage
 from amdb.domain.constants.common import Sex
 from amdb.domain.value_objects import Date, Place
 from amdb.domain.services.user.access_concern import AccessConcern
@@ -89,6 +89,7 @@ OTHER_PERSON_DEATH_DATE = Date(year=2014, month=10, day=14)
 OTHER_PERSON_DEATH_PLACE = Place(country="USA", state="Texas", city=None)
 OTHER_PERSON_UPDATED_AT = datetime.now(timezone.utc)
 
+MARRIAGE_ID = MarriageId(uuid4())
 MARRIAGE_HUSBAND_ID = PERSON_ID
 MARRIAGE_WIFE_ID = OTHER_PERSON_ID
 MARRIAGE_CHILD_IDS: list[PersonId] = []
@@ -235,6 +236,7 @@ def update_person() -> UpdatePerson:
 @pytest.fixture
 def marriage() -> Marriage:
     return Marriage(
+        id=MARRIAGE_ID,
         husband_id=MARRIAGE_HUSBAND_ID,
         wife_id=MARRIAGE_WIFE_ID,
         child_ids=MARRIAGE_CHILD_IDS,

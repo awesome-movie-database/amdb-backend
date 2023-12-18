@@ -16,6 +16,7 @@ from amdb.application.common.exception import ApplicationError
 class CreatePersonHandler:
     def __init__(
         self,
+        *,
         access_concern: AccessConcern,
         create_person: CreatePerson,
         access_policy_gateway: AccessPolicyGateway,
