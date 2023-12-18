@@ -10,7 +10,7 @@ class Profile(Model):
     __tablename__ = "profiles"
 
     user_id: Mapped[UUID] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"),
+        ForeignKey(column="users.id", ondelete="CASCADE"),
         primary_key=True,
     )
     achievements: Mapped[int]

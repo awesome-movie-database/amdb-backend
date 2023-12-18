@@ -19,6 +19,11 @@ class UserMapper:
             state = None
             city = None
 
+        if entity.sex is not None:
+            sex = entity.sex.value
+        else:
+            sex = None
+
         return model.User(
             id=entity.id,
             name=entity.name,
@@ -27,6 +32,7 @@ class UserMapper:
             is_verified=entity.is_verified,
             created_at=entity.created_at,
             email=entity.email,
+            sex=sex,
             birth_date=entity.birth_date,
             country=country,
             state=state,
