@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Optional
 from uuid import uuid4
 
 from amdb.domain.entities.person.person import PersonId, Person
@@ -24,6 +25,8 @@ from amdb.application.common.interfaces.unit_of_work import UnitOfWork
 from amdb.application.common.constants.exceptions import (
     CREATE_PERSON_ACCESS_DENIED,
     PERSONS_DO_NOT_EXIST,
+    CREATE_PERSON_INVALID_COMMAND,
+    RELATION_ALREADY_EXISTS,
     NO_HOMO,
 )
 from amdb.application.common.exception import ApplicationError
@@ -84,6 +87,11 @@ class CreatePersonHandler:
         )
 
         if command.relations_data:
+            self._ensure_can_create_relations(
+                person=person,
+                relations_data=command.relations_data,
+                marriages_data=command.marriages_data,
+            )
             relations = self._create_relations(
                 person=person,
                 relations_data=command.relations_data,
@@ -93,6 +101,10 @@ class CreatePersonHandler:
                 relations=relations,
             )
         if command.marriages_data:
+            self._ensure_can_create_marriages(
+                marriages_data=command.marriages_data,
+                relations_data=command.relations_data,
+            )
             marriages = self._create_marriages(
                 person=person,
                 marriages_data=command.marriages_data,
@@ -113,8 +125,9 @@ class CreatePersonHandler:
         relations_data: list[RelationData],
         timestamp: datetime,
     ) -> list[Relation]:
+        relative_ids = [relation_data.person_id for relation_data in relations_data]
         relatives = self._get_persons_with_ids(
-            *(relation_data.person_id for relation_data in relations_data),
+            *relative_ids,
         )
 
         relations = []
@@ -140,25 +153,20 @@ class CreatePersonHandler:
         marriages_data: list[MarriageData],
         timestamp: datetime,
     ) -> list[Marriage]:
+        spouse_ids = [marriage_data.person_id for marriage_data in marriages_data]
         spouses = self._get_persons_with_ids(
-            *(marriage_data.person_id for marriage_data in marriages_data),
+            *spouse_ids,
         )
 
         marriages = []
         for spouse, marriage_data in zip(spouses, marriages_data):
-            children = self._get_persons_with_ids(
-                *(child_id for child_id in marriage_data.child_ids),
+            husband, wife = self._ensure_husband_and_wife(
+                person=person,
+                spouse=spouse,
             )
-
-            if person.sex is Sex.MALE and spouse.sex is Sex.FEMALE:
-                husband = person
-                wife = spouse
-            elif person.sex is Sex.FEMALE and spouse.sex is Sex.MALE:
-                husband = spouse
-                wife = person
-            else:
-                raise ApplicationError(NO_HOMO)
-
+            children = self._get_persons_with_ids(
+                *marriage_data.child_ids,
+            )
             marriage = self._create_marriage(
                 id=MarriageId(uuid4()),
                 husband=husband,
@@ -202,3 +210,56 @@ class CreatePersonHandler:
             )
 
         return persons
+
+    def _ensure_can_create_relations(
+        self,
+        *,
+        person: Person,
+        relations_data: list[RelationData],
+        marriages_data: Optional[list[MarriageData]] = None,
+    ) -> None:
+        if marriages_data is not None:
+            marriages_spouse_ids = [marriage_data.person_id for marriage_data in marriages_data]
+        else:
+            marriages_spouse_ids = []
+
+        for relation_data in relations_data:
+            if relation_data.person_id in marriages_spouse_ids:
+                raise ApplicationError(CREATE_PERSON_INVALID_COMMAND)
+            relation = self._relation_gateway.with_person_id_and_relative_id(
+                person_id=person.id,
+                relative_id=relation_data.person_id,
+            )
+            if relation is not None:
+                raise ApplicationError(RELATION_ALREADY_EXISTS)
+
+    def _ensure_can_create_marriages(
+        self,
+        *,
+        marriages_data: list[MarriageData],
+        relations_data: Optional[list[RelationData]] = None,
+    ) -> None:
+        if relations_data is not None:
+            relations_person_ids = [relation_data.person_id for relation_data in relations_data]
+        else:
+            relations_person_ids = []
+
+        for marriage_data in marriages_data:
+            if marriage_data.person_id in relations_person_ids:
+                raise ApplicationError(CREATE_PERSON_INVALID_COMMAND)
+            for child_id in marriage_data.child_ids:
+                if child_id in relations_person_ids or child_id == marriage_data.person_id:
+                    raise ApplicationError(CREATE_PERSON_INVALID_COMMAND)
+
+    def _ensure_husband_and_wife(
+        self,
+        *,
+        person: Person,
+        spouse: Person,
+    ) -> tuple[Person, Person]:
+        if person.sex is Sex.MALE and spouse.sex is Sex.FEMALE:
+            return (person, spouse)
+        elif person.sex is Sex.FEMALE and spouse.sex is Sex.MALE:
+            return (spouse, person)
+
+        raise ApplicationError(NO_HOMO)

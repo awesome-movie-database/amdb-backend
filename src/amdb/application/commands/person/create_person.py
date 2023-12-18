@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from amdb.domain.entities.person.person import PersonId
-from amdb.domain.entities.person.relation import RelativeType
+from amdb.domain.entities.person.relation import RelationType
 from amdb.domain.entities.person.marriage import MarriageStatus
 from amdb.domain.constants.common import Sex
 from amdb.domain.value_objects import Date, Place
@@ -11,7 +11,7 @@ from amdb.domain.value_objects import Date, Place
 @dataclass(frozen=True, slots=True)
 class RelationData:
     person_id: PersonId
-    type: RelativeType
+    type: RelationType
 
 
 @dataclass(frozen=True, slots=True)

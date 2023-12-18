@@ -23,5 +23,5 @@ class RelationMapper:
         return entity.Relation(
             person_id=PersonId(model.person_id),
             relative_id=PersonId(model.relative_id),
-            type=entity.RelativeType(model.type),
+            type=entity.RelationType(model.type),
         )

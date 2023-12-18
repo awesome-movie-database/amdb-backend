@@ -5,15 +5,16 @@ from amdb.domain.entities.base import Entity
 from .person import PersonId
 
 
-class RelativeType(IntEnum):
+class RelationType(IntEnum):
     SIBLING = 0
-    AUNT_OR_UNCLE = 1
-    NIECE_OR_NEPHEW = 2
-    GRANDMOTHER_OR_GRANDFATHER = 3
+    AUNCLE = 1
+    NIBLING = 2
+    GRANDPARENT = 3
+    GRANDHCILD = 4
 
 
 @dataclass(slots=True)
 class Relation(Entity):
     person_id: PersonId
     relative_id: PersonId
-    type: RelativeType
+    type: RelationType
