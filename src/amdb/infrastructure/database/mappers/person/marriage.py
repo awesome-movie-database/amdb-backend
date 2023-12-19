@@ -31,9 +31,8 @@ class MarriageMapper:
         children = []
         for child_id in entity.child_ids:
             child = model.MarriageChild(
+                marriage_id=entity.id,
                 child_id=child_id,
-                father_id=entity.husband_id,
-                mother_id=entity.wife_id,
             )
             children.append(child)
 

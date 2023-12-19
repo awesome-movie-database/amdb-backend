@@ -17,7 +17,7 @@ from amdb.application.common.constants.exceptions import (
     PERSON_DOES_NOT_EXIST,
     PERSONS_DO_NOT_EXIST,
     PERSON_ALREADY_MARRIED,
-    PERSONS_ALREADY_MARRIED,
+    MARRIAGE_ALREADY_EXISTS,
     PERSONS_HAVE_SAME_SEX,
 )
 from amdb.application.common.exception import ApplicationError
@@ -146,7 +146,7 @@ class CreateMarriageHandler:
                 and husband_marriage.status not in valid_marriage_statuses
             ):
                 if husband_marriage.wife_id == wife.id:
-                    raise ApplicationError(PERSONS_ALREADY_MARRIED)
+                    raise ApplicationError(MARRIAGE_ALREADY_EXISTS)
 
                 raise ApplicationError(
                     messsage=PERSON_ALREADY_MARRIED,
