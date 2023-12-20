@@ -1,6 +1,7 @@
 from unittest.mock import Mock
 
 import pytest
+from polyfactory.factories import DataclassFactory
 
 from amdb.domain.entities.user.access_policy import AccessPolicy
 from amdb.domain.entities.user.user import UserId, User
@@ -22,14 +23,17 @@ from amdb.application.common.exception import ApplicationError
 @pytest.mark.usefixtures("clear_database")
 def test_verify_user(
     system_user_id: UserId,
-    user: User,
-    access_concern: AccessConcern,
-    verify_user: VerifyUser,
     access_policy_gateway: AccessPolicyGateway,
     user_gateway: UserGateway,
     identity_provider: IdentityProvider,
     unit_of_work: UnitOfWork,
 ) -> None:
+    user_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
+        model=User,
+    )
+    user = user_factory.build(
+        is_verified=False,
+    )
     current_access_policy = AccessPolicy(
         id=system_user_id,
         is_active=True,
@@ -42,13 +46,12 @@ def test_verify_user(
         user=user,
     )
     unit_of_work.commit()
-
     verify_user_command = VerifyUserCommand(
         user_id=user.id,
     )
     verify_user_handler = VerifyUserHandler(
-        access_concern=access_concern,
-        verify_user=verify_user,
+        access_concern=AccessConcern(),
+        verify_user=VerifyUser(),
         access_policy_gateway=access_policy_gateway,
         user_gateway=user_gateway,
         identity_provider=identity_provider,
@@ -62,14 +65,17 @@ def test_verify_user(
 
 @pytest.mark.usefixtures("clear_database")
 def test_verify_user_raises_error_when_access_is_denied(
-    user: User,
-    access_concern: AccessConcern,
-    verify_user: VerifyUser,
     access_policy_gateway: AccessPolicyGateway,
     user_gateway: UserGateway,
     identity_provider: IdentityProvider,
     unit_of_work: UnitOfWork,
 ) -> None:
+    user_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
+        model=User,
+    )
+    user = user_factory.build(
+        is_verified=False,
+    )
     current_access_policy = AccessPolicy(
         id=user.id,
         is_active=True,
@@ -87,8 +93,8 @@ def test_verify_user_raises_error_when_access_is_denied(
         user_id=user.id,
     )
     verify_user_handler = VerifyUserHandler(
-        access_concern=access_concern,
-        verify_user=verify_user,
+        access_concern=AccessConcern(),
+        verify_user=VerifyUser(),
         access_policy_gateway=access_policy_gateway,
         user_gateway=user_gateway,
         identity_provider=identity_provider,
@@ -99,20 +105,24 @@ def test_verify_user_raises_error_when_access_is_denied(
         verify_user_handler.execute(
             command=verify_user_command,
         )
+
     assert error.value.messsage == VERIFY_USER_ACCESS_DENIED
 
 
 @pytest.mark.usefixtures("clear_database")
 def test_verify_user_raises_error_when_user_does_not_exist(
     system_user_id: UserId,
-    user: User,
-    access_concern: AccessConcern,
-    verify_user: VerifyUser,
     access_policy_gateway: AccessPolicyGateway,
     user_gateway: UserGateway,
     identity_provider: IdentityProvider,
     unit_of_work: UnitOfWork,
 ) -> None:
+    user_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
+        model=User,
+    )
+    user = user_factory.build(
+        is_verified=False,
+    )
     current_access_policy = AccessPolicy(
         id=system_user_id,
         is_active=True,
@@ -121,13 +131,12 @@ def test_verify_user_raises_error_when_user_does_not_exist(
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
     )
-
     verify_user_command = VerifyUserCommand(
         user_id=user.id,
     )
     verify_user_handler = VerifyUserHandler(
-        access_concern=access_concern,
-        verify_user=verify_user,
+        access_concern=AccessConcern(),
+        verify_user=VerifyUser(),
         access_policy_gateway=access_policy_gateway,
         user_gateway=user_gateway,
         identity_provider=identity_provider,
@@ -138,4 +147,5 @@ def test_verify_user_raises_error_when_user_does_not_exist(
         verify_user_handler.execute(
             command=verify_user_command,
         )
+
     assert error.value.messsage == USER_DOES_NOT_EXIST

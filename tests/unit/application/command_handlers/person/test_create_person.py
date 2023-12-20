@@ -1,9 +1,11 @@
 from unittest.mock import Mock
+from uuid import uuid4
 
 import pytest
+from polyfactory.factories import DataclassFactory
 
 from amdb.domain.entities.user.access_policy import AccessPolicy
-from amdb.domain.entities.user.user import UserId, User
+from amdb.domain.entities.user.user import UserId
 from amdb.domain.entities.person.person import Person
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.person.create_person import CreatePerson
@@ -20,13 +22,15 @@ from amdb.application.command_handlers.person.create_person import CreatePersonH
 @pytest.mark.usefixtures("clear_database")
 def test_create_person(
     system_user_id: UserId,
-    person: Person,
-    access_concern: AccessConcern,
     access_policy_gateway: AccessPolicyGateway,
     person_gateway: PersonGateway,
     identity_provider: IdentityProvider,
     unit_of_work: UnitOfWork,
 ) -> None:
+    person_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
+        model=Person,
+    )
+    person = person_factory.build()
     create_person: CreatePerson = Mock(
         return_value=person,
     )
@@ -38,7 +42,6 @@ def test_create_person(
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
     )
-
     create_person_command = CreatePersonCommand(
         name=person.name,
         sex=person.sex,
@@ -48,13 +51,14 @@ def test_create_person(
         death_place=person.death_place,
     )
     creaate_person_handler = CreatePersonHandler(
-        access_concern=access_concern,
+        access_concern=AccessConcern(),
         create_person=create_person,
         access_policy_gateway=access_policy_gateway,
         person_gateway=person_gateway,
         identity_provider=identity_provider,
         unit_of_work=unit_of_work,
     )
+
     person_id = creaate_person_handler.execute(
         command=create_person_command,
     )
@@ -64,26 +68,23 @@ def test_create_person(
 
 @pytest.mark.usefixtures("clear_database")
 def test_create_person_should_raise_error_when_access_is_denied(
-    user: User,
-    person: Person,
-    access_concern: AccessConcern,
     access_policy_gateway: AccessPolicyGateway,
     person_gateway: PersonGateway,
     identity_provider: IdentityProvider,
     unit_of_work: UnitOfWork,
 ) -> None:
-    create_person: CreatePerson = Mock(
-        return_value=person,
+    person_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
+        model=Person,
     )
+    person = person_factory.build()
     current_access_policy = AccessPolicy(
-        id=user.id,
+        id=UserId(uuid4()),
         is_active=True,
         is_verified=True,
     )
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
     )
-
     create_person_command = CreatePersonCommand(
         name=person.name,
         sex=person.sex,
@@ -93,8 +94,8 @@ def test_create_person_should_raise_error_when_access_is_denied(
         death_place=person.death_place,
     )
     creaate_person_handler = CreatePersonHandler(
-        access_concern=access_concern,
-        create_person=create_person,
+        access_concern=AccessConcern(),
+        create_person=CreatePerson(),
         access_policy_gateway=access_policy_gateway,
         person_gateway=person_gateway,
         identity_provider=identity_provider,
@@ -105,4 +106,5 @@ def test_create_person_should_raise_error_when_access_is_denied(
         creaate_person_handler.execute(
             command=create_person_command,
         )
+
     assert error.value.messsage == CREATE_PERSON_ACCESS_DENIED

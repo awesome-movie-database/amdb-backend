@@ -1,10 +1,12 @@
 from unittest.mock import Mock
+from uuid import uuid4
 
 import pytest
+from polyfactory.factories import DataclassFactory
 
 from amdb.domain.entities.user.access_policy import AccessPolicy
-from amdb.domain.entities.user.user import UserId, User
-from amdb.domain.entities.person.person import Person
+from amdb.domain.entities.user.user import UserId
+from amdb.domain.entities.person.person import PersonId, Person
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.person.update_person import UpdatePerson
 from amdb.application.common.interfaces.gateways.user.access_policy import AccessPolicyGateway
@@ -20,15 +22,9 @@ from amdb.application.commands.person.update_person import UpdatePersonCommand
 from amdb.application.command_handlers.person.update_person import UpdatePersonHandler
 
 
-NEW_PERSON_NAME = "John Doe jr"
-
-
 @pytest.mark.usefixtures("clear_database")
 def test_update_person(
     system_user_id: UserId,
-    person: Person,
-    access_concern: AccessConcern,
-    update_person: UpdatePerson,
     access_policy_gateway: AccessPolicyGateway,
     person_gateway: PersonGateway,
     identity_provider: IdentityProvider,
@@ -42,18 +38,23 @@ def test_update_person(
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
     )
+    person_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
+        model=Person,
+    )
+    person = person_factory.build(
+        name="John Doe",
+    )
     person_gateway.save(
         person=person,
     )
     unit_of_work.commit()
-
     update_person_command = UpdatePersonCommand(
         person_id=person.id,
-        name=NEW_PERSON_NAME,
+        name="Johny Doe",
     )
     update_person_handler = UpdatePersonHandler(
-        access_concern=access_concern,
-        update_person=update_person,
+        access_concern=AccessConcern(),
+        update_person=UpdatePerson(),
         access_policy_gateway=access_policy_gateway,
         person_gateway=person_gateway,
         identity_provider=identity_provider,
@@ -67,35 +68,36 @@ def test_update_person(
 
 @pytest.mark.usefixtures("clear_database")
 def test_update_person_should_raise_error_when_access_is_denied(
-    user: User,
-    person: Person,
-    access_concern: AccessConcern,
-    update_person: UpdatePerson,
     access_policy_gateway: AccessPolicyGateway,
     person_gateway: PersonGateway,
     identity_provider: IdentityProvider,
     unit_of_work: UnitOfWork,
 ) -> None:
     current_access_policy = AccessPolicy(
-        id=user.id,
+        id=UserId(uuid4()),
         is_active=True,
         is_verified=True,
     )
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
     )
+    person_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
+        model=Person,
+    )
+    person = person_factory.build(
+        name="John Doe",
+    )
     person_gateway.save(
         person=person,
     )
     unit_of_work.commit()
-
     update_person_command = UpdatePersonCommand(
         person_id=person.id,
-        name=NEW_PERSON_NAME,
+        name="Johny Doe",
     )
     update_person_handler = UpdatePersonHandler(
-        access_concern=access_concern,
-        update_person=update_person,
+        access_concern=AccessConcern(),
+        update_person=UpdatePerson(),
         access_policy_gateway=access_policy_gateway,
         person_gateway=person_gateway,
         identity_provider=identity_provider,
@@ -106,15 +108,13 @@ def test_update_person_should_raise_error_when_access_is_denied(
         update_person_handler.execute(
             command=update_person_command,
         )
+
     assert error.value.messsage == UPDATE_PERSON_ACCESS_DENIED
 
 
 @pytest.mark.usefixtures("clear_database")
 def test_update_person_should_raise_error_when_person_does_not_exist(
     system_user_id: UserId,
-    person: Person,
-    access_concern: AccessConcern,
-    update_person: UpdatePerson,
     access_policy_gateway: AccessPolicyGateway,
     person_gateway: PersonGateway,
     identity_provider: IdentityProvider,
@@ -128,14 +128,13 @@ def test_update_person_should_raise_error_when_person_does_not_exist(
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
     )
-
     update_person_command = UpdatePersonCommand(
-        person_id=person.id,
-        name=NEW_PERSON_NAME,
+        person_id=PersonId(uuid4()),
+        name="Johny Doe",
     )
     update_person_handler = UpdatePersonHandler(
-        access_concern=access_concern,
-        update_person=update_person,
+        access_concern=AccessConcern(),
+        update_person=UpdatePerson(),
         access_policy_gateway=access_policy_gateway,
         person_gateway=person_gateway,
         identity_provider=identity_provider,
@@ -146,4 +145,5 @@ def test_update_person_should_raise_error_when_person_does_not_exist(
         update_person_handler.execute(
             command=update_person_command,
         )
+
     assert error.value.messsage == PERSON_DOES_NOT_EXIST
