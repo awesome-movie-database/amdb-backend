@@ -175,8 +175,11 @@ def test_create_marriage_should_raise_error_when_access_is_denied(
 
 
 @pytest.mark.parametrize(
-    argnames=("child_id"),
-    argvalues=(HUSBAND_ID, WIFE_ID),
+    argnames="child_id",
+    argvalues=(
+        HUSBAND_ID,
+        WIFE_ID,
+    ),
 )
 @pytest.mark.usefixtures("clear_database")
 def test_create_marriage_should_raise_error_when_command_is_invalid(
@@ -293,57 +296,38 @@ def test_create_marriage_should_raise_error_when_children_do_not_exist(
     assert error.value.extra["person_ids"] == child_ids
 
 
+@pytest.mark.parametrize(
+    argnames=(
+        "husband_id_to_use_in_command",
+        "wife_id_to_use_in_command",
+        "husband_id",
+        "wife_id",
+        "person_id_that_should_be_in_exception",
+    ),
+    argvalues=(
+        (
+            HUSBAND_ID,
+            WIFE_ID,
+            HUSBAND_ID,
+            PersonId(uuid4()),
+            WIFE_ID,
+        ),
+        (
+            HUSBAND_ID,
+            WIFE_ID,
+            PersonId(uuid4()),
+            WIFE_ID,
+            HUSBAND_ID,
+        ),
+    ),
+)
 @pytest.mark.usefixtures("clear_database")
-def test_create_marriage_should_raise_error_when_husband_does_not_exist(
-    valid_access_policy: AccessPolicy,
-    access_policy_gateway: AccessPolicyGateway,
-    marriage_gateway: MarriageGateway,
-    person_gateway: PersonGateway,
-    identity_provider: IdentityProvider,
-    unit_of_work: UnitOfWork,
-) -> None:
-    person_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=Person,
-    )
-    wife = person_factory.build(
-        sex=Sex.FEMALE,
-    )
-    identity_provider.get_access_policy = Mock(
-        return_value=valid_access_policy,
-    )
-    person_gateway.save(
-        person=wife,
-    )
-    unit_of_work.commit()
-    create_marriage_command = CreateMarriageCommand(
-        husband_id=HUSBAND_ID,
-        wife_id=wife.id,
-        child_ids=[],
-        status=MarriageStatus.MARRIAGE,
-        start_date=None,
-        end_date=None,
-    )
-    create_marriage_handler = CreateMarriageHandler(
-        access_concern=AccessConcern(),
-        create_marriage=CreateMarriage(),
-        access_policy_gateway=access_policy_gateway,
-        marriage_gateway=marriage_gateway,
-        person_gateway=person_gateway,
-        identity_provider=identity_provider,
-        unit_of_work=unit_of_work,
-    )
-
-    with pytest.raises(ApplicationError) as error:
-        create_marriage_handler.execute(
-            command=create_marriage_command,
-        )
-
-    assert error.value.messsage == PERSON_DOES_NOT_EXIST
-    assert error.value.extra["person_id"] == HUSBAND_ID
-
-
-@pytest.mark.usefixtures("clear_database")
-def test_create_marriage_should_raise_error_when_wife_does_not_exist(
+def test_create_marriage_should_raise_error_when_husband_or_wife_does_not_exist(
+    husband_id_to_use_in_command: PersonId,
+    wife_id_to_use_in_command: PersonId,
+    husband_id: PersonId,
+    wife_id: PersonId,
+    person_id_that_should_be_in_exception: PersonId,
     valid_access_policy: AccessPolicy,
     access_policy_gateway: AccessPolicyGateway,
     marriage_gateway: MarriageGateway,
@@ -355,7 +339,12 @@ def test_create_marriage_should_raise_error_when_wife_does_not_exist(
         model=Person,
     )
     husband = person_factory.build(
+        id=husband_id,
         sex=Sex.MALE,
+    )
+    wife = person_factory.build(
+        id=wife_id,
+        sex=Sex.FEMALE,
     )
     identity_provider.get_access_policy = Mock(
         return_value=valid_access_policy,
@@ -363,10 +352,13 @@ def test_create_marriage_should_raise_error_when_wife_does_not_exist(
     person_gateway.save(
         person=husband,
     )
+    person_gateway.save(
+        person=wife,
+    )
     unit_of_work.commit()
     create_marriage_command = CreateMarriageCommand(
-        husband_id=husband.id,
-        wife_id=WIFE_ID,
+        husband_id=husband_id_to_use_in_command,
+        wife_id=wife_id_to_use_in_command,
         child_ids=[],
         status=MarriageStatus.MARRIAGE,
         start_date=None,
@@ -388,12 +380,24 @@ def test_create_marriage_should_raise_error_when_wife_does_not_exist(
         )
 
     assert error.value.messsage == PERSON_DOES_NOT_EXIST
-    assert error.value.extra["person_id"] == WIFE_ID
+    assert error.value.extra["person_id"] == person_id_that_should_be_in_exception
 
 
 @pytest.mark.parametrize(
-    argnames=("husband_sex", "wife_sex"),
-    argvalues=((Sex.MALE, Sex.MALE), (Sex.FEMALE, Sex.FEMALE)),
+    argnames=(
+        "husband_sex",
+        "wife_sex",
+    ),
+    argvalues=(
+        (
+            Sex.MALE,
+            Sex.MALE,
+        ),
+        (
+            Sex.FEMALE,
+            Sex.FEMALE,
+        ),
+    ),
 )
 @pytest.mark.usefixtures("clear_database")
 def test_create_marriage_should_raise_error_when_husband_or_wife_have_same_sex(
