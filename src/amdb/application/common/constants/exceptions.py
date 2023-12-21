@@ -12,6 +12,6 @@ USER_DOES_NOT_EXIST = "User doesn't exist"
 
 PERSON_DOES_NOT_EXIST = "Person doesn't exist"
 PERSONS_DO_NOT_EXIST = "Persons don't exist"
-PERSON_ALREADY_MARRIED = "Person is already married"
+PERSON_IS_MARRIED = "Person is married"
 PERSONS_HAVE_SAME_SEX = "Persons have the same sex"
 MARRIAGE_ALREADY_EXISTS = "Marriage already exists"

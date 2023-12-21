@@ -16,7 +16,7 @@ from amdb.application.common.constants.exceptions import (
     CREATE_MARRIAGE_ACCESS_DENIED,
     PERSON_DOES_NOT_EXIST,
     PERSONS_DO_NOT_EXIST,
-    PERSON_ALREADY_MARRIED,
+    PERSON_IS_MARRIED,
     MARRIAGE_ALREADY_EXISTS,
     PERSONS_HAVE_SAME_SEX,
 )
@@ -131,10 +131,15 @@ class CreateMarriageHandler:
         wife: Person,
         status: MarriageStatus,
     ) -> None:
-        valid_marriage_statuses = (
+        valid_statuses_for_marriage = (
             MarriageStatus.DIVORCE,
             MarriageStatus.HIS_DEATH,
             MarriageStatus.HER_DEATH,
+        )
+        valid_statuses_for_filing_for_divorce = (
+            MarriageStatus.DIVORCE,
+            MarriageStatus.HER_DEATH,
+            MarriageStatus.HIS_DEATH,
         )
 
         husband_marriages = self._marriage_gateway.list_with_husband_id(
@@ -143,13 +148,22 @@ class CreateMarriageHandler:
         for husband_marriage in husband_marriages:
             if (
                 status is MarriageStatus.MARRIAGE
-                and husband_marriage.status not in valid_marriage_statuses
+                and husband_marriage.status not in valid_statuses_for_marriage
             ):
                 if husband_marriage.wife_id == wife.id:
                     raise ApplicationError(MARRIAGE_ALREADY_EXISTS)
 
                 raise ApplicationError(
-                    messsage=PERSON_ALREADY_MARRIED,
+                    messsage=PERSON_IS_MARRIED,
+                    extra={"person_id": husband.id},
+                )
+            elif (
+                status
+                is (MarriageStatus.HE_FILED_FOR_DIVORCE, MarriageStatus.SHE_FILED_FOR_DIVORCED)
+                and husband_marriage.status not in valid_statuses_for_filing_for_divorce
+            ):
+                raise ApplicationError(
+                    messsage=PERSON_IS_MARRIED,
                     extra={"person_id": husband.id},
                 )
 
@@ -159,10 +173,19 @@ class CreateMarriageHandler:
         for wife_marriage in wife_marriages:
             if (
                 status is MarriageStatus.MARRIAGE
-                and wife_marriage.status not in valid_marriage_statuses
+                and wife_marriage.status not in valid_statuses_for_marriage
             ):
                 raise ApplicationError(
-                    messsage=PERSON_ALREADY_MARRIED,
+                    messsage=PERSON_IS_MARRIED,
+                    extra={"person_id": wife.id},
+                )
+            elif (
+                status
+                is (MarriageStatus.HE_FILED_FOR_DIVORCE, MarriageStatus.SHE_FILED_FOR_DIVORCED)
+                and wife_marriage.status not in valid_statuses_for_filing_for_divorce
+            ):
+                raise ApplicationError(
+                    messsage=PERSON_IS_MARRIED,
                     extra={"person_id": wife.id},
                 )
 
@@ -176,7 +199,7 @@ class CreateMarriageHandler:
         if father.id in child_ids or mother.id in child_ids:
             raise ApplicationError(
                 messsage=CREATE_PERSON_INVALID_COMMAND,
-                extra={"extra_message": "Husband id or wife id in child ids"},
+                extra={"details": "`child_ids` contains `husband_id` or `wife_id`"},
             )
 
         children = self._person_gateway.list_with_ids(
