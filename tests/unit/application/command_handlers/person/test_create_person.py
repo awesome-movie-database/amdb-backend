@@ -19,7 +19,6 @@ from amdb.application.commands.person.create_person import CreatePersonCommand
 from amdb.application.command_handlers.person.create_person import CreatePersonHandler
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_create_person(
     system_user_id: UserId,
     access_policy_gateway: AccessPolicyGateway,
@@ -66,7 +65,6 @@ def test_create_person(
     assert person_id == person.id
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_create_person_should_raise_error_when_access_is_denied(
     access_policy_gateway: AccessPolicyGateway,
     person_gateway: PersonGateway,

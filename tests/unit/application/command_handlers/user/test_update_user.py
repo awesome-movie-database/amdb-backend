@@ -17,7 +17,6 @@ from amdb.application.common.constants.exceptions import UPDATE_USER_ACCESS_DENI
 from amdb.application.common.exception import ApplicationError
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_update_user(
     access_policy_gateway: AccessPolicyGateway,
     user_gateway: UserGateway,
@@ -59,7 +58,6 @@ def test_update_user(
     )
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_update_user_raises_error_when_access_is_denied(
     access_policy_gateway: AccessPolicyGateway,
     user_gateway: UserGateway,

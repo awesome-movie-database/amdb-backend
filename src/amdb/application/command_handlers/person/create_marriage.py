@@ -159,7 +159,7 @@ class CreateMarriageHandler:
                 )
             elif (
                 status
-                is (MarriageStatus.HE_FILED_FOR_DIVORCE, MarriageStatus.SHE_FILED_FOR_DIVORCED)
+                in (MarriageStatus.HE_FILED_FOR_DIVORCE, MarriageStatus.SHE_FILED_FOR_DIVORCE)
                 and husband_marriage.status not in valid_statuses_for_filing_for_divorce
             ):
                 raise ApplicationError(
@@ -181,7 +181,7 @@ class CreateMarriageHandler:
                 )
             elif (
                 status
-                is (MarriageStatus.HE_FILED_FOR_DIVORCE, MarriageStatus.SHE_FILED_FOR_DIVORCED)
+                in (MarriageStatus.HE_FILED_FOR_DIVORCE, MarriageStatus.SHE_FILED_FOR_DIVORCE)
                 and wife_marriage.status not in valid_statuses_for_filing_for_divorce
             ):
                 raise ApplicationError(

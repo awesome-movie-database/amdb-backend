@@ -39,7 +39,7 @@ def access_policy_gateway() -> InMemoryAccessPolicyGateway:
 @pytest.fixture
 def user_gateway(
     sqlalchemy_session: Session,
-) -> SQLAlchemyUnitOfWork:
+) -> SQLAlchemyUserGateway:
     return SQLAlchemyUserGateway(
         session=sqlalchemy_session,
         mapper=UserMapper(),
@@ -79,7 +79,7 @@ def marriage_gateway(
 @pytest.fixture
 def relation_gateway(
     sqlalchemy_session: Session,
-) -> SQLAlchemyRelationGateway:
+) -> SQLAlchemyMarriageGateway:
     return SQLAlchemyRelationGateway(
         session=sqlalchemy_session,
         mapper=RelationMapper(),

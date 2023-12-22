@@ -17,7 +17,7 @@ class MarriageStatus(IntEnum):
     HIS_DEATH = 2
     HER_DEATH = 3
     HE_FILED_FOR_DIVORCE = 4
-    SHE_FILED_FOR_DIVORCED = 5
+    SHE_FILED_FOR_DIVORCE = 5
 
 
 @dataclass(slots=True)

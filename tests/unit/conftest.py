@@ -41,13 +41,24 @@ def sqlalchemy_engine(test_sqlalchemy_url: str) -> Engine:
     )
 
 
+@pytest.fixture(autouse=True)
+def clear_database(
+    sqlalchemy_engine: Engine,
+) -> Iterator[None]:
+    Model.metadata.create_all(
+        bind=sqlalchemy_engine,
+    )
+    yield
+    Model.metadata.drop_all(bind=sqlalchemy_engine)
+
+
 @pytest.fixture
 def sqlalchemy_session(
     sqlalchemy_engine: Engine,
 ) -> Iterator[Session]:
     connection = sqlalchemy_engine.connect()
     session = Session(
-        bind=sqlalchemy_engine,
+        bind=connection,
         autoflush=False,
         expire_on_commit=False,
     )
@@ -56,16 +67,3 @@ def sqlalchemy_session(
 
     session.close()
     connection.close()
-
-
-@pytest.fixture
-def clear_database(
-    sqlalchemy_engine: Engine,
-) -> Iterator[None]:
-    Model.metadata.create_all(
-        bind=sqlalchemy_engine,
-    )
-    yield
-    Model.metadata.drop_all(
-        bind=sqlalchemy_engine,
-    )

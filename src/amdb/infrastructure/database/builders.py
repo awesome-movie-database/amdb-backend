@@ -1,6 +1,8 @@
 from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy.orm.session import sessionmaker, Session
 
+from .gateway_factory import GatewayFactory
+
 
 def build_engine(
     *,
@@ -20,4 +22,13 @@ def build_session_factory(
         bind=engine,
         autoflush=False,
         expire_on_commit=False,
+    )
+
+
+def build_gateway_factory(
+    *,
+    session: Session,
+) -> GatewayFactory:
+    return GatewayFactory(
+        session=session,
     )

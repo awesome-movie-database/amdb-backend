@@ -20,7 +20,6 @@ from amdb.application.common.constants.exceptions import (
 from amdb.application.common.exception import ApplicationError
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_verify_user(
     system_user_id: UserId,
     access_policy_gateway: AccessPolicyGateway,
@@ -63,7 +62,6 @@ def test_verify_user(
     )
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_verify_user_raises_error_when_access_is_denied(
     access_policy_gateway: AccessPolicyGateway,
     user_gateway: UserGateway,
@@ -109,7 +107,6 @@ def test_verify_user_raises_error_when_access_is_denied(
     assert error.value.messsage == VERIFY_USER_ACCESS_DENIED
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_verify_user_raises_error_when_user_does_not_exist(
     system_user_id: UserId,
     access_policy_gateway: AccessPolicyGateway,

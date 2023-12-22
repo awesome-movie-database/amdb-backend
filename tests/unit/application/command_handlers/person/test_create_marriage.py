@@ -1,4 +1,5 @@
 from unittest.mock import Mock
+from typing import Type
 from uuid import uuid4
 
 import pytest
@@ -21,6 +22,7 @@ from amdb.application.common.constants.exceptions import (
     CREATE_MARRIAGE_ACCESS_DENIED,
     PERSON_DOES_NOT_EXIST,
     PERSONS_DO_NOT_EXIST,
+    PERSON_IS_MARRIED,
     MARRIAGE_ALREADY_EXISTS,
     PERSONS_HAVE_SAME_SEX,
 )
@@ -28,6 +30,9 @@ from amdb.application.common.exception import ApplicationError
 from amdb.application.commands.person.create_marriage import CreateMarriageCommand
 from amdb.application.command_handlers.person.create_marriage import CreateMarriageHandler
 
+
+PersonFactory = Type[DataclassFactory[Person]]
+MarriageFactory = Type[DataclassFactory[Marriage]]
 
 HUSBAND_ID = PersonId(uuid4())
 WIFE_ID = PersonId(uuid4())
@@ -44,7 +49,6 @@ def valid_access_policy(
     )
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_create_marriage(
     valid_access_policy: AccessPolicy,
     access_policy_gateway: AccessPolicyGateway,
@@ -112,7 +116,6 @@ def test_create_marriage(
     assert marriage_id == marriage.id
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_create_marriage_should_raise_error_when_access_is_denied(
     access_policy_gateway: AccessPolicyGateway,
     marriage_gateway: MarriageGateway,
@@ -181,7 +184,6 @@ def test_create_marriage_should_raise_error_when_access_is_denied(
         WIFE_ID,
     ),
 )
-@pytest.mark.usefixtures("clear_database")
 def test_create_marriage_should_raise_error_when_command_is_invalid(
     child_id: PersonId,
     valid_access_policy: AccessPolicy,
@@ -238,7 +240,6 @@ def test_create_marriage_should_raise_error_when_command_is_invalid(
     assert error.value.messsage == CREATE_PERSON_INVALID_COMMAND
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_create_marriage_should_raise_error_when_children_do_not_exist(
     valid_access_policy: AccessPolicy,
     access_policy_gateway: AccessPolicyGateway,
@@ -321,7 +322,6 @@ def test_create_marriage_should_raise_error_when_children_do_not_exist(
         ),
     ),
 )
-@pytest.mark.usefixtures("clear_database")
 def test_create_marriage_should_raise_error_when_husband_or_wife_does_not_exist(
     husband_id_to_use_in_command: PersonId,
     wife_id_to_use_in_command: PersonId,
@@ -399,7 +399,6 @@ def test_create_marriage_should_raise_error_when_husband_or_wife_does_not_exist(
         ),
     ),
 )
-@pytest.mark.usefixtures("clear_database")
 def test_create_marriage_should_raise_error_when_husband_or_wife_have_same_sex(
     valid_access_policy: AccessPolicy,
     husband_sex: Sex,
@@ -455,7 +454,6 @@ def test_create_marriage_should_raise_error_when_husband_or_wife_have_same_sex(
     assert error.value.messsage == PERSONS_HAVE_SAME_SEX
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_create_marriage_should_raise_error_when_marriage_already_exists(
     valid_access_policy: AccessPolicy,
     access_policy_gateway: AccessPolicyGateway,
@@ -519,3 +517,173 @@ def test_create_marriage_should_raise_error_when_marriage_already_exists(
         )
 
     assert error.value.messsage == MARRIAGE_ALREADY_EXISTS
+
+
+@pytest.mark.parametrize(
+    argnames="marriage_status_to_use_in_command",
+    argvalues=(
+        MarriageStatus.MARRIAGE,
+        MarriageStatus.HE_FILED_FOR_DIVORCE,
+        MarriageStatus.SHE_FILED_FOR_DIVORCE,
+    ),
+)
+class TestCreateMarriageShouldRaisePersonIsMarriedError:
+    @pytest.mark.parametrize(
+        argnames="husband_marriage_status",
+        argvalues=(
+            MarriageStatus.MARRIAGE,
+            MarriageStatus.HE_FILED_FOR_DIVORCE,
+            MarriageStatus.SHE_FILED_FOR_DIVORCE,
+        ),
+    )
+    def when_husband_is_married(
+        self,
+        husband_marriage_status: MarriageStatus,
+        marriage_status_to_use_in_command: MarriageStatus,
+        person_factory: PersonFactory,
+        marriage_factory: MarriageFactory,
+        valid_access_policy: AccessPolicy,
+        access_policy_gateway: AccessPolicyGateway,
+        person_gateway: PersonGateway,
+        marriage_gateway: MarriageGateway,
+        unit_of_work: UnitOfWork,
+        identity_provider: IdentityProvider,
+    ) -> None:
+        wife = person_factory.build(
+            sex=Sex.FEMALE,
+        )
+        person_gateway.save(
+            person=wife,
+        )
+        marriage_husband = person_factory.build(
+            sex=Sex.MALE,
+        )
+        person_gateway.save(
+            person=marriage_husband,
+        )
+        marriage_wife = person_factory.build(
+            sex=Sex.FEMALE,
+        )
+        person_gateway.save(
+            person=marriage_wife,
+        )
+        husband_marriage = marriage_factory.build(
+            husband_id=marriage_husband.id,
+            wife_id=marriage_wife.id,
+            status=husband_marriage_status,
+        )
+        marriage_gateway.save(
+            marriage=husband_marriage,
+        )
+
+        unit_of_work.commit()
+
+        identity_provider.get_access_policy = Mock(
+            return_value=valid_access_policy,
+        )
+
+        create_marriage_command = CreateMarriageCommand(
+            husband_id=marriage_husband.id,
+            wife_id=wife.id,
+            child_ids=[],
+            status=marriage_status_to_use_in_command,
+            start_date=None,
+            end_date=None,
+        )
+        create_marriage_handler = CreateMarriageHandler(
+            access_concern=AccessConcern(),
+            create_marriage=CreateMarriage(),
+            access_policy_gateway=access_policy_gateway,
+            marriage_gateway=marriage_gateway,
+            person_gateway=person_gateway,
+            identity_provider=identity_provider,
+            unit_of_work=unit_of_work,
+        )
+
+        with pytest.raises(ApplicationError) as error:
+            create_marriage_handler.execute(
+                command=create_marriage_command,
+            )
+
+        assert error.value.messsage == PERSON_IS_MARRIED
+        assert error.value.extra["person_id"] == marriage_husband.id
+
+    @pytest.mark.parametrize(
+        argnames="wife_marriage_status",
+        argvalues=(
+            MarriageStatus.MARRIAGE,
+            MarriageStatus.HE_FILED_FOR_DIVORCE,
+            MarriageStatus.SHE_FILED_FOR_DIVORCE,
+        ),
+    )
+    def when_wife_is_married(
+        self,
+        wife_marriage_status: MarriageStatus,
+        marriage_status_to_use_in_command: MarriageStatus,
+        person_factory: PersonFactory,
+        marriage_factory: MarriageFactory,
+        valid_access_policy: AccessPolicy,
+        access_policy_gateway: AccessPolicyGateway,
+        person_gateway: PersonGateway,
+        marriage_gateway: MarriageGateway,
+        unit_of_work: UnitOfWork,
+        identity_provider: IdentityProvider,
+    ) -> None:
+        husband = person_factory.build(
+            sex=Sex.MALE,
+        )
+        person_gateway.save(
+            person=husband,
+        )
+        marriage_husband = person_factory.build(
+            sex=Sex.MALE,
+        )
+        person_gateway.save(
+            person=marriage_husband,
+        )
+        marriage_wife = person_factory.build(
+            sex=Sex.FEMALE,
+        )
+        person_gateway.save(
+            person=marriage_wife,
+        )
+        husband_marriage = marriage_factory.build(
+            husband_id=marriage_husband.id,
+            wife_id=marriage_wife.id,
+            status=wife_marriage_status,
+        )
+        marriage_gateway.save(
+            marriage=husband_marriage,
+        )
+
+        unit_of_work.commit()
+
+        identity_provider.get_access_policy = Mock(
+            return_value=valid_access_policy,
+        )
+
+        create_marriage_command = CreateMarriageCommand(
+            husband_id=husband.id,
+            wife_id=marriage_wife.id,
+            child_ids=[],
+            status=marriage_status_to_use_in_command,
+            start_date=None,
+            end_date=None,
+        )
+        create_marriage_handler = CreateMarriageHandler(
+            access_concern=AccessConcern(),
+            create_marriage=CreateMarriage(),
+            access_policy_gateway=access_policy_gateway,
+            marriage_gateway=marriage_gateway,
+            person_gateway=person_gateway,
+            identity_provider=identity_provider,
+            unit_of_work=unit_of_work,
+        )
+
+        with pytest.raises(ApplicationError) as error:
+            create_marriage_handler.execute(
+                command=create_marriage_command,
+            )
+
+        assert error.value.messsage == PERSON_IS_MARRIED
+        assert error.value.extra["person_id"] == marriage_wife.id

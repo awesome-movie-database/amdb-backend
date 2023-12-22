@@ -22,7 +22,6 @@ from amdb.application.commands.person.update_person import UpdatePersonCommand
 from amdb.application.command_handlers.person.update_person import UpdatePersonHandler
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_update_person(
     system_user_id: UserId,
     access_policy_gateway: AccessPolicyGateway,
@@ -66,7 +65,6 @@ def test_update_person(
     )
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_update_person_should_raise_error_when_access_is_denied(
     access_policy_gateway: AccessPolicyGateway,
     person_gateway: PersonGateway,
@@ -112,7 +110,6 @@ def test_update_person_should_raise_error_when_access_is_denied(
     assert error.value.messsage == UPDATE_PERSON_ACCESS_DENIED
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_update_person_should_raise_error_when_person_does_not_exist(
     system_user_id: UserId,
     access_policy_gateway: AccessPolicyGateway,

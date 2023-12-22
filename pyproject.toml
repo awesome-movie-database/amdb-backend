@@ -27,6 +27,7 @@ polyfactory = "^2.13.0"
 
 [tool.pytest.ini_options]
 pythonpath = "src/"
+python_functions = "when_* test_*"
 
 [tool.ruff]
 line-length = 99

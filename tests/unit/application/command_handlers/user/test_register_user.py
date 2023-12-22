@@ -15,7 +15,6 @@ from amdb.application.commands.user.register_user import RegisterUserCommand
 from amdb.application.command_handlers.user.register_user import RegisterUserHandler
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_register_user(
     user_gateway: UserGateway,
     profile_gateway: ProfileGateway,
@@ -55,7 +54,6 @@ def test_register_user(
     assert user_id == user.id
 
 
-@pytest.mark.usefixtures("clear_database")
 def test_register_user_raises_error_when_username_already_exists(
     user_gateway: UserGateway,
     profile_gateway: ProfileGateway,
