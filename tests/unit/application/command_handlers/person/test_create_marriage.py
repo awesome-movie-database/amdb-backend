@@ -454,69 +454,87 @@ def test_create_marriage_should_raise_error_when_husband_or_wife_have_same_sex(
     assert error.value.messsage == PERSONS_HAVE_SAME_SEX
 
 
-def test_create_marriage_should_raise_error_when_marriage_already_exists(
-    valid_access_policy: AccessPolicy,
-    access_policy_gateway: AccessPolicyGateway,
-    marriage_gateway: MarriageGateway,
-    person_gateway: PersonGateway,
-    identity_provider: IdentityProvider,
-    unit_of_work: UnitOfWork,
-) -> None:
-    person_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=Person,
+class TestCreateMarriageShouldRaiseMarriageAlreadyExistsError:
+    @pytest.mark.parametrize(
+        argnames="marriage_status_to_use_in_command",
+        argvalues=(
+            MarriageStatus.MARRIAGE,
+            MarriageStatus.HE_FILED_FOR_DIVORCE,
+            MarriageStatus.SHE_FILED_FOR_DIVORCE,
+        ),
     )
-    husband = person_factory.build(
-        sex=Sex.MALE,
+    @pytest.mark.parametrize(
+        argnames="marriage_status",
+        argvalues=(
+            MarriageStatus.MARRIAGE,
+            MarriageStatus.HE_FILED_FOR_DIVORCE,
+            MarriageStatus.SHE_FILED_FOR_DIVORCE,
+        ),
     )
-    wife = person_factory.build(
-        sex=Sex.FEMALE,
-    )
-    marriage_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=Marriage,
-    )
-    marriage = marriage_factory.build(
-        husband_id=husband.id,
-        wife_id=wife.id,
-        child_ids=[],
-        status=MarriageStatus.MARRIAGE,
-    )
-    identity_provider.get_access_policy = Mock(
-        return_value=valid_access_policy,
-    )
-    person_gateway.save(
-        person=husband,
-    )
-    person_gateway.save(
-        person=wife,
-    )
-    marriage_gateway.save(
-        marriage=marriage,
-    )
-    unit_of_work.commit()
-    create_marriage_command = CreateMarriageCommand(
-        husband_id=marriage.husband_id,
-        wife_id=marriage.wife_id,
-        child_ids=marriage.child_ids,
-        status=marriage.status,
-        start_date=marriage.start_date,
-        end_date=marriage.end_date,
-    )
-    create_marriage_handler = CreateMarriageHandler(
-        access_concern=AccessConcern(),
-        create_marriage=CreateMarriage(),
-        access_policy_gateway=access_policy_gateway,
-        marriage_gateway=marriage_gateway,
-        person_gateway=person_gateway,
-        identity_provider=identity_provider,
-        unit_of_work=unit_of_work,
-    )
-
-    with pytest.raises(ApplicationError) as error:
-        create_marriage_handler.execute(
-            command=create_marriage_command,
+    def when_marriage_already_exists(
+        self,
+        marriage_status_to_use_in_command: MarriageStatus,
+        marriage_status: MarriageStatus,
+        person_factory: PersonFactory,
+        marriage_factory: MarriageFactory,
+        valid_access_policy: AccessPolicy,
+        access_policy_gateway: AccessPolicyGateway,
+        marriage_gateway: MarriageGateway,
+        person_gateway: PersonGateway,
+        identity_provider: IdentityProvider,
+        unit_of_work: UnitOfWork,
+    ) -> None:
+        husband = person_factory.build(
+            sex=Sex.MALE,
+        )
+        person_gateway.save(
+            person=husband,
+        )
+        wife = person_factory.build(
+            sex=Sex.FEMALE,
+        )
+        person_gateway.save(
+            person=wife,
+        )
+        marriage = marriage_factory.build(
+            husband_id=husband.id,
+            wife_id=wife.id,
+            status=marriage_status,
+        )
+        marriage_gateway.save(
+            marriage=marriage,
         )
 
-    assert error.value.messsage == MARRIAGE_ALREADY_EXISTS
+        unit_of_work.commit()
+
+        identity_provider.get_access_policy = Mock(
+            return_value=valid_access_policy,
+        )
+
+        create_marriage_command = CreateMarriageCommand(
+            husband_id=husband.id,
+            wife_id=wife.id,
+            child_ids=[],
+            status=marriage_status_to_use_in_command,
+            start_date=None,
+            end_date=None,
+        )
+        create_marriage_handler = CreateMarriageHandler(
+            access_concern=AccessConcern(),
+            create_marriage=CreateMarriage(),
+            access_policy_gateway=access_policy_gateway,
+            marriage_gateway=marriage_gateway,
+            person_gateway=person_gateway,
+            identity_provider=identity_provider,
+            unit_of_work=unit_of_work,
+        )
+
+        with pytest.raises(ApplicationError) as error:
+            create_marriage_handler.execute(
+                command=create_marriage_command,
+            )
+
+        assert error.value.messsage == MARRIAGE_ALREADY_EXISTS
 
 
 @pytest.mark.parametrize(

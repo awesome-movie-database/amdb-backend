@@ -131,15 +131,10 @@ class CreateMarriageHandler:
         wife: Person,
         status: MarriageStatus,
     ) -> None:
-        valid_statuses_for_marriage = (
+        valid_marriage_statuses = (
             MarriageStatus.DIVORCE,
             MarriageStatus.HIS_DEATH,
             MarriageStatus.HER_DEATH,
-        )
-        valid_statuses_for_filing_for_divorce = (
-            MarriageStatus.DIVORCE,
-            MarriageStatus.HER_DEATH,
-            MarriageStatus.HIS_DEATH,
         )
 
         husband_marriages = self._marriage_gateway.list_with_husband_id(
@@ -147,21 +142,17 @@ class CreateMarriageHandler:
         )
         for husband_marriage in husband_marriages:
             if (
-                status is MarriageStatus.MARRIAGE
-                and husband_marriage.status not in valid_statuses_for_marriage
+                status
+                in (
+                    MarriageStatus.MARRIAGE,
+                    MarriageStatus.HE_FILED_FOR_DIVORCE,
+                    MarriageStatus.SHE_FILED_FOR_DIVORCE,
+                )
+                and husband_marriage.status not in valid_marriage_statuses
             ):
                 if husband_marriage.wife_id == wife.id:
                     raise ApplicationError(MARRIAGE_ALREADY_EXISTS)
 
-                raise ApplicationError(
-                    messsage=PERSON_IS_MARRIED,
-                    extra={"person_id": husband.id},
-                )
-            elif (
-                status
-                in (MarriageStatus.HE_FILED_FOR_DIVORCE, MarriageStatus.SHE_FILED_FOR_DIVORCE)
-                and husband_marriage.status not in valid_statuses_for_filing_for_divorce
-            ):
                 raise ApplicationError(
                     messsage=PERSON_IS_MARRIED,
                     extra={"person_id": husband.id},
@@ -172,17 +163,13 @@ class CreateMarriageHandler:
         )
         for wife_marriage in wife_marriages:
             if (
-                status is MarriageStatus.MARRIAGE
-                and wife_marriage.status not in valid_statuses_for_marriage
-            ):
-                raise ApplicationError(
-                    messsage=PERSON_IS_MARRIED,
-                    extra={"person_id": wife.id},
-                )
-            elif (
                 status
-                in (MarriageStatus.HE_FILED_FOR_DIVORCE, MarriageStatus.SHE_FILED_FOR_DIVORCE)
-                and wife_marriage.status not in valid_statuses_for_filing_for_divorce
+                in (
+                    MarriageStatus.MARRIAGE,
+                    MarriageStatus.HE_FILED_FOR_DIVORCE,
+                    MarriageStatus.SHE_FILED_FOR_DIVORCE,
+                )
+                and wife_marriage.status not in valid_marriage_statuses
             ):
                 raise ApplicationError(
                     messsage=PERSON_IS_MARRIED,
