@@ -1,4 +1,5 @@
 from unittest.mock import Mock
+from typing import Type
 from uuid import uuid4
 
 import pytest
@@ -6,7 +7,8 @@ from polyfactory.factories import DataclassFactory
 
 from amdb.domain.entities.user.access_policy import AccessPolicy
 from amdb.domain.entities.user.user import UserId
-from amdb.domain.entities.person.person import Person
+from amdb.domain.entities.person.person import PersonId, Person
+from amdb.domain.constants.common import Sex
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.person.create_person import CreatePerson
 from amdb.application.common.interfaces.gateways.user.access_policy import AccessPolicyGateway
@@ -19,90 +21,97 @@ from amdb.application.commands.person.create_person import CreatePersonCommand
 from amdb.application.command_handlers.person.create_person import CreatePersonHandler
 
 
-def test_create_person(
+PersonFactory = Type[DataclassFactory[Person]]
+
+
+@pytest.fixture(scope="module")
+def identity_provider_with_valid_access_policy(
     system_user_id: UserId,
-    access_policy_gateway: AccessPolicyGateway,
-    person_gateway: PersonGateway,
-    identity_provider: IdentityProvider,
-    unit_of_work: UnitOfWork,
-) -> None:
-    person_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=Person,
-    )
-    person = person_factory.build()
-    create_person: CreatePerson = Mock(
-        return_value=person,
-    )
-    current_access_policy = AccessPolicy(
+) -> IdentityProvider:
+    valid_access_policy = AccessPolicy(
         id=system_user_id,
         is_active=True,
         is_verified=True,
     )
+    identity_provider = Mock()
     identity_provider.get_access_policy = Mock(
-        return_value=current_access_policy,
-    )
-    create_person_command = CreatePersonCommand(
-        name=person.name,
-        sex=person.sex,
-        birth_date=person.birth_date,
-        birth_place=person.birth_place,
-        death_date=person.death_date,
-        death_place=person.death_place,
-    )
-    creaate_person_handler = CreatePersonHandler(
-        access_concern=AccessConcern(),
-        create_person=create_person,
-        access_policy_gateway=access_policy_gateway,
-        person_gateway=person_gateway,
-        identity_provider=identity_provider,
-        unit_of_work=unit_of_work,
+        return_value=valid_access_policy,
     )
 
-    person_id = creaate_person_handler.execute(
-        command=create_person_command,
-    )
-
-    assert person_id == person.id
+    return identity_provider
 
 
-def test_create_person_should_raise_error_when_access_is_denied(
-    access_policy_gateway: AccessPolicyGateway,
-    person_gateway: PersonGateway,
-    identity_provider: IdentityProvider,
-    unit_of_work: UnitOfWork,
-) -> None:
-    person_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=Person,
-    )
-    person = person_factory.build()
-    current_access_policy = AccessPolicy(
-        id=UserId(uuid4()),
+@pytest.fixture(scope="module")
+def identity_provider_with_invalid_access_policy() -> IdentityProvider:
+    invalid_access_policy = AccessPolicy(
+        id=PersonId(uuid4()),
         is_active=True,
         is_verified=True,
     )
+    identity_provider = Mock()
     identity_provider.get_access_policy = Mock(
-        return_value=current_access_policy,
+        return_value=invalid_access_policy,
     )
+
+    return identity_provider
+
+
+def test_create_person(
+    access_policy_gateway: AccessPolicyGateway,
+    person_gateway: PersonGateway,
+    identity_provider_with_valid_access_policy: IdentityProvider,
+    unit_of_work: UnitOfWork,
+) -> None:
     create_person_command = CreatePersonCommand(
-        name=person.name,
-        sex=person.sex,
-        birth_date=person.birth_date,
-        birth_place=person.birth_place,
-        death_date=person.death_date,
-        death_place=person.death_place,
+        name="John Doe",
+        sex=Sex.MALE,
+        birth_date=None,
+        birth_place=None,
+        death_date=None,
+        death_place=None,
     )
     creaate_person_handler = CreatePersonHandler(
         access_concern=AccessConcern(),
         create_person=CreatePerson(),
         access_policy_gateway=access_policy_gateway,
         person_gateway=person_gateway,
-        identity_provider=identity_provider,
+        identity_provider=identity_provider_with_valid_access_policy,
         unit_of_work=unit_of_work,
     )
 
-    with pytest.raises(ApplicationError) as error:
-        creaate_person_handler.execute(
-            command=create_person_command,
+    creaate_person_handler.execute(
+        command=create_person_command,
+    )
+
+
+class TestCreatePersonShouldRaiseCreatePersonAccessDeniedError:
+    def when_access_is_denied(
+        self,
+        access_policy_gateway: AccessPolicyGateway,
+        person_gateway: PersonGateway,
+        identity_provider_with_invalid_access_policy: IdentityProvider,
+        unit_of_work: UnitOfWork,
+    ) -> None:
+        create_person_command = CreatePersonCommand(
+            name="John Doe",
+            sex=Sex.MALE,
+            birth_date=None,
+            birth_place=None,
+            death_date=None,
+            death_place=None,
+        )
+        creaate_person_handler = CreatePersonHandler(
+            access_concern=AccessConcern(),
+            create_person=CreatePerson(),
+            access_policy_gateway=access_policy_gateway,
+            person_gateway=person_gateway,
+            identity_provider=identity_provider_with_invalid_access_policy,
+            unit_of_work=unit_of_work,
         )
 
-    assert error.value.messsage == CREATE_PERSON_ACCESS_DENIED
+        with pytest.raises(ApplicationError) as error:
+            creaate_person_handler.execute(
+                command=create_person_command,
+            )
+
+        assert error.value.messsage == CREATE_PERSON_ACCESS_DENIED

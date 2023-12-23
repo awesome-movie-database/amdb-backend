@@ -52,7 +52,6 @@ class UpdatePersonHandler:
             person=person,
             timestamp=datetime.now(timezone.utc),
             name=command.name,
-            sex=command.sex,
             birth_date=command.birth_date,
             birth_place=command.birth_place,
             death_date=command.death_date,

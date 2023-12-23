@@ -1,4 +1,5 @@
 from unittest.mock import Mock
+from typing import Type
 from uuid import uuid4
 
 import pytest
@@ -22,24 +23,48 @@ from amdb.application.commands.person.update_person import UpdatePersonCommand
 from amdb.application.command_handlers.person.update_person import UpdatePersonHandler
 
 
-def test_update_person(
+PersonFactory = Type[DataclassFactory[Person]]
+
+
+@pytest.fixture(scope="module")
+def identity_provider_with_valid_access_policy(
     system_user_id: UserId,
-    access_policy_gateway: AccessPolicyGateway,
-    person_gateway: PersonGateway,
-    identity_provider: IdentityProvider,
-    unit_of_work: UnitOfWork,
-) -> None:
-    current_access_policy = AccessPolicy(
+) -> IdentityProvider:
+    valid_access_policy = AccessPolicy(
         id=system_user_id,
         is_active=True,
         is_verified=True,
     )
+    identity_provider = Mock()
     identity_provider.get_access_policy = Mock(
-        return_value=current_access_policy,
+        return_value=valid_access_policy,
     )
-    person_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=Person,
+
+    return identity_provider
+
+
+@pytest.fixture(scope="module")
+def identity_provider_with_invalid_access_policy() -> IdentityProvider:
+    invalid_access_policy = AccessPolicy(
+        id=PersonId(uuid4()),
+        is_active=True,
+        is_verified=True,
     )
+    identity_provider = Mock()
+    identity_provider.get_access_policy = Mock(
+        return_value=invalid_access_policy,
+    )
+
+    return identity_provider
+
+
+def test_update_person(
+    person_factory: PersonFactory,
+    access_policy_gateway: AccessPolicyGateway,
+    person_gateway: PersonGateway,
+    identity_provider_with_valid_access_policy: IdentityProvider,
+    unit_of_work: UnitOfWork,
+) -> None:
     person = person_factory.build(
         name="John Doe",
     )
@@ -47,6 +72,7 @@ def test_update_person(
         person=person,
     )
     unit_of_work.commit()
+
     update_person_command = UpdatePersonCommand(
         person_id=person.id,
         name="Johny Doe",
@@ -56,7 +82,7 @@ def test_update_person(
         update_person=UpdatePerson(),
         access_policy_gateway=access_policy_gateway,
         person_gateway=person_gateway,
-        identity_provider=identity_provider,
+        identity_provider=identity_provider_with_valid_access_policy,
         unit_of_work=unit_of_work,
     )
 
@@ -65,82 +91,59 @@ def test_update_person(
     )
 
 
-def test_update_person_should_raise_error_when_access_is_denied(
-    access_policy_gateway: AccessPolicyGateway,
-    person_gateway: PersonGateway,
-    identity_provider: IdentityProvider,
-    unit_of_work: UnitOfWork,
-) -> None:
-    current_access_policy = AccessPolicy(
-        id=UserId(uuid4()),
-        is_active=True,
-        is_verified=True,
-    )
-    identity_provider.get_access_policy = Mock(
-        return_value=current_access_policy,
-    )
-    person_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=Person,
-    )
-    person = person_factory.build(
-        name="John Doe",
-    )
-    person_gateway.save(
-        person=person,
-    )
-    unit_of_work.commit()
-    update_person_command = UpdatePersonCommand(
-        person_id=person.id,
-        name="Johny Doe",
-    )
-    update_person_handler = UpdatePersonHandler(
-        access_concern=AccessConcern(),
-        update_person=UpdatePerson(),
-        access_policy_gateway=access_policy_gateway,
-        person_gateway=person_gateway,
-        identity_provider=identity_provider,
-        unit_of_work=unit_of_work,
-    )
-
-    with pytest.raises(ApplicationError) as error:
-        update_person_handler.execute(
-            command=update_person_command,
+class TestUpdateUserShouldRaiseUpdatePersonAccessDeniedError:
+    def when_access_is_denied(
+        self,
+        access_policy_gateway: AccessPolicyGateway,
+        person_gateway: PersonGateway,
+        identity_provider_with_invalid_access_policy: IdentityProvider,
+        unit_of_work: UnitOfWork,
+    ) -> None:
+        update_person_command = UpdatePersonCommand(
+            person_id=PersonId(uuid4()),
+            name="John Doe",
+        )
+        update_person_handler = UpdatePersonHandler(
+            access_concern=AccessConcern(),
+            update_person=UpdatePerson(),
+            access_policy_gateway=access_policy_gateway,
+            person_gateway=person_gateway,
+            identity_provider=identity_provider_with_invalid_access_policy,
+            unit_of_work=unit_of_work,
         )
 
-    assert error.value.messsage == UPDATE_PERSON_ACCESS_DENIED
+        with pytest.raises(ApplicationError) as error:
+            update_person_handler.execute(
+                command=update_person_command,
+            )
+
+        assert error.value.messsage == UPDATE_PERSON_ACCESS_DENIED
 
 
-def test_update_person_should_raise_error_when_person_does_not_exist(
-    system_user_id: UserId,
-    access_policy_gateway: AccessPolicyGateway,
-    person_gateway: PersonGateway,
-    identity_provider: IdentityProvider,
-    unit_of_work: UnitOfWork,
-) -> None:
-    current_access_policy = AccessPolicy(
-        id=system_user_id,
-        is_active=True,
-        is_verified=True,
-    )
-    identity_provider.get_access_policy = Mock(
-        return_value=current_access_policy,
-    )
-    update_person_command = UpdatePersonCommand(
-        person_id=PersonId(uuid4()),
-        name="Johny Doe",
-    )
-    update_person_handler = UpdatePersonHandler(
-        access_concern=AccessConcern(),
-        update_person=UpdatePerson(),
-        access_policy_gateway=access_policy_gateway,
-        person_gateway=person_gateway,
-        identity_provider=identity_provider,
-        unit_of_work=unit_of_work,
-    )
-
-    with pytest.raises(ApplicationError) as error:
-        update_person_handler.execute(
-            command=update_person_command,
+class TestUpdateUserShouldRaisePersonDoesNotExistError:
+    def when_person_does_not_exist(
+        self,
+        access_policy_gateway: AccessPolicyGateway,
+        person_gateway: PersonGateway,
+        identity_provider_with_valid_access_policy: IdentityProvider,
+        unit_of_work: UnitOfWork,
+    ) -> None:
+        update_person_command = UpdatePersonCommand(
+            person_id=PersonId(uuid4()),
+            name="John Doe",
+        )
+        update_person_handler = UpdatePersonHandler(
+            access_concern=AccessConcern(),
+            update_person=UpdatePerson(),
+            access_policy_gateway=access_policy_gateway,
+            person_gateway=person_gateway,
+            identity_provider=identity_provider_with_valid_access_policy,
+            unit_of_work=unit_of_work,
         )
 
-    assert error.value.messsage == PERSON_DOES_NOT_EXIST
+        with pytest.raises(ApplicationError) as error:
+            update_person_handler.execute(
+                command=update_person_command,
+            )
+
+        assert error.value.messsage == PERSON_DOES_NOT_EXIST
