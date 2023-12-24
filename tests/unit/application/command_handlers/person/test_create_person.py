@@ -1,13 +1,13 @@
 from unittest.mock import Mock
 from typing import Type
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 from polyfactory.factories import DataclassFactory
 
 from amdb.domain.entities.user.access_policy import AccessPolicy
 from amdb.domain.entities.user.user import UserId
-from amdb.domain.entities.person.person import PersonId, Person
+from amdb.domain.entities.person.person import Person
 from amdb.domain.constants.common import Sex
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.person.create_person import CreatePerson
@@ -44,7 +44,7 @@ def identity_provider_with_valid_access_policy(
 @pytest.fixture(scope="module")
 def identity_provider_with_invalid_access_policy() -> IdentityProvider:
     invalid_access_policy = AccessPolicy(
-        id=PersonId(uuid4()),
+        id=UserId(uuid4()),
         is_active=True,
         is_verified=True,
     )
@@ -79,9 +79,11 @@ def test_create_person(
         unit_of_work=unit_of_work,
     )
 
-    creaate_person_handler.execute(
+    person_id = creaate_person_handler.execute(
         command=create_person_command,
     )
+
+    assert isinstance(person_id, UUID)
 
 
 class TestCreatePersonShouldRaiseCreatePersonAccessDeniedError:

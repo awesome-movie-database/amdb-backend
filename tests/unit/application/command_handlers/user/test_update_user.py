@@ -1,4 +1,5 @@
 from unittest.mock import Mock
+from typing import Type
 
 import pytest
 from polyfactory.factories import DataclassFactory
@@ -17,18 +18,24 @@ from amdb.application.common.constants.exceptions import UPDATE_USER_ACCESS_DENI
 from amdb.application.common.exception import ApplicationError
 
 
+UserFactory = Type[DataclassFactory[User]]
+
+
 def test_update_user(
+    user_factory: UserFactory,
     access_policy_gateway: AccessPolicyGateway,
     user_gateway: UserGateway,
     identity_provider: IdentityProvider,
     unit_of_work: UnitOfWork,
 ) -> None:
-    user_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=User,
-    )
     user = user_factory.build(
         name="John Doe",
     )
+    user_gateway.save(
+        user=user,
+    )
+    unit_of_work.commit()
+
     current_access_policy = AccessPolicy(
         id=user.id,
         is_active=True,
@@ -37,10 +44,7 @@ def test_update_user(
     identity_provider.get_access_policy = Mock(
         return_value=current_access_policy,
     )
-    user_gateway.save(
-        user=user,
-    )
-    unit_of_work.commit()
+
     update_user_command = UpdateUserCommand(
         name="Johny Doe",
     )
@@ -58,43 +62,47 @@ def test_update_user(
     )
 
 
-def test_update_user_raises_error_when_access_is_denied(
-    access_policy_gateway: AccessPolicyGateway,
-    user_gateway: UserGateway,
-    identity_provider: IdentityProvider,
-    unit_of_work: UnitOfWork,
-) -> None:
-    user_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=User,
-    )
-    user = user_factory.build()
-    current_access_policy = AccessPolicy(
-        id=user.id,
-        is_active=False,
-        is_verified=False,
-    )
-    identity_provider.get_access_policy = Mock(
-        return_value=current_access_policy,
-    )
-    user_gateway.save(
-        user=user,
-    )
-    unit_of_work.commit()
-    update_user_command = UpdateUserCommand(
-        name=user.name,
-    )
-    update_user_handler = UpdateUserHandler(
-        access_concern=AccessConcern(),
-        update_user=UpdateUser(),
-        access_policy_gateway=access_policy_gateway,
-        user_gateway=user_gateway,
-        identity_provider=identity_provider,
-        unit_of_work=unit_of_work,
-    )
+class TestUpdateUserRaisesUpdateUserAccessDeniedError:
+    def when_access_is_denied(
+        self,
+        user_factory: UserFactory,
+        access_policy_gateway: AccessPolicyGateway,
+        user_gateway: UserGateway,
+        identity_provider: IdentityProvider,
+        unit_of_work: UnitOfWork,
+    ) -> None:
+        user = user_factory.build(
+            name="John Doe",
+        )
+        user_gateway.save(
+            user=user,
+        )
+        unit_of_work.commit()
 
-    with pytest.raises(ApplicationError) as error:
-        update_user_handler.execute(
-            command=update_user_command,
+        current_access_policy = AccessPolicy(
+            id=user.id,
+            is_active=False,
+            is_verified=False,
+        )
+        identity_provider.get_access_policy = Mock(
+            return_value=current_access_policy,
         )
 
-    assert error.value.messsage == UPDATE_USER_ACCESS_DENIED
+        update_user_command = UpdateUserCommand(
+            name="Johny Doe",
+        )
+        update_user_handler = UpdateUserHandler(
+            access_concern=AccessConcern(),
+            update_user=UpdateUser(),
+            access_policy_gateway=access_policy_gateway,
+            user_gateway=user_gateway,
+            identity_provider=identity_provider,
+            unit_of_work=unit_of_work,
+        )
+
+        with pytest.raises(ApplicationError) as error:
+            update_user_handler.execute(
+                command=update_user_command,
+            )
+
+        assert error.value.messsage == UPDATE_USER_ACCESS_DENIED

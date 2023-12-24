@@ -46,7 +46,7 @@ def identity_provider_with_valid_access_policy(
 @pytest.fixture(scope="module")
 def identity_provider_with_invalid_access_policy() -> IdentityProvider:
     invalid_access_policy = AccessPolicy(
-        id=PersonId(uuid4()),
+        id=UserId(uuid4()),
         is_active=True,
         is_verified=True,
     )

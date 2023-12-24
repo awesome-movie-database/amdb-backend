@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 from typing import Type
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 from polyfactory.factories import DataclassFactory
@@ -58,7 +58,7 @@ def identity_provider_with_valid_access_policy(
 @pytest.fixture(scope="module")
 def identity_provider_with_invalid_access_policy() -> IdentityProvider:
     invalid_access_policy = AccessPolicy(
-        id=PersonId(uuid4()),
+        id=UserId(uuid4()),
         is_active=True,
         is_verified=True,
     )
@@ -120,9 +120,11 @@ def test_create_marriage(
         unit_of_work=unit_of_work,
     )
 
-    create_marriage_handler.execute(
+    marriage_id = create_marriage_handler.execute(
         command=create_marriage_command,
     )
+
+    assert isinstance(marriage_id, UUID)
 
 
 class TestCreateMarriageShouldRaiseCreateMarriageAccessDeniedError:

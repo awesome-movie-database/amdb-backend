@@ -1,4 +1,6 @@
 from unittest.mock import Mock
+from typing import Type
+from uuid import uuid4
 
 import pytest
 from polyfactory.factories import DataclassFactory
@@ -20,31 +22,54 @@ from amdb.application.common.constants.exceptions import (
 from amdb.application.common.exception import ApplicationError
 
 
-def test_verify_user(
+UserFactory = Type[DataclassFactory[User]]
+
+
+@pytest.fixture(scope="module")
+def identity_provider_with_valid_access_policy(
     system_user_id: UserId,
-    access_policy_gateway: AccessPolicyGateway,
-    user_gateway: UserGateway,
-    identity_provider: IdentityProvider,
-    unit_of_work: UnitOfWork,
-) -> None:
-    user_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=User,
-    )
-    user = user_factory.build(
-        is_verified=False,
-    )
-    current_access_policy = AccessPolicy(
+) -> IdentityProvider:
+    valid_access_policy = AccessPolicy(
         id=system_user_id,
         is_active=True,
-        is_verified=False,
+        is_verified=True,
     )
+    identity_provider = Mock()
     identity_provider.get_access_policy = Mock(
-        return_value=current_access_policy,
+        return_value=valid_access_policy,
     )
+
+    return identity_provider
+
+
+@pytest.fixture(scope="module")
+def identity_provider_with_invalid_access_policy() -> IdentityProvider:
+    invalid_access_policy = AccessPolicy(
+        id=UserId(uuid4()),
+        is_active=True,
+        is_verified=True,
+    )
+    identity_provider = Mock()
+    identity_provider.get_access_policy = Mock(
+        return_value=invalid_access_policy,
+    )
+
+    return identity_provider
+
+
+def test_verify_user(
+    user_factory: UserFactory,
+    access_policy_gateway: AccessPolicyGateway,
+    user_gateway: UserGateway,
+    identity_provider_with_valid_access_policy: IdentityProvider,
+    unit_of_work: UnitOfWork,
+) -> None:
+    user = user_factory.build()
     user_gateway.save(
         user=user,
     )
     unit_of_work.commit()
+
     verify_user_command = VerifyUserCommand(
         user_id=user.id,
     )
@@ -53,7 +78,7 @@ def test_verify_user(
         verify_user=VerifyUser(),
         access_policy_gateway=access_policy_gateway,
         user_gateway=user_gateway,
-        identity_provider=identity_provider,
+        identity_provider=identity_provider_with_valid_access_policy,
         unit_of_work=unit_of_work,
     )
 
@@ -62,87 +87,65 @@ def test_verify_user(
     )
 
 
-def test_verify_user_raises_error_when_access_is_denied(
-    access_policy_gateway: AccessPolicyGateway,
-    user_gateway: UserGateway,
-    identity_provider: IdentityProvider,
-    unit_of_work: UnitOfWork,
-) -> None:
-    user_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=User,
-    )
-    user = user_factory.build(
-        is_verified=False,
-    )
-    current_access_policy = AccessPolicy(
-        id=user.id,
-        is_active=True,
-        is_verified=False,
-    )
-    identity_provider.get_access_policy = Mock(
-        return_value=current_access_policy,
-    )
-    user_gateway.save(
-        user=user,
-    )
-    unit_of_work.commit()
+class TestVerifyUserRaisesVerifyUserAccessDeniedError:
+    def when_access_is_denied(
+        self,
+        user_factory: UserFactory,
+        access_policy_gateway: AccessPolicyGateway,
+        user_gateway: UserGateway,
+        identity_provider_with_invalid_access_policy: IdentityProvider,
+        unit_of_work: UnitOfWork,
+    ) -> None:
+        user = user_factory.build()
+        user_gateway.save(
+            user=user,
+        )
+        unit_of_work.commit()
 
-    verify_user_command = VerifyUserCommand(
-        user_id=user.id,
-    )
-    verify_user_handler = VerifyUserHandler(
-        access_concern=AccessConcern(),
-        verify_user=VerifyUser(),
-        access_policy_gateway=access_policy_gateway,
-        user_gateway=user_gateway,
-        identity_provider=identity_provider,
-        unit_of_work=unit_of_work,
-    )
-
-    with pytest.raises(ApplicationError) as error:
-        verify_user_handler.execute(
-            command=verify_user_command,
+        verify_user_command = VerifyUserCommand(
+            user_id=user.id,
+        )
+        verify_user_handler = VerifyUserHandler(
+            access_concern=AccessConcern(),
+            verify_user=VerifyUser(),
+            access_policy_gateway=access_policy_gateway,
+            user_gateway=user_gateway,
+            identity_provider=identity_provider_with_invalid_access_policy,
+            unit_of_work=unit_of_work,
         )
 
-    assert error.value.messsage == VERIFY_USER_ACCESS_DENIED
+        with pytest.raises(ApplicationError) as error:
+            verify_user_handler.execute(
+                command=verify_user_command,
+            )
+
+        assert error.value.messsage == VERIFY_USER_ACCESS_DENIED
 
 
-def test_verify_user_raises_error_when_user_does_not_exist(
-    system_user_id: UserId,
-    access_policy_gateway: AccessPolicyGateway,
-    user_gateway: UserGateway,
-    identity_provider: IdentityProvider,
-    unit_of_work: UnitOfWork,
-) -> None:
-    user_factory = DataclassFactory.create_factory(  # type: ignore[var-annotated]
-        model=User,
-    )
-    user = user_factory.build(
-        is_verified=False,
-    )
-    current_access_policy = AccessPolicy(
-        id=system_user_id,
-        is_active=True,
-        is_verified=True,
-    )
-    identity_provider.get_access_policy = Mock(
-        return_value=current_access_policy,
-    )
-    verify_user_command = VerifyUserCommand(
-        user_id=user.id,
-    )
-    verify_user_handler = VerifyUserHandler(
-        access_concern=AccessConcern(),
-        verify_user=VerifyUser(),
-        access_policy_gateway=access_policy_gateway,
-        user_gateway=user_gateway,
-        identity_provider=identity_provider,
-        unit_of_work=unit_of_work,
-    )
-
-    with pytest.raises(ApplicationError) as error:
-        verify_user_handler.execute(
-            command=verify_user_command,
+class TestVerifyUserRaisesUserDoesNotExistError:
+    def when_user_does_not_exist(
+        self,
+        user_factory: UserFactory,
+        access_policy_gateway: AccessPolicyGateway,
+        user_gateway: UserGateway,
+        identity_provider_with_valid_access_policy: IdentityProvider,
+        unit_of_work: UnitOfWork,
+    ) -> None:
+        verify_user_command = VerifyUserCommand(
+            user_id=UserId(uuid4()),
+        )
+        verify_user_handler = VerifyUserHandler(
+            access_concern=AccessConcern(),
+            verify_user=VerifyUser(),
+            access_policy_gateway=access_policy_gateway,
+            user_gateway=user_gateway,
+            identity_provider=identity_provider_with_valid_access_policy,
+            unit_of_work=unit_of_work,
         )
 
-    assert error.value.messsage == USER_DOES_NOT_EXIST
+        with pytest.raises(ApplicationError) as error:
+            verify_user_handler.execute(
+                command=verify_user_command,
+            )
+
+        assert error.value.messsage == USER_DOES_NOT_EXIST
