@@ -116,4 +116,4 @@ class TestCreatePersonShouldRaiseCreatePersonAccessDeniedError:
                 command=create_person_command,
             )
 
-        assert error.value.messsage == CREATE_PERSON_ACCESS_DENIED
+        assert error.value.message == CREATE_PERSON_ACCESS_DENIED

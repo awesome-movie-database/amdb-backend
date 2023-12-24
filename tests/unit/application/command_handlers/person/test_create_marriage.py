@@ -159,7 +159,7 @@ class TestCreateMarriageShouldRaiseCreateMarriageAccessDeniedError:
                 command=create_marriage_command,
             )
 
-        assert error.value.messsage == CREATE_MARRIAGE_ACCESS_DENIED
+        assert error.value.message == CREATE_MARRIAGE_ACCESS_DENIED
 
 
 class TestCreateMarriageShouldRaiseCreatePersonInvalidCommandError:
@@ -233,7 +233,7 @@ class TestCreateMarriageShouldRaiseCreatePersonInvalidCommandError:
                 command=create_marriage_command,
             )
 
-        assert error.value.messsage == CREATE_PERSON_INVALID_COMMAND
+        assert error.value.message == CREATE_PERSON_INVALID_COMMAND
 
 
 class TestCreateMarriageShouldRaisePersonsDoNotExist:
@@ -289,7 +289,7 @@ class TestCreateMarriageShouldRaisePersonsDoNotExist:
                 command=create_marriage_command,
             )
 
-        assert error.value.messsage == PERSONS_DO_NOT_EXIST
+        assert error.value.message == PERSONS_DO_NOT_EXIST
         assert error.value.extra["person_ids"] == nonexistent_child_ids
 
 
@@ -336,7 +336,7 @@ class TestCreateMarriageShouldRaisePersonDoesNotExistError:
                 command=create_marriage_command,
             )
 
-        assert error.value.messsage == PERSON_DOES_NOT_EXIST
+        assert error.value.message == PERSON_DOES_NOT_EXIST
         assert error.value.extra["person_id"] == nonexistent_husband_id
 
     def when_wife_does_not_exist(
@@ -381,7 +381,7 @@ class TestCreateMarriageShouldRaisePersonDoesNotExistError:
                 command=create_marriage_command,
             )
 
-        assert error.value.messsage == PERSON_DOES_NOT_EXIST
+        assert error.value.message == PERSON_DOES_NOT_EXIST
         assert error.value.extra["person_id"] == nonexistent_wife_id
 
 
@@ -450,7 +450,7 @@ class TestCreateMarriageShouldRaisePersonsHaveSameSexError:
                 command=create_marriage_command,
             )
 
-        assert error.value.messsage == PERSONS_HAVE_SAME_SEX
+        assert error.value.message == PERSONS_HAVE_SAME_SEX
 
 
 class TestCreateMarriageShouldRaiseMarriageAlreadyExistsError:
@@ -527,7 +527,7 @@ class TestCreateMarriageShouldRaiseMarriageAlreadyExistsError:
                 command=create_marriage_command,
             )
 
-        assert error.value.messsage == MARRIAGE_ALREADY_EXISTS
+        assert error.value.message == MARRIAGE_ALREADY_EXISTS
 
 
 @pytest.mark.parametrize(
@@ -610,7 +610,7 @@ class TestCreateMarriageShouldRaisePersonIsMarriedError:
                 command=create_marriage_command,
             )
 
-        assert error.value.messsage == PERSON_IS_MARRIED
+        assert error.value.message == PERSON_IS_MARRIED
         assert error.value.extra["person_id"] == marriage_husband.id
 
     @pytest.mark.parametrize(
@@ -684,5 +684,5 @@ class TestCreateMarriageShouldRaisePersonIsMarriedError:
                 command=create_marriage_command,
             )
 
-        assert error.value.messsage == PERSON_IS_MARRIED
+        assert error.value.message == PERSON_IS_MARRIED
         assert error.value.extra["person_id"] == marriage_wife.id

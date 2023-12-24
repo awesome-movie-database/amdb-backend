@@ -4,5 +4,5 @@ from typing import Optional
 
 @dataclass(frozen=True, slots=True)
 class ApplicationError(Exception):
-    messsage: str
+    message: str
     extra: Optional[dict] = None

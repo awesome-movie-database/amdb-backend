@@ -62,7 +62,7 @@ def test_update_user(
     )
 
 
-class TestUpdateUserRaisesUpdateUserAccessDeniedError:
+class TestUpdateUserShouldRaiseUpdateUserAccessDeniedError:
     def when_access_is_denied(
         self,
         user_factory: UserFactory,
@@ -105,4 +105,4 @@ class TestUpdateUserRaisesUpdateUserAccessDeniedError:
                 command=update_user_command,
             )
 
-        assert error.value.messsage == UPDATE_USER_ACCESS_DENIED
+        assert error.value.message == UPDATE_USER_ACCESS_DENIED

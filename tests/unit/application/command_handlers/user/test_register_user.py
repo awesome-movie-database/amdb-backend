@@ -43,7 +43,7 @@ def test_register_user(
     assert isinstance(user_id, UUID)
 
 
-class TestRegisterUserRaisesUserNameAlreadyExistsError:
+class TestRegisterUserShouldRaiseUserNameAlreadyExistsError:
     def when_user_name_already_exists(
         self,
         user_factory: UserFactory,
@@ -74,4 +74,4 @@ class TestRegisterUserRaisesUserNameAlreadyExistsError:
                 command=register_user_command,
             )
 
-        assert error.value.messsage == USER_NAME_ALREADY_EXISTS
+        assert error.value.message == USER_NAME_ALREADY_EXISTS

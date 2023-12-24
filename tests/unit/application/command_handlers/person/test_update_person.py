@@ -117,7 +117,7 @@ class TestUpdateUserShouldRaiseUpdatePersonAccessDeniedError:
                 command=update_person_command,
             )
 
-        assert error.value.messsage == UPDATE_PERSON_ACCESS_DENIED
+        assert error.value.message == UPDATE_PERSON_ACCESS_DENIED
 
 
 class TestUpdateUserShouldRaisePersonDoesNotExistError:
@@ -146,4 +146,4 @@ class TestUpdateUserShouldRaisePersonDoesNotExistError:
                 command=update_person_command,
             )
 
-        assert error.value.messsage == PERSON_DOES_NOT_EXIST
+        assert error.value.message == PERSON_DOES_NOT_EXIST

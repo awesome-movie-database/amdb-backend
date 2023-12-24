@@ -106,7 +106,7 @@ class CreateMarriageHandler:
         )
         if husband is None:
             raise ApplicationError(
-                messsage=PERSON_DOES_NOT_EXIST,
+                message=PERSON_DOES_NOT_EXIST,
                 extra={"person_id": husband_id},
             )
 
@@ -115,7 +115,7 @@ class CreateMarriageHandler:
         )
         if wife is None:
             raise ApplicationError(
-                messsage=PERSON_DOES_NOT_EXIST,
+                message=PERSON_DOES_NOT_EXIST,
                 extra={"person_id": wife_id},
             )
 
@@ -154,7 +154,7 @@ class CreateMarriageHandler:
                     raise ApplicationError(MARRIAGE_ALREADY_EXISTS)
 
                 raise ApplicationError(
-                    messsage=PERSON_IS_MARRIED,
+                    message=PERSON_IS_MARRIED,
                     extra={"person_id": husband.id},
                 )
 
@@ -172,7 +172,7 @@ class CreateMarriageHandler:
                 and wife_marriage.status not in valid_marriage_statuses
             ):
                 raise ApplicationError(
-                    messsage=PERSON_IS_MARRIED,
+                    message=PERSON_IS_MARRIED,
                     extra={"person_id": wife.id},
                 )
 
@@ -185,7 +185,7 @@ class CreateMarriageHandler:
     ) -> list[Person]:
         if father.id in child_ids or mother.id in child_ids:
             raise ApplicationError(
-                messsage=CREATE_PERSON_INVALID_COMMAND,
+                message=CREATE_PERSON_INVALID_COMMAND,
                 extra={"details": "`child_ids` contains `husband_id` or `wife_id`"},
             )
 
@@ -202,7 +202,7 @@ class CreateMarriageHandler:
                 invalid_child_ids.append(child_id)
 
             raise ApplicationError(
-                messsage=PERSONS_DO_NOT_EXIST,
+                message=PERSONS_DO_NOT_EXIST,
                 extra={"person_ids": invalid_child_ids},
             )
 
