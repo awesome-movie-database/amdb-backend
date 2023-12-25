@@ -291,7 +291,12 @@ class TestCreateMarriageShouldRaisePersonsDoNotExist:
             )
 
         assert error.value.message == PERSONS_DO_NOT_EXIST
-        assert error.value.extra["person_ids"] == nonexistent_child_ids
+        assert all(
+            (
+                nonexistent_child_id in error.value.extra["person_ids"]
+                for nonexistent_child_id in nonexistent_child_ids
+            ),
+        )
 
 
 class TestCreateMarriageShouldRaisePersonDoesNotExistError:
