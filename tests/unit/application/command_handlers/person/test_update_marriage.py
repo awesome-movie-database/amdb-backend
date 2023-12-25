@@ -323,3 +323,9 @@ class TestUpdateMarriageShouldRaisePersonsDoNotExistError:
             )
 
         assert error.value.message == PERSONS_DO_NOT_EXIST
+        assert all(
+            (
+                nonexistent_child_id in error.value.extra["person_ids"]
+                for nonexistent_child_id in nonexistent_child_ids
+            ),
+        )
