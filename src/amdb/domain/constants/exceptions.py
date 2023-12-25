@@ -1,3 +1,5 @@
+PERSONS_HAVE_SAME_SEX = "Persons have the same sex"
+
 CANNOT_REMOVE_GENRE_FROM_SERIES = (
     "Cannot delete a genre because it belongs to one of the episodes of the series"
 )

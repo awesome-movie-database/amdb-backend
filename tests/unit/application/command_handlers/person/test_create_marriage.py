@@ -12,6 +12,8 @@ from amdb.domain.entities.person.marriage import MarriageStatus, Marriage
 from amdb.domain.constants.common import Sex
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.person.create_marriage import CreateMarriage
+from amdb.domain.constants.exceptions import PERSONS_HAVE_SAME_SEX
+from amdb.domain.exception import DomainError
 from amdb.application.common.interfaces.gateways.user.access_policy import AccessPolicyGateway
 from amdb.application.common.interfaces.gateways.person.marriage import MarriageGateway
 from amdb.application.common.interfaces.gateways.person.person import PersonGateway
@@ -24,7 +26,6 @@ from amdb.application.common.constants.exceptions import (
     PERSONS_DO_NOT_EXIST,
     PERSON_IS_MARRIED,
     MARRIAGE_ALREADY_EXISTS,
-    PERSONS_HAVE_SAME_SEX,
 )
 from amdb.application.common.exception import ApplicationError
 from amdb.application.commands.person.create_marriage import CreateMarriageCommand
@@ -445,7 +446,7 @@ class TestCreateMarriageShouldRaisePersonsHaveSameSexError:
             unit_of_work=unit_of_work,
         )
 
-        with pytest.raises(ApplicationError) as error:
+        with pytest.raises(DomainError) as error:
             create_marriage_handler.execute(
                 command=create_marriage_command,
             )

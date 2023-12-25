@@ -18,7 +18,6 @@ from amdb.application.common.constants.exceptions import (
     PERSONS_DO_NOT_EXIST,
     PERSON_IS_MARRIED,
     MARRIAGE_ALREADY_EXISTS,
-    PERSONS_HAVE_SAME_SEX,
 )
 from amdb.application.common.exception import ApplicationError
 
@@ -53,19 +52,40 @@ class CreateMarriageHandler:
         if not access:
             raise ApplicationError(CREATE_MARRIAGE_ACCESS_DENIED)
 
-        husband, wife = self._ensure_husband_and_wife(
-            husband_id=command.husband_id,
-            wife_id=command.wife_id,
+        self._ensure_valid_command(
+            command=command,
         )
+
+        husband = self._person_gateway.with_id(
+            person_id=command.husband_id,
+        )
+        if husband is None:
+            raise ApplicationError(
+                message=PERSON_DOES_NOT_EXIST,
+                extra={"person_id": command.husband_id},
+            )
+
+        wife = self._person_gateway.with_id(
+            person_id=command.wife_id,
+        )
+        if wife is None:
+            raise ApplicationError(
+                message=PERSON_DOES_NOT_EXIST,
+                extra={"person_id": command.wife_id},
+            )
+
         self._ensure_can_create_marriage(
             husband=husband,
             wife=wife,
             status=command.status,
         )
-        children = self._ensure_children(
-            father=husband,
-            mother=wife,
-            child_ids=command.child_ids,
+
+        children = self._person_gateway.list_with_ids(
+            *command.child_ids,
+        )
+        self._ensure_persons(
+            requested_person_ids=command.child_ids,
+            persons=children,
         )
 
         marriage = self._create_marriage(
@@ -95,34 +115,16 @@ class CreateMarriageHandler:
 
         return marriage.id
 
-    def _ensure_husband_and_wife(
+    def _ensure_valid_command(
         self,
         *,
-        husband_id: PersonId,
-        wife_id: PersonId,
-    ) -> tuple[Person, Person]:
-        husband = self._person_gateway.with_id(
-            person_id=husband_id,
-        )
-        if husband is None:
+        command: CreateMarriageCommand,
+    ) -> None:
+        if command.husband_id in command.child_ids or command.wife_id in command.child_ids:
             raise ApplicationError(
-                message=PERSON_DOES_NOT_EXIST,
-                extra={"person_id": husband_id},
+                message=CREATE_MARRIAGE_INVALID_COMMAND,
+                extra={"details": "Child ids contain id of husband or wife"},
             )
-
-        wife = self._person_gateway.with_id(
-            person_id=wife_id,
-        )
-        if wife is None:
-            raise ApplicationError(
-                message=PERSON_DOES_NOT_EXIST,
-                extra={"person_id": wife_id},
-            )
-
-        if husband.sex == wife.sex:
-            raise ApplicationError(PERSONS_HAVE_SAME_SEX)
-
-        return (husband, wife)
 
     def _ensure_can_create_marriage(
         self,
@@ -131,7 +133,12 @@ class CreateMarriageHandler:
         wife: Person,
         status: MarriageStatus,
     ) -> None:
-        valid_marriage_statuses = (
+        valid_marriage_statuses_for_new_marriage_to_have = (
+            MarriageStatus.MARRIAGE,
+            MarriageStatus.HE_FILED_FOR_DIVORCE,
+            MarriageStatus.SHE_FILED_FOR_DIVORCE,
+        )
+        valid_marriage_statuses_for_spouses_to_have = (
             MarriageStatus.DIVORCE,
             MarriageStatus.HIS_DEATH,
             MarriageStatus.HER_DEATH,
@@ -142,13 +149,8 @@ class CreateMarriageHandler:
         )
         for husband_marriage in husband_marriages:
             if (
-                status
-                in (
-                    MarriageStatus.MARRIAGE,
-                    MarriageStatus.HE_FILED_FOR_DIVORCE,
-                    MarriageStatus.SHE_FILED_FOR_DIVORCE,
-                )
-                and husband_marriage.status not in valid_marriage_statuses
+                status in valid_marriage_statuses_for_new_marriage_to_have
+                and husband_marriage.status not in valid_marriage_statuses_for_spouses_to_have
             ):
                 if husband_marriage.wife_id == wife.id:
                     raise ApplicationError(MARRIAGE_ALREADY_EXISTS)
@@ -163,47 +165,30 @@ class CreateMarriageHandler:
         )
         for wife_marriage in wife_marriages:
             if (
-                status
-                in (
-                    MarriageStatus.MARRIAGE,
-                    MarriageStatus.HE_FILED_FOR_DIVORCE,
-                    MarriageStatus.SHE_FILED_FOR_DIVORCE,
-                )
-                and wife_marriage.status not in valid_marriage_statuses
+                status in valid_marriage_statuses_for_new_marriage_to_have
+                and wife_marriage.status not in valid_marriage_statuses_for_spouses_to_have
             ):
                 raise ApplicationError(
                     message=PERSON_IS_MARRIED,
                     extra={"person_id": wife.id},
                 )
 
-    def _ensure_children(
+    def _ensure_persons(
         self,
         *,
-        father: Person,
-        mother: Person,
-        child_ids: list[PersonId],
-    ) -> list[Person]:
-        if father.id in child_ids or mother.id in child_ids:
-            raise ApplicationError(
-                message=CREATE_MARRIAGE_INVALID_COMMAND,
-                extra={"details": "`child_ids` contains `husband_id` or `wife_id`"},
-            )
+        requested_person_ids: list[PersonId],
+        persons: list[Person],
+    ) -> None:
+        if len(requested_person_ids) != len(persons):
+            person_ids = [person.id for person in persons]
 
-        children = self._person_gateway.list_with_ids(
-            *child_ids,
-        )
-        if len(children) != len(child_ids):
-            child_ids_from_gateway = [child.id for child in children]
-
-            invalid_child_ids = []
-            for child_id in child_ids:
-                if child_id in child_ids_from_gateway:
+            invalid_person_ids = []
+            for requested_person_id in requested_person_ids:
+                if requested_person_id in person_ids:
                     continue
-                invalid_child_ids.append(child_id)
+                invalid_person_ids.append(requested_person_id)
 
             raise ApplicationError(
                 message=PERSONS_DO_NOT_EXIST,
-                extra={"person_ids": invalid_child_ids},
+                extra={"person_ids": invalid_person_ids},
             )
-
-        return children

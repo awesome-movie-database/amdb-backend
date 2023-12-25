@@ -5,6 +5,8 @@ from amdb.domain.services.base import Service
 from amdb.domain.value_objects import Date
 from amdb.domain.entities.person.person import Person
 from amdb.domain.entities.person.marriage import MarriageId, MarriageStatus, Marriage
+from amdb.domain.constants.exceptions import PERSONS_HAVE_SAME_SEX
+from amdb.domain.exception import DomainError
 
 
 class CreateMarriage(Service):
@@ -20,6 +22,9 @@ class CreateMarriage(Service):
         start_date: Optional[Date] = None,
         end_date: Optional[Date] = None,
     ) -> Marriage:
+        if husband.sex == wife.sex:
+            raise DomainError(PERSONS_HAVE_SAME_SEX)
+
         husband.updated_at = timestamp
         wife.updated_at = timestamp
 
