@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Collection
 
 from amdb.domain.entities.person.person import PersonId, Person
 from amdb.domain.entities.person.marriage import Marriage
@@ -56,7 +57,7 @@ class UpdateMarriageHandler:
         if marriage is None:
             raise ApplicationError(MARRIAGE_DOES_NOT_EXIST)
 
-        self._ensure_command_is_valid(
+        self._ensure_valid_command(
             command=command,
             marriage=marriage,
         )
@@ -102,7 +103,7 @@ class UpdateMarriageHandler:
 
         self._unit_of_work.commit()
 
-    def _ensure_command_is_valid(
+    def _ensure_valid_command(
         self,
         *,
         command: UpdateMarriageCommand,
@@ -131,11 +132,10 @@ class UpdateMarriageHandler:
         children = self._person_gateway.list_with_ids(
             *total_child_ids,
         )
-        if len(children) != len(total_child_ids):
-            raise ApplicationError(
-                message=PERSONS_DO_NOT_EXIST,
-                extra={},
-            )
+        self._ensure_persons(
+            requested_person_ids=total_child_ids,
+            persons=children,
+        )
 
         old_children, new_children = [], []
         for child in children:
@@ -144,9 +144,30 @@ class UpdateMarriageHandler:
             elif child.id in child_ids:
                 new_children.append(child)
 
-        children_dataclass = Children(
-            old_children=old_children,
-            new_children=new_children,
+        return (
+            Children(
+                old_children=old_children,
+                new_children=new_children,
+            ),
+            children,
         )
 
-        return children_dataclass, children
+    def _ensure_persons(
+        self,
+        *,
+        requested_person_ids: Collection[PersonId],
+        persons: Collection[Person],
+    ) -> None:
+        if len(requested_person_ids) != len(persons):
+            person_ids = [person.id for person in persons]
+
+            invalid_person_ids = []
+            for requested_person_id in requested_person_ids:
+                if requested_person_id in person_ids:
+                    continue
+                invalid_person_ids.append(requested_person_id)
+
+            raise ApplicationError(
+                message=PERSONS_DO_NOT_EXIST,
+                extra={"person_ids": invalid_person_ids},
+            )
