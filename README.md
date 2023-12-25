@@ -18,9 +18,3 @@
         <img src="https://codecov.io/github/Awesome-Movie-Database/amdb-backend/graph/badge.svg?token=7JK9QG9N0X"/>
     </a>
 </p>
-
-<p align="center">
-    <a href="/docs/architecture_log.md">Architecture Log</a>
-    <span> | </span>
-    <a href="/docs/CHANGELOG.md">Changelog</a>
-</p>
