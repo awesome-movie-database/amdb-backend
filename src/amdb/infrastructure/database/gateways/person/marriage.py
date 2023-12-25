@@ -1,5 +1,8 @@
+from typing import Optional
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from amdb.domain.entities.person.marriage import Marriage
 
 from amdb.domain.entities.person.person import PersonId
 from amdb.domain.entities.person import marriage as entity
@@ -17,6 +20,21 @@ class SQLAlchemyMarriageGateway(MarriageGateway):
     ) -> None:
         self._session = session
         self._mapper = mapper
+
+    def with_id(
+        self,
+        *,
+        marriage_id: entity.MarriageId,
+    ) -> Optional[entity.Marriage]:
+        marriage_model = self._session.get(
+            entity=model.Marriage,
+            ident=marriage_id,
+        )
+        if marriage_model is not None:
+            return self._mapper.to_entity(
+                model=marriage_model,
+            )
+        return None
 
     def list_with_husband_id(
         self,
@@ -67,4 +85,16 @@ class SQLAlchemyMarriageGateway(MarriageGateway):
         )
         self._session.flush(
             objects=(marriage_model,),
+        )
+
+    def update(
+        self,
+        *,
+        marriage: Marriage,
+    ) -> None:
+        marriage_model = self._mapper.to_model(
+            entity=marriage,
+        )
+        self._session.merge(
+            instance=marriage_model,
         )

@@ -18,7 +18,7 @@ from amdb.application.common.interfaces.gateways.person.person import PersonGate
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
 from amdb.application.common.constants.exceptions import (
-    CREATE_PERSON_INVALID_COMMAND,
+    CREATE_MARRIAGE_INVALID_COMMAND,
     CREATE_MARRIAGE_ACCESS_DENIED,
     PERSON_DOES_NOT_EXIST,
     PERSONS_DO_NOT_EXIST,
@@ -172,11 +172,11 @@ class TestCreateMarriageShouldRaiseCreatePersonInvalidCommandError:
         argvalues=(
             (
                 HUSBAND_ID,
-                PersonId(uuid4()),
+                WIFE_ID,
                 [HUSBAND_ID],
             ),
             (
-                PersonId(uuid4()),
+                HUSBAND_ID,
                 WIFE_ID,
                 [WIFE_ID],
             ),
@@ -233,7 +233,7 @@ class TestCreateMarriageShouldRaiseCreatePersonInvalidCommandError:
                 command=create_marriage_command,
             )
 
-        assert error.value.message == CREATE_PERSON_INVALID_COMMAND
+        assert error.value.message == CREATE_MARRIAGE_INVALID_COMMAND
 
 
 class TestCreateMarriageShouldRaisePersonsDoNotExist:

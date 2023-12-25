@@ -12,7 +12,7 @@ from amdb.application.common.interfaces.gateways.person.marriage import Marriage
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
 from amdb.application.common.constants.exceptions import (
-    CREATE_PERSON_INVALID_COMMAND,
+    CREATE_MARRIAGE_INVALID_COMMAND,
     CREATE_MARRIAGE_ACCESS_DENIED,
     PERSON_DOES_NOT_EXIST,
     PERSONS_DO_NOT_EXIST,
@@ -185,7 +185,7 @@ class CreateMarriageHandler:
     ) -> list[Person]:
         if father.id in child_ids or mother.id in child_ids:
             raise ApplicationError(
-                message=CREATE_PERSON_INVALID_COMMAND,
+                message=CREATE_MARRIAGE_INVALID_COMMAND,
                 extra={"details": "`child_ids` contains `husband_id` or `wife_id`"},
             )
 

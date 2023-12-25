@@ -19,7 +19,9 @@ class Marriage(Model):
     wife_id: Mapped[UUID] = mapped_column(
         ForeignKey(column="persons.id", ondelete="CASCADE"),
     )
-    children: Mapped[list["MarriageChild"]] = relationship()
+    children: Mapped[list["MarriageChild"]] = relationship(
+        cascade="all, delete-orphan",
+    )
     status: Mapped[int]
     start_year: Mapped[Optional[int]]
     start_month: Mapped[Optional[int]]
