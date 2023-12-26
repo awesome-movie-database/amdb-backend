@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Collection
+from typing import Collection, cast
 
 from amdb.domain.entities.person.person import PersonId, Person
 from amdb.domain.entities.person.marriage import Marriage
@@ -65,9 +65,12 @@ class UpdateMarriageHandler:
         husband = self._person_gateway.with_id(
             person_id=marriage.husband_id,
         )
+        husband = cast(Person, husband)
+
         wife = self._person_gateway.with_id(
             person_id=marriage.wife_id,
         )
+        wife = cast(Person, wife)
 
         if command.child_ids is not unset:
             children, persons_to_update = self._get_children(
@@ -80,8 +83,8 @@ class UpdateMarriageHandler:
 
         self._update_marriage(
             marriage=marriage,
-            husband=husband,  # type: ignore[arg-type]
-            wife=wife,  # type: ignore[arg-type]
+            husband=husband,
+            wife=wife,
             timestamp=datetime.now(timezone.utc),
             children=children,
             status=command.status,
@@ -92,10 +95,10 @@ class UpdateMarriageHandler:
             marriage=marriage,
         )
         self._person_gateway.update(
-            person=husband,  # type: ignore[arg-type]
+            person=husband,
         )
         self._person_gateway.update(
-            person=wife,  # type: ignore[arg-type]
+            person=wife,
         )
         self._person_gateway.update_list(
             persons=persons_to_update,
