@@ -39,3 +39,10 @@ class MarriageGateway(Protocol):
         marriage: Marriage,
     ) -> None:
         raise NotImplementedError
+
+    def delete(
+        self,
+        *,
+        marriage: Marriage,
+    ) -> None:
+        raise NotImplementedError

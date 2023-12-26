@@ -1,8 +1,7 @@
 from typing import Optional
 
-from sqlalchemy import select
+from sqlalchemy import select, inspect
 from sqlalchemy.orm import Session
-from amdb.domain.entities.person.marriage import Marriage
 
 from amdb.domain.entities.person.person import PersonId
 from amdb.domain.entities.person import marriage as entity
@@ -90,7 +89,7 @@ class SQLAlchemyMarriageGateway(MarriageGateway):
     def update(
         self,
         *,
-        marriage: Marriage,
+        marriage: entity.Marriage,
     ) -> None:
         marriage_model = self._mapper.to_model(
             entity=marriage,
@@ -98,3 +97,23 @@ class SQLAlchemyMarriageGateway(MarriageGateway):
         self._session.merge(
             instance=marriage_model,
         )
+
+    def delete(
+        self,
+        *,
+        marriage: entity.Marriage,
+    ) -> None:
+        marriage_model = self._mapper.to_model(
+            entity=marriage,
+        )
+        marriage_model_insp = inspect(
+            subject=marriage_model,
+        )
+        if marriage_model_insp.persistent:
+            self._session.delete(
+                instance=marriage_model,
+            )
+        elif marriage_model_insp.pending:
+            self._session.expunge(
+                instance=marriage_model,
+            )

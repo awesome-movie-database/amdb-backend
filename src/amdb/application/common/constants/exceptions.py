@@ -8,6 +8,7 @@ CREATE_PERSON_ACCESS_DENIED = "Access to person creation is denied"
 UPDATE_PERSON_ACCESS_DENIED = "Access to person update is denied"
 CREATE_MARRIAGE_ACCESS_DENIED = "Access to marriage creation is denied"
 UPDATE_MARRIAGE_ACCESS_DENIED = "Access to marriage update is denied"
+DELETE_MARRIAGE_ACCESS_DENIED = "Access to marriage deletion is denied"
 
 USER_NAME_ALREADY_EXISTS = "Name of user already exists"
 USER_DOES_NOT_EXIST = "User doesn't exist"

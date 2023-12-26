@@ -58,7 +58,9 @@ class SQLAlchemyPersonGateway(PersonGateway):
         self._session.add(
             instance=person_model,
         )
-        self._session.flush(objects=(person_model,))
+        self._session.flush(
+            objects=(person_model,),
+        )
 
     def update(
         self,

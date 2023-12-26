@@ -52,3 +52,10 @@ class InMemoryAccessPolicyGateway(AccessPolicyGateway):
             is_active=no_matter,
             is_verified=no_matter,
         )
+
+    def for_delete_marriage(self) -> RequiredAccessPolicy:
+        return RequiredAccessPolicy(
+            id=self._system_user_id,
+            is_active=no_matter,
+            is_verified=no_matter,
+        )
