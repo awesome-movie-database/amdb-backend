@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Collection, cast
+from typing import cast
 
 from amdb.domain.entities.person.person import PersonId, Person
 from amdb.domain.entities.person.marriage import Marriage
@@ -132,13 +132,14 @@ class UpdateMarriageHandler:
         for child_id in child_ids:
             total_child_ids.add(child_id)
 
-        children = self._person_gateway.list_with_ids(
+        children, missing_child_ids = self._person_gateway.list_with_ids(
             *total_child_ids,
         )
-        self._ensure_persons(
-            requested_person_ids=total_child_ids,
-            persons=children,
-        )
+        if missing_child_ids:
+            raise ApplicationError(
+                message=PERSONS_DO_NOT_EXIST,
+                extra={"person_ids": missing_child_ids},
+            )
 
         old_children, new_children = [], []
         for child in children:
@@ -154,23 +155,3 @@ class UpdateMarriageHandler:
             ),
             children,
         )
-
-    def _ensure_persons(
-        self,
-        *,
-        requested_person_ids: Collection[PersonId],
-        persons: Collection[Person],
-    ) -> None:
-        if len(requested_person_ids) != len(persons):
-            person_ids = [person.id for person in persons]
-
-            invalid_person_ids = []
-            for requested_person_id in requested_person_ids:
-                if requested_person_id in person_ids:
-                    continue
-                invalid_person_ids.append(requested_person_id)
-
-            raise ApplicationError(
-                message=PERSONS_DO_NOT_EXIST,
-                extra={"person_ids": invalid_person_ids},
-            )

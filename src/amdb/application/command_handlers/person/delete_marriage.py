@@ -63,7 +63,7 @@ class DeleteMarriageHandler:
         )
         wife = cast(Person, wife)
 
-        children = self._person_gateway.list_with_ids(
+        children, _ = self._person_gateway.list_with_ids(
             *marriage.child_ids,
         )
         children = cast(list[Person], children)

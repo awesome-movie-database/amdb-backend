@@ -14,7 +14,11 @@ class PersonGateway(Protocol):
     def list_with_ids(
         self,
         *person_ids: PersonId,
-    ) -> list[Person]:
+    ) -> tuple[list[Person], list[PersonId]]:
+        """
+        Returns tuple of persons and person ids that
+        were not found
+        """
         raise NotImplementedError
 
     def save(

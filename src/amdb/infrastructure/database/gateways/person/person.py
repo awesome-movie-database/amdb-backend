@@ -37,7 +37,7 @@ class SQLAlchemyPersonGateway(PersonGateway):
     def list_with_ids(
         self,
         *person_ids: entity.PersonId,
-    ) -> list[entity.Person]:
+    ) -> tuple[list[entity.Person], list[entity.PersonId]]:
         statement = select(model.Person).filter(model.Person.id.in_(person_ids))
         person_models = self._session.scalars(
             statement=statement,
@@ -45,7 +45,17 @@ class SQLAlchemyPersonGateway(PersonGateway):
         person_entities = [
             self._mapper.to_entity(model=person_model) for person_model in person_models
         ]
-        return person_entities
+
+        missing_person_ids = []
+        if len(person_entities) != len(person_ids):
+            fetched_person_ids = [person_entity.id for person_entity in person_entities]
+
+            for person_id in person_ids:
+                if person_id in fetched_person_ids:
+                    continue
+                missing_person_ids.append(person_id)
+
+        return person_entities, missing_person_ids
 
     def save(
         self,

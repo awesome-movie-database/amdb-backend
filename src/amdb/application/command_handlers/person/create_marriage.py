@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from uuid import uuid4
 
-from amdb.domain.entities.person.person import PersonId, Person
+from amdb.domain.entities.person.person import Person
 from amdb.domain.entities.person.marriage import MarriageId, MarriageStatus
 from amdb.domain.services.user.access_concern import AccessConcern
 from amdb.domain.services.person.create_marriage import CreateMarriage
@@ -80,13 +80,14 @@ class CreateMarriageHandler:
             status=command.status,
         )
 
-        children = self._person_gateway.list_with_ids(
+        children, missing_child_ids = self._person_gateway.list_with_ids(
             *command.child_ids,
         )
-        self._ensure_persons(
-            requested_person_ids=command.child_ids,
-            persons=children,
-        )
+        if missing_child_ids:
+            raise ApplicationError(
+                message=PERSONS_DO_NOT_EXIST,
+                extra={"person_ids": missing_child_ids},
+            )
 
         marriage = self._create_marriage(
             id=MarriageId(uuid4()),
@@ -172,23 +173,3 @@ class CreateMarriageHandler:
                     message=PERSON_IS_MARRIED,
                     extra={"person_id": wife.id},
                 )
-
-    def _ensure_persons(
-        self,
-        *,
-        requested_person_ids: list[PersonId],
-        persons: list[Person],
-    ) -> None:
-        if len(requested_person_ids) != len(persons):
-            person_ids = [person.id for person in persons]
-
-            invalid_person_ids = []
-            for requested_person_id in requested_person_ids:
-                if requested_person_id in person_ids:
-                    continue
-                invalid_person_ids.append(requested_person_id)
-
-            raise ApplicationError(
-                message=PERSONS_DO_NOT_EXIST,
-                extra={"person_ids": invalid_person_ids},
-            )
