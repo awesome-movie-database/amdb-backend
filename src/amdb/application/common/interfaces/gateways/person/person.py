@@ -30,14 +30,6 @@ class PersonGateway(Protocol):
 
     def update(
         self,
-        *,
-        person: Person,
-    ) -> None:
-        raise NotImplementedError
-
-    def update_list(
-        self,
-        *,
-        persons: list[Person],
+        *persons: Person,
     ) -> None:
         raise NotImplementedError

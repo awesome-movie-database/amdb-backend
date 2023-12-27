@@ -58,7 +58,7 @@ class UpdatePersonHandler:
             death_place=command.death_place,
         )
         self._person_gateway.update(
-            person=person,
+            person,
         )
 
         self._unit_of_work.commit()

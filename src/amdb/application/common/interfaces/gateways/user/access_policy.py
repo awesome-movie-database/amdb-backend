@@ -24,3 +24,6 @@ class AccessPolicyGateway(Protocol):
 
     def for_delete_marriage(self) -> RequiredAccessPolicy:
         raise NotImplementedError
+
+    def for_create_relation(self) -> RequiredAccessPolicy:
+        raise NotImplementedError

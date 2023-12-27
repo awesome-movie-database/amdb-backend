@@ -103,13 +103,9 @@ class CreateMarriageHandler:
             marriage=marriage,
         )
         self._person_gateway.update(
-            person=husband,
-        )
-        self._person_gateway.update(
-            person=wife,
-        )
-        self._person_gateway.update_list(
-            persons=children,
+            husband,
+            wife,
+            *children,
         )
 
         self._unit_of_work.commit()

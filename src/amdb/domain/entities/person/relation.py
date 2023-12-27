@@ -10,7 +10,7 @@ class RelationType(IntEnum):
     AUNCLE = 1
     NIBLING = 2
     GRANDPARENT = 3
-    GRANDHCILD = 4
+    GRANDCHILD = 4
 
 
 @dataclass(slots=True)

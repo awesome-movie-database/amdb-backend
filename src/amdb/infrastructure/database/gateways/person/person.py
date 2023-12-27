@@ -74,20 +74,7 @@ class SQLAlchemyPersonGateway(PersonGateway):
 
     def update(
         self,
-        *,
-        person: entity.Person,
-    ) -> None:
-        person_model = self._mapper.to_model(
-            entity=person,
-        )
-        self._session.merge(
-            instance=person_model,
-        )
-
-    def update_list(
-        self,
-        *,
-        persons: list[entity.Person],
+        *persons: entity.Person,
     ) -> None:
         for person in persons:
             person_model = self._mapper.to_model(
