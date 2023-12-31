@@ -4,6 +4,9 @@
     <a href="https://github.com/Awesome-Movie-Database/amdb-backend/blob/main/LICENSE" target="_blank">
         <img src="https://img.shields.io/github/license/Awesome-Movie-Database/amdb-backend" alt="License">
     </a>
+    <a>
+        <img src="https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg">
+    </a>
     <a href="https://github.com/astral-sh/ruff">
         <img src="https://img.shields.io/badge/code_style-ruff-%236b00ff" alt="Code style">
     </a>
