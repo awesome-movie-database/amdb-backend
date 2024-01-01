@@ -22,6 +22,6 @@ class RateMovie:
         return Rating(
             movie_id=movie.id,
             user_id=user.id,
-            rating=rating,
+            value=rating,
             created_at=current_timestamp,
         )

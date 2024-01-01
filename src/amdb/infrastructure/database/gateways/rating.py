@@ -23,15 +23,15 @@ class SQLAlchemyRatingGateway(RatingGateway):
     def with_user_id_and_movie_id(
         self,
         user_id: UserId,
-        movie_id: MovieId
+        movie_id: MovieId,
     ) -> Optional[RatingEntity]:
         statement = (
             select(RatingModel)
             .where(
                 and_(
                     RatingModel.user_id == user_id,
-                    RatingModel.movie_id == movie_id
-                )
+                    RatingModel.movie_id == movie_id,
+                ),
             )
         )
         rating_model = self._session.scalar(statement)

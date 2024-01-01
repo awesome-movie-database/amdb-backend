@@ -4,12 +4,14 @@ from typing import cast
 from amdb.domain.entities.user import User
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.rate_movie import RateMovie
+from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
 from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.rating_gateway import RatingGateway
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.common.constants.exceptions import (
+    RATE_MOVIE_ACCESS_DENIED,
     MOVIE_DOES_NOT_EXIST,
     MOVIE_ALREADY_RATED,
 )
@@ -23,6 +25,7 @@ class RateMovieHandler:
         *,
         access_concern: AccessConcern,
         rate_movie: RateMovie,
+        permissions_gateway: PermissionsGateway,
         user_gateway: UserGateway,
         movie_gateway: MovieGateway,
         rating_gateway: RatingGateway,
@@ -31,6 +34,7 @@ class RateMovieHandler:
     ) -> None:
         self._access_concern = access_concern
         self._rate_movie = rate_movie
+        self._permissions_gateway = permissions_gateway
         self._user_gateway = user_gateway
         self._movie_gateway = movie_gateway
         self._rating_gateway = rating_gateway
@@ -38,11 +42,20 @@ class RateMovieHandler:
         self._identity_provider = identity_provider
     
     def execute(self, command: RateMovieCommand) -> None:
-        current_user_id = self._identity_provider.get_user_id()
+        current_permissions = self._identity_provider.get_permissions()
+        required_permissions = self._permissions_gateway.for_rate_movie()
+        access = self._access_concern.authorize(
+            current_permissions=current_permissions,
+            required_permissions=required_permissions,
+        )
+        if not access:
+            raise ApplicationError(RATE_MOVIE_ACCESS_DENIED)
         
         movie = self._movie_gateway.with_id(command.movie_id)
         if not movie:
             raise ApplicationError(MOVIE_DOES_NOT_EXIST)
+        
+        current_user_id = self._identity_provider.get_user_id()
         
         rating = self._rating_gateway.with_user_id_and_movie_id(
             user_id=current_user_id,

@@ -35,7 +35,7 @@ class CreateMovieHandler:
         required_permissions = self._permissions_gateway.for_create_movie()
         access = self._access_concern.authorize(
             current_permissions=current_permissions,
-            required_permissions=required_permissions
+            required_permissions=required_permissions,
         )
         if not access:
             raise ApplicationError(CREATE_MOVIE_ACCESS_DENIED)

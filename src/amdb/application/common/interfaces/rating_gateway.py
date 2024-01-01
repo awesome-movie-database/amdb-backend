@@ -9,7 +9,7 @@ class RatingGateway(Protocol):
     def with_user_id_and_movie_id(
         self,
         user_id: UserId,
-        movie_id: MovieId
+        movie_id: MovieId,
     ) -> Optional[Rating]:
         raise NotImplementedError
 

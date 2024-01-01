@@ -4,61 +4,95 @@ build-backend = "hatchling.build"
 
 [project]
 name = "amdb"
-dynamic = ["version"]
-description = ''
+description = "Awesome Movie Database Backend"
+license = "Apache-2.0"
 readme = "README.md"
-requires-python = ">=3.8"
-license = "MIT"
-keywords = []
+dynamic = ["version"]
+requires-python = "==3.10.13"
+
 authors = [
-  { name = "U.N. Owen", email = "void@some.where" },
+    { name = "madnoberson", email = "baseddepartmentzx77@gmail.com" },
 ]
-classifiers = [
-  "Development Status :: 4 - Beta",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
+maintainers = [
+    { name = "madnoberson", email = "baseddepartmentzx77@gmail.com" },
 ]
 dependencies = [
-  "sqlalchemy>=2.0",
+    "sqlalchemy>=2.0",
 ]
 
-[project.urls]
-Documentation = "https://github.com/unknown/amdb#readme"
-Issues = "https://github.com/unknown/amdb/issues"
-Source = "https://github.com/unknown/amdb"
+[tool.hatch.envs.style]
+description = "Lint and format"
+detached = true
 
-[tool.hatch.envs.default]
 dependencies = [
-  "coverage[toml]>=6.5",
-  "pytest",
-]
-[tool.hatch.envs.default.scripts]
-test = "pytest {args:tests}"
-test-cov = "coverage run -m pytest {args:tests}"
-cov-report = [
-  "- coverage combine",
-  "coverage report",
-]
-cov = [
-  "test-cov",
-  "cov-report",
+    "mypy==1.8.0",
+    "ruff==0.1.9",
 ]
 
-[[tool.hatch.envs.all.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
+[tool.hatch.envs.style.scripts]
+lint = "./scripts/lint.sh"
+format = "./scripts/format.sh"
 
-[tool.hatch.envs.types]
+[tool.hatch.envs.test]
+description = "Testing"
+
 dependencies = [
-  "mypy>=1.0.0",
+    "coverage[toml]>=6.5",
+    "pytest",
 ]
-[tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/amdb tests}"
+
+[tool.hatch.envs.test.scripts]
+test = "./scripts/test.sh"
+test-cov = "./scripts/test-cov.sh"
+
+[tool.hatch.envs.dev]
+description = "Development"
+
+dependencies = [
+    "mypy==1.8.0",
+    "ruff==0.1.9",
+    "coverage[toml]>=6.5",
+    "pytest",
+]
+
+[tool.hatch.envs.dev.scripts]
+lint = "./scripts/lint.sh"
+format = "./scripts/format.sh"
+test = "./scripts/test.sh"
+test-cov = "./scripts/test-cov.sh"
+
+[tool.hatch.version]
+path = "src/amdb/__about__.py"
+
+[tool.ruff.lint]
+extend-select = [
+    "N",        # https://docs.astral.sh/ruff/settings/#pep8-naming
+    "EM",       # https://docs.astral.sh/ruff/settings/#flake8-errmsg
+    "ISC",      # https://docs.astral.sh/ruff/settings/#flake8-implicit-str-concat
+    "G",        # https://docs.astral.sh/ruff/rules/#flake8-logging-format-g
+    "Q",        # https://docs.astral.sh/ruff/rules/#flake8-pytest-style-pt
+]
+select = [
+    "F401",     # unused-import
+    "F406",     # undefined-local-with-nested-import-star-usage
+    "COM812",   # missing-trailing-comma
+    "DTZ003",   # call-datetime-utcnow
+    "EM102",    # f-string-in-exception
+    "INP001",   # implicit-namespace-package
+    "PIE794",   # duplicate-class-field-definition
+    "PIE796",   # non-unique-enums
+    "T201",     # print
+    "SLF001",   # private-member-access
+]
+
+[tool.pytest.ini_options]
+pythonpath = "src/"
+
+[tool.ruff]
+line-length = 99
+
+[tool.ruff.format]
+quote-style = "double"
 
 [tool.coverage.run]
 source_pkgs = ["amdb", "tests"]
@@ -71,7 +105,7 @@ tests = ["tests", "*/tests"]
 
 [tool.coverage.report]
 exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
+    "no cov",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
 ]

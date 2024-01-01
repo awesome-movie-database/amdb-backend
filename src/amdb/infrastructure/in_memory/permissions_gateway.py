@@ -6,4 +6,7 @@ class InMemoryPermissionsGateway(PermissionsGateway):
         return 2
     
     def for_rate_movie(self) -> int:
-        return 6
+        return 4
+    
+    def for_unrate_movie(self) -> int:
+        return 4
