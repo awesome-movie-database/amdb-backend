@@ -9,7 +9,7 @@ run_database_container() {
         -e POSTGRES_USER=$TEST_DATABASE_PG_USER \
         -e POSTGRES_PASSWORD=$TEST_DATABASE_PG_PASSWORD \
         -e POSTGRES_DB=$TEST_DATABASE_PG_NAME \
-        -p "5432:5432" \
+        -p "$TEST_DATABASE_PG_PORT:5432" \
         --replace \
         postgres:15-alpine
     sleep 3  # FIXME: Do it properly
@@ -17,7 +17,7 @@ run_database_container() {
 
 run_tests() {
     echo "Running tests..."
-    pytest -vv
+    pytest
 }
 
 remove_database_container() {
