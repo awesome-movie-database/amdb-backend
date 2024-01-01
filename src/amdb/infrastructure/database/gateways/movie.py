@@ -24,21 +24,24 @@ class SQLAlchemyMovieGateway(MovieGateway):
                 movie=movie_model,
             )
         return None
-    
+
     def save(self, movie: MovieEntity) -> None:
         movie_model = self._mapper.to_model(
             movie=movie,
         )
         self._session.add(movie_model)
-    
+        self._session.flush((movie_model,))
+
     def update(self, movie: MovieEntity) -> None:
         movie_model = self._mapper.to_model(
             movie=movie,
         )
         self._session.merge(movie_model)
-    
+        self._session.flush((movie_model,))
+
     def delete(self, movie: MovieEntity) -> None:
         movie_model = self._mapper.to_model(
             movie=movie,
         )
         self._session.delete(movie_model)
+        self._session.flush((movie_model,))

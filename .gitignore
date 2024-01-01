@@ -5,6 +5,3 @@ __pycache__
 .pytest_cache
 .coverage
 .env
-.vscode
-coverage.xml
-poetry.lock

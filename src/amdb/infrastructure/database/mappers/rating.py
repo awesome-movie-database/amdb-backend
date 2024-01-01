@@ -12,7 +12,7 @@ class RatingMapper:
             value=rating.value,
             created_at=rating.created_at,
         )
-    
+
     def to_entity(self, rating: RatingModel) -> RatingEntity:
         return RatingEntity(
             movie_id=MovieId(rating.movie_id),

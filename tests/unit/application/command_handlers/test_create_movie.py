@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-import pytest 
+import pytest
 
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.create_movie import CreateMovie
@@ -59,7 +59,7 @@ def test_create_movie_should_raise_error_when_access_is_denied(
     permissions_gateway: PermissionsGateway,
     movie_gateway: MovieGateway,
     unit_of_work: UnitOfWork,
-    identity_provider_with_valid_permissions: IdentityProvider,
+    identity_provider_with_invalid_permissions: IdentityProvider,
 ):
     create_movie_command = CreateMovieCommand(
         title="Matrix",
@@ -70,7 +70,7 @@ def test_create_movie_should_raise_error_when_access_is_denied(
         permissions_gateway=permissions_gateway,
         movie_gateway=movie_gateway,
         unit_of_work=unit_of_work,
-        identity_provider=identity_provider_with_valid_permissions,
+        identity_provider=identity_provider_with_invalid_permissions,
     )
 
     with pytest.raises(ApplicationError) as error:

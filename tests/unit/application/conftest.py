@@ -41,7 +41,7 @@ def sqlalchemy_engine(database_config: DatabaseConfig) -> Engine:
     return build_engine(database_config)
 
 
-@pytest.fixture(scope="package", autouse=True)
+@pytest.fixture(autouse=True)
 def clear_database(sqlalchemy_engine: Engine) -> Iterator[None]:
     Model.metadata.create_all(sqlalchemy_engine)
     yield
@@ -51,10 +51,9 @@ def clear_database(sqlalchemy_engine: Engine) -> Iterator[None]:
 @pytest.fixture
 def sqlalchemy_session(sqlalchemy_engine: Engine) -> Iterator[Session]:
     connection = sqlalchemy_engine.connect()
-    session = Session(connection, autoflush=False, expire_on_commit=False)
-    
+    session = Session(connection, expire_on_commit=False)
+
     yield session
 
     session.close()
     connection.close()
-    

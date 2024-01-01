@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, inspect
 from sqlalchemy.orm.session import Session
 
 from amdb.domain.entities.user import UserId
@@ -40,16 +40,21 @@ class SQLAlchemyRatingGateway(RatingGateway):
                 rating=rating_model,
             )
         return None
-    
+
     def save(self, rating: RatingEntity) -> None:
         rating_model = self._mapper.to_model(
             rating=rating,
         )
         self._session.add(rating_model)
-    
+        self._session.flush((rating_model,))
+
     def delete(self, rating: RatingEntity) -> None:
         rating_model = self._mapper.to_model(
             rating=rating,
         )
-        self._session.delete(rating_model)
-    
+        rating_model_insp = inspect(rating_model)
+        if rating_model_insp.persistent:
+            self._session.delete(rating_model)
+            self._session.flush((rating_model,))
+        elif rating_model_insp.pending:
+            self._session.expunge(rating_model)

@@ -6,11 +6,11 @@ from .gateway_factory import GatewayFactory
 
 
 def build_engine(config: DatabaseConfig) -> Engine:
-    return create_engine(url=config.pg_dsn, echo=True)
+    return create_engine(url=config.pg_dsn)
 
 
 def build_session_factory(engine: Engine) -> sessionmaker[Session]:
-    return sessionmaker(engine, autoflush=False, expire_on_commit=False)
+    return sessionmaker(engine)
 
 
 def build_gateway_factory(session: Session) -> GatewayFactory:

@@ -25,9 +25,15 @@ from amdb.application.common.constants.exceptions import (
 from amdb.application.common.exception import ApplicationError
 
 
+USER_ID = UserId(uuid4())
+
+
 @pytest.fixture(scope="module")
 def identity_provider_with_valid_permissions() -> IdentityProvider:
     identity_provider = Mock()
+    identity_provider.get_user_id = Mock(
+        return_value=USER_ID,
+    )
     identity_provider.get_permissions = Mock(
         return_value=4,
     )
@@ -38,6 +44,9 @@ def identity_provider_with_valid_permissions() -> IdentityProvider:
 @pytest.fixture(scope="module")
 def identity_provider_with_invalid_permissions() -> IdentityProvider:
     identity_provider = Mock()
+    identity_provider.get_user_id = Mock(
+        return_value=USER_ID,
+    )
     identity_provider.get_permissions = Mock(
         return_value=2,
     )
@@ -54,7 +63,7 @@ def test_unrate_movie(
     identity_provider_with_valid_permissions: IdentityProvider,
 ):
     user = User(
-        id=UserId(uuid4()),
+        id=USER_ID,
         name="John Doe",
     )
     user_gateway.save(user)
@@ -122,7 +131,7 @@ def test_unrate_movie_should_raise_error_when_access_is_denied(
         unrate_movie_handler.execute(
             command=unrate_movie_command,
         )
-    
+
     assert error.value.message == UNRATE_MOVIE_ACCESS_DENIED
 
 
@@ -152,7 +161,7 @@ def test_unrate_movie_should_raise_error_when_movie_does_not_exist(
         unrate_movie_handler.execute(
             command=unrate_movie_command,
         )
-    
+
     assert error.value.message == MOVIE_DOES_NOT_EXIST
 
 
@@ -165,7 +174,7 @@ def test_unrate_movie_should_raise_error_when_movie_is_not_rated(
     identity_provider_with_valid_permissions: IdentityProvider,
 ):
     user = User(
-        id=UserId(uuid4()),
+        id=USER_ID,
         name="John Doe",
     )
     user_gateway.save(user)
@@ -198,5 +207,5 @@ def test_unrate_movie_should_raise_error_when_movie_is_not_rated(
         unrate_movie_handler.execute(
             command=unrate_movie_command,
         )
-    
+
     assert error.value.message == MOVIE_NOT_RATED

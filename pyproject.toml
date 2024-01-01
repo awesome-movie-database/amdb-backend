@@ -17,7 +17,8 @@ maintainers = [
     { name = "madnoberson", email = "baseddepartmentzx77@gmail.com" },
 ]
 dependencies = [
-    "sqlalchemy>=2.0",
+    "sqlalchemy==2.0.23",
+    "psycopg2-binary==2.9.9",
 ]
 
 [tool.hatch.envs.style]
