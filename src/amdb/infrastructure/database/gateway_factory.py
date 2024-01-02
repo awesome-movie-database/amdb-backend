@@ -11,12 +11,15 @@ from .mappers.rating import RatingMapper
 class GatewayFactory:
     def __init__(self, session: Session) -> None:
         self._session = session
-    
+
     def create_user_gateway(self) -> SQLAlchemyUserGateway:
         return SQLAlchemyUserGateway(self._session, UserMapper())
-    
+
     def create_movie_gateway(self) -> SQLAlchemyMovieGateway:
         return SQLAlchemyMovieGateway(self._session, MovieMapper())
-    
+
     def create_rating_gateway(self) -> SQLAlchemyRatingGateway:
         return SQLAlchemyRatingGateway(self._session, RatingMapper())
+
+    def create_unit_of_work(self) -> Session:
+        return self._session

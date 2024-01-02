@@ -1,3 +1,6 @@
+from contextlib import contextmanager
+from typing import Iterator
+
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm.session import Session, sessionmaker
 
@@ -13,5 +16,13 @@ def build_session_factory(engine: Engine) -> sessionmaker[Session]:
     return sessionmaker(engine)
 
 
-def build_gateway_factory(session: Session) -> GatewayFactory:
-    return GatewayFactory(session)
+class BuildGatewayFactory:
+    def __init__(self, session_factory: sessionmaker[Session]) -> None:
+        self._session_factory = session_factory
+
+    @contextmanager
+    def __call__(self) -> Iterator[GatewayFactory]:
+        session = self._session_factory()
+        yield GatewayFactory(session)
+        session.close()
+
