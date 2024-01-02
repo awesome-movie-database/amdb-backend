@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+    web_api:
+        profiles: [web_api]
+        container_name: amdb_backend.web_api
+        depends_on: [postgres, redis]
+        ports: [127.0.0.1:8000:8000]
+        restart: unless-stopped
+
+        networks:
+            - amdb_backend.postgres.network
+            - amdb_backend.redis.network
+
+    postgres:
+        profiles: [web_api]
+        container_name: amdb_backend.postgres
+        image: postgres:15-alpine
+        restart: unless-stopped
+
+        networks:
+            - amdb_backend.postgres.network
+        environment:
+            - POSTGRES_USER=${DATABASE_PG_USER}
+            - POSTGRES_PASSWORD=${DATABASE_PG_PASSWORD}
+            - POSTGRES_DB=${DATABASE_PG_NAME}
+
+    redis:
+        profiles: [web_api]
+        container_name: amdb_backend.redis
+        image: redis:7.2-alpine
+        restart: unless-stopped
+
+        networks:
+            - amdb_backend.redis.network
+        environment:
+            - REDIS_PASSWORD=${SESSION_IDENTITY_PROVIDER_REDIS_PASSWORD}
+
+
+networks:
+    amdb_backend.postgres.network: {}
+    amdb_backend.redis.network: {}

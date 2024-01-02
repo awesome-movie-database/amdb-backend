@@ -21,6 +21,7 @@ dependencies = [
     "psycopg2-binary==2.9.9",
 ]
 
+
 [tool.hatch.envs.style]
 description = "Lint and format"
 detached = true
@@ -34,6 +35,17 @@ dependencies = [
 lint = "./scripts/lint.sh"
 format = "./scripts/format.sh"
 
+
+[tool.hatch.envs.web_api]
+description = "Web API"
+
+dependencies = [
+    "redis>=5.0.0",
+    "fastapi==0.103.*",
+    "uvicorn==0.22.*",
+]
+
+
 [tool.hatch.envs.test]
 description = "Testing"
 
@@ -45,6 +57,7 @@ dependencies = [
 [tool.hatch.envs.test.scripts]
 test = "./scripts/test.sh"
 test-cov = "./scripts/test-cov.sh"
+
 
 [tool.hatch.envs.dev]
 description = "Development"
@@ -62,6 +75,7 @@ lint = "./scripts/lint.sh"
 format = "./scripts/format.sh"
 test = "./scripts/test.sh"
 test-cov = "./scripts/test-cov.sh"
+
 
 [tool.hatch.version]
 path = "src/amdb/__about__.py"
