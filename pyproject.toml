@@ -19,6 +19,7 @@ maintainers = [
 dependencies = [
     "sqlalchemy==2.0.23",
     "psycopg2-binary==2.9.9",
+    "alembic==1.13.0",
 ]
 
 [project.optional-dependencies]
@@ -34,6 +35,8 @@ dev = [
     "pytest",
     "pre-commit==3.5.0",
 ]
+
+[project.scripts]
 
 [tool.setuptools.packages.find]
 where = ["src"]
