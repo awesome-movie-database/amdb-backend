@@ -8,6 +8,10 @@ services:
         ports: [127.0.0.1:8000:8000]
         restart: unless-stopped
 
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
+            target: web_api
         networks:
             - amdb_backend.postgres.network
             - amdb_backend.redis.network

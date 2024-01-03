@@ -1,14 +1,14 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "amdb"
 description = "Awesome Movie Database Backend"
-license = "Apache-2.0"
+version = "0.1.0"
+license = { file = "LICENSE" }
 readme = "README.md"
-dynamic = ["version"]
-requires-python = "==3.10.13"
+requires-python = "==3.10.*"
 
 authors = [
     { name = "madnoberson", email = "baseddepartmentzx77@gmail.com" },
@@ -21,64 +21,26 @@ dependencies = [
     "psycopg2-binary==2.9.9",
 ]
 
-
-[tool.hatch.envs.style]
-description = "Lint and format"
-detached = true
-
-dependencies = [
-    "mypy==1.8.0",
-    "ruff==0.1.9",
-]
-
-[tool.hatch.envs.style.scripts]
-lint = "./scripts/lint.sh"
-format = "./scripts/format.sh"
-
-
-[tool.hatch.envs.web_api]
-description = "Web API"
-
-dependencies = [
+[project.optional-dependencies]
+web_api = [
     "redis>=5.0.0",
     "fastapi==0.103.*",
     "uvicorn==0.22.*",
 ]
-
-
-[tool.hatch.envs.test]
-description = "Testing"
-
-dependencies = [
-    "coverage[toml]>=6.5",
-    "pytest",
-]
-
-[tool.hatch.envs.test.scripts]
-test = "./scripts/test.sh"
-test-cov = "./scripts/test-cov.sh"
-
-
-[tool.hatch.envs.dev]
-description = "Development"
-
-dependencies = [
+dev = [
+    "amdb[web_api]",
     "mypy==1.8.0",
     "ruff==0.1.9",
-    "coverage[toml]>=6.5",
     "pytest",
     "pre-commit==3.5.0",
 ]
 
-[tool.hatch.envs.dev.scripts]
-lint = "./scripts/lint.sh"
-format = "./scripts/format.sh"
-test = "./scripts/test.sh"
-test-cov = "./scripts/test-cov.sh"
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["amdb*"]
 
-
-[tool.hatch.version]
-path = "src/amdb/__about__.py"
+[tool.pytest.ini_options]
+pythonpath = "src/"
 
 [tool.ruff.lint]
 extend-select = [
@@ -101,27 +63,8 @@ select = [
     "SLF001",   # private-member-access
 ]
 
-[tool.pytest.ini_options]
-pythonpath = "src/"
-
 [tool.ruff]
 line-length = 99
 
 [tool.ruff.format]
 quote-style = "double"
-
-[tool.coverage.run]
-source_pkgs = ["amdb", "tests"]
-branch = true
-parallel = true
-
-[tool.coverage.paths]
-amdb = ["src/amdb", "*/src/amdb"]
-tests = ["tests", "*/tests"]
-
-[tool.coverage.report]
-exclude_lines = [
-    "no cov",
-    "if __name__ == .__main__.:",
-    "if TYPE_CHECKING:",
-]
