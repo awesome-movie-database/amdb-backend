@@ -36,7 +36,9 @@ def build_web_api_config() -> "WebAPIConfig":
         redis_port=int(_get_env(SESSION_IDENTITY_PROVIDER_REDIS_PORT_ENV)),
         redis_db=int(_get_env(SESSION_IDENTITY_PROVIDER_REDIS_DB_ENV)),
         redis_password=_get_env(SESSION_IDENTITY_PROVIDER_REDIS_PASSWORD_ENV),
-        session_lifetime=timedelta(minutes=int(_get_env(SESSION_IDENTITY_PROVIDER_SESSION_LIFETIME_ENV))),
+        session_lifetime=timedelta(
+            minutes=int(_get_env(SESSION_IDENTITY_PROVIDER_SESSION_LIFETIME_ENV)),
+        ),
     )
     return WebAPIConfig(
         fastapi=fastapi_config,

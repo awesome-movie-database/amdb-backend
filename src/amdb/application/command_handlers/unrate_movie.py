@@ -12,7 +12,7 @@ from amdb.application.common.constants.exceptions import (
     MOVIE_NOT_RATED,
 )
 from amdb.application.common.exception import ApplicationError
-from amdb.application.commands.rate_movie import RateMovieCommand
+from amdb.application.commands.unrate_movie import UnrateMovieCommand
 
 
 class UnrateMovieHandler:
@@ -37,7 +37,7 @@ class UnrateMovieHandler:
         self._unit_of_work = unit_of_work
         self._identity_provider = identity_provider
 
-    def execute(self, command: RateMovieCommand) -> None:
+    def execute(self, command: UnrateMovieCommand) -> None:
         current_permissions = self._identity_provider.get_permissions()
         required_permissions = self._permissions_gateway.for_unrate_movie()
         access = self._access_concern.authorize(

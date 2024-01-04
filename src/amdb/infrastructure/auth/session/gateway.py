@@ -27,10 +27,10 @@ class SessionGateway:
         self._session_lifetime = session_lifetime
 
     def save_session(self, session: Session) -> SessionId:
-        session_id = uuid4().hex,
+        session_id = SessionId(uuid4().hex)
         session_data = {
             "user_id": session.user_id.hex,
-            "permissions": session.permissions
+            "permissions": session.permissions,
         }
         self._redis.hset(
             name=session_id,
@@ -44,10 +44,10 @@ class SessionGateway:
         return session_id
 
     def get_session(self, session_id: SessionId) -> Optional[Session]:
-        session_data = self._redis.hgetall(session_id)
+        session_data = self._redis.hgetall(session_id)  # type: ignore
         if session_data:
             return Session(
-                user_id=UserId(UUID(session_data["user_id"])),
-                permissions=session_data["permissions"],
+                user_id=UserId(UUID(session_data["user_id"])),  # type: ignore
+                permissions=session_data["permissions"],  # type: ignore
             )
         return None

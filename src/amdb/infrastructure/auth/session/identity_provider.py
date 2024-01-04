@@ -27,7 +27,7 @@ class SessionIdentityProvider(IdentityProvider):
             raise AuthenticationError()
 
         session = self._session_gateway.get_session(
-            session_id=self._session_id
+            session_id=self._session_id,
         )
         if not session:
             raise AuthenticationError()

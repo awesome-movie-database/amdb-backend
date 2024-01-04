@@ -2,7 +2,6 @@ from typing import Callable
 
 
 class Stub:
-
     def __init__(self, dependency: Callable) -> None:
         self.dependency = dependency
 

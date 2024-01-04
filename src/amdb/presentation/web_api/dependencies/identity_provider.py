@@ -13,5 +13,5 @@ def get_identity_provider(
 ) -> SessionIdentityProvider:
     return SessionIdentityProvider(
         session_id=session_id,
-        session_gateway=session_gateway
+        session_gateway=session_gateway,
     )

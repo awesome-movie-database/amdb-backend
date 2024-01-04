@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from amdb.infrastructure.auth.session.config import SessionIdentityProviderConfig
 from amdb.presentation.web_api.exception_handlers import setup_exception_handlers
-from amdb.presentation.web_api.routers.setuper import setup_routers
+from amdb.presentation.web_api.routers.setup import setup_routers
 from amdb.main.config import GenericConfig
 from .config import FastAPIConfig
 from .di import setup_dependecies

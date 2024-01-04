@@ -29,7 +29,7 @@ class CreateMovieHandler:
         self._movie_gateway = movie_gateway
         self._unit_of_work = unit_of_work
         self._identity_provider = identity_provider
-    
+
     def execute(self, command: CreateMovieCommand) -> MovieId:
         current_permissions = self._identity_provider.get_permissions()
         required_permissions = self._permissions_gateway.for_create_movie()
@@ -39,13 +39,13 @@ class CreateMovieHandler:
         )
         if not access:
             raise ApplicationError(CREATE_MOVIE_ACCESS_DENIED)
-        
+
         movie = self._create_movie(
             id=MovieId(uuid4()),
             title=command.title,
         )
         self._movie_gateway.save(movie)
-        
+
         self._unit_of_work.commit()
 
         return movie.id

@@ -14,9 +14,7 @@ class RateMovie:
         rating: float,
         current_timestamp: datetime,
     ) -> Rating:
-        movie.rating = (movie.rating * movie.rating_count + rating) / (
-            movie.rating_count + 1
-        )
+        movie.rating = (movie.rating * movie.rating_count + rating) / (movie.rating_count + 1)
         movie.rating_count += 1
 
         return Rating(

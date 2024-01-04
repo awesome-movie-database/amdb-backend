@@ -8,7 +8,7 @@ class UserMapper:
             id=user.id,
             name=user.name,
         )
-    
+
     def to_entity(self, user: UserModel) -> UserEntity:
         return UserEntity(
             id=UserId(user.id),

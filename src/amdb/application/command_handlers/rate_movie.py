@@ -40,7 +40,7 @@ class RateMovieHandler:
         self._rating_gateway = rating_gateway
         self._unit_of_work = unit_of_work
         self._identity_provider = identity_provider
-    
+
     def execute(self, command: RateMovieCommand) -> None:
         current_permissions = self._identity_provider.get_permissions()
         required_permissions = self._permissions_gateway.for_rate_movie()
@@ -50,23 +50,23 @@ class RateMovieHandler:
         )
         if not access:
             raise ApplicationError(RATE_MOVIE_ACCESS_DENIED)
-        
+
         movie = self._movie_gateway.with_id(command.movie_id)
         if not movie:
             raise ApplicationError(MOVIE_DOES_NOT_EXIST)
-        
+
         current_user_id = self._identity_provider.get_user_id()
-        
+
         rating = self._rating_gateway.with_user_id_and_movie_id(
             user_id=current_user_id,
             movie_id=movie.id,
         )
         if rating:
             raise ApplicationError(MOVIE_ALREADY_RATED)
-        
+
         user = self._user_gateway.with_id(current_user_id)
         user = cast(User, user)
-        
+
         new_rating = self._rate_movie(
             user=user,
             movie=movie,

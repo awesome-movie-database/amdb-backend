@@ -20,7 +20,7 @@ class CreateUserHandler:
         self._create_user = create_user
         self._user_gateway = user_gateway
         self._unit_of_work = unit_of_work
-    
+
     def execute(self, command: CreateUserCommand) -> UserId:
         user = self._user_gateway.with_name(command.name)
         if user:

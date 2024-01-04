@@ -16,11 +16,13 @@ async def main() -> None:
         session_identity_provider_config=web_api_config.session_identity_provider,
         generic_config=generic_config,
     )
-    server = Server(Config(
-        app=app,
-        host=web_api_config.uvicorn.host,
-        port=web_api_config.uvicorn.port,
-    ))
+    server = Server(
+        Config(
+            app=app,
+            host=web_api_config.uvicorn.host,
+            port=web_api_config.uvicorn.port,
+        ),
+    )
 
     await server.serve()
 

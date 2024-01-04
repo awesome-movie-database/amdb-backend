@@ -56,5 +56,5 @@ def test_create_user_should_raise_error_when_user_name_already_exists(
         create_user_handler.execute(
             command=create_user_command,
         )
-    
+
     assert error.value.message == USER_NAME_ALREADY_EXISTS

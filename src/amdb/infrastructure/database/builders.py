@@ -25,4 +25,3 @@ class BuildGatewayFactory:
         session = self._session_factory()
         yield GatewayFactory(session)
         session.close()
-

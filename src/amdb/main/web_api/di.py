@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 
-from amdb.infrastructure.database.builders import build_engine, build_session_factory, BuildGatewayFactory
+from amdb.infrastructure.database.builders import (
+    build_engine,
+    build_session_factory,
+    BuildGatewayFactory,
+)
 from amdb.infrastructure.in_memory.permissions_gateway import InMemoryPermissionsGateway
 from amdb.infrastructure.auth.session.gateway import SessionGateway
 from amdb.infrastructure.auth.session.builders import build_session_gateway
@@ -22,9 +26,9 @@ def setup_dependecies(
         build_gateway_factory=BuildGatewayFactory(session_factory),
         permissions_gateway=InMemoryPermissionsGateway(),
     )
-    app.dependency_overrides[HandlerFactory] = ioc
+    app.dependency_overrides[HandlerFactory] = ioc  # type: ignore
 
     session_gateway = build_session_gateway(
         session_identity_provider_config=session_identity_provider_config,
     )
-    app.dependency_overrides[Stub(SessionGateway)] = session_gateway
+    app.dependency_overrides[Stub(SessionGateway)] = session_gateway  # type: ignore

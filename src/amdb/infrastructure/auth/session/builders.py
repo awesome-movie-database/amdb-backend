@@ -6,7 +6,7 @@ from .gateway import SessionGateway
 
 def build_session_gateway(
     session_identity_provider_config: SessionIdentityProviderConfig,
-) -> Redis:
+) -> SessionGateway:
     redis = Redis(
         host=session_identity_provider_config.redis_host,
         port=session_identity_provider_config.redis_port,
@@ -15,5 +15,5 @@ def build_session_gateway(
     )
     return SessionGateway(
         redis=redis,
-        session_lifetime=session_identity_provider_config.session_lifetime
+        session_lifetime=session_identity_provider_config.session_lifetime,
     )

@@ -22,4 +22,3 @@ def create_ratings_router() -> APIRouter:
     )
 
     return router
-

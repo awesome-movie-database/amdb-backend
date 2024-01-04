@@ -5,11 +5,11 @@ __pycache__/
 .env.template
 .pre-commit-config.yaml
 .env
-.venv
 .mypy_cache
 .ruff_cache
 .pytest_cache
 .coverage
+venv/
 assets/
 scripts/
 tests/

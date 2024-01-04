@@ -15,6 +15,6 @@ class RatingGateway(Protocol):
 
     def save(self, rating: Rating) -> None:
         raise NotImplementedError
-    
+
     def delete(self, rating: Rating) -> None:
         raise NotImplementedError

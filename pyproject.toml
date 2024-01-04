@@ -28,15 +28,18 @@ web_api = [
     "fastapi==0.103.*",
     "uvicorn==0.22.*",
 ]
-dev = [
-    "amdb[web_api]",
+style = [
     "mypy==1.8.0",
     "ruff==0.1.9",
+    "types-redis",
+]
+test = [
     "pytest",
+]
+dev = [
+    "amdb[web_api,style,test]",
     "pre-commit==3.5.0",
 ]
-
-[project.scripts]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -71,14 +71,14 @@ class IoC(HandlerFactory):
         self,
         identity_provider: IdentityProvider,
     ) -> Iterator[UnrateMovieHandler]:
-            with self._build_gateway_factory() as gateway_factory:
-                yield UnrateMovieHandler(
-                    access_concern=AccessConcern(),
-                    unrate_movie=UnrateMovie(),
-                    permissions_gateway=self._permissions_gateway,
-                    user_gateway=gateway_factory.create_user_gateway(),
-                    movie_gateway=gateway_factory.create_movie_gateway(),
-                    rating_gateway=gateway_factory.create_rating_gateway(),
-                    unit_of_work=gateway_factory.create_unit_of_work(),
-                    identity_provider=identity_provider,
-                )
+        with self._build_gateway_factory() as gateway_factory:
+            yield UnrateMovieHandler(
+                access_concern=AccessConcern(),
+                unrate_movie=UnrateMovie(),
+                permissions_gateway=self._permissions_gateway,
+                user_gateway=gateway_factory.create_user_gateway(),
+                movie_gateway=gateway_factory.create_movie_gateway(),
+                rating_gateway=gateway_factory.create_rating_gateway(),
+                unit_of_work=gateway_factory.create_unit_of_work(),
+                identity_provider=identity_provider,
+            )
