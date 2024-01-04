@@ -28,6 +28,9 @@ web_api = [
     "fastapi==0.103.*",
     "uvicorn==0.22.*",
 ]
+cli = [
+    "typer[all]==0.9.*",
+]
 style = [
     "mypy==1.8.0",
     "ruff==0.1.9",
@@ -37,7 +40,7 @@ test = [
     "pytest",
 ]
 dev = [
-    "amdb[web_api,style,test]",
+    "amdb[web_api,cli,style,test]",
     "pre-commit==3.5.0",
 ]
 
