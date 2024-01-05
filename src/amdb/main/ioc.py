@@ -9,6 +9,7 @@ from amdb.domain.services.unrate_movie import UnrateMovie
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.command_handlers.create_user import CreateUserHandler
 from amdb.application.command_handlers.create_movie import CreateMovieHandler
+from amdb.application.command_handlers.delete_movie import DeleteMovieHandler
 from amdb.application.command_handlers.rate_movie import RateMovieHandler
 from amdb.application.command_handlers.unrate_movie import UnrateMovieHandler
 from amdb.infrastructure.database.builders import BuildGatewayFactory
@@ -45,6 +46,21 @@ class IoC(HandlerFactory):
                 create_movie=CreateMovie(),
                 permissions_gateway=self._permissions_gateway,
                 movie_gateway=gateway_factory.create_movie_gateway(),
+                unit_of_work=gateway_factory.create_unit_of_work(),
+                identity_provider=identity_provider,
+            )
+
+    @contextmanager
+    def delete_movie(
+        self,
+        identity_provider: IdentityProvider,
+    ) -> Iterator[DeleteMovieHandler]:
+        with self._build_gateway_factory() as gateway_factory:
+            yield DeleteMovieHandler(
+                access_concern=AccessConcern(),
+                permissions_gateway=self._permissions_gateway,
+                movie_gateway=gateway_factory.create_movie_gateway(),
+                rating_gateway=gateway_factory.create_rating_gateway(),
                 unit_of_work=gateway_factory.create_unit_of_work(),
                 identity_provider=identity_provider,
             )
