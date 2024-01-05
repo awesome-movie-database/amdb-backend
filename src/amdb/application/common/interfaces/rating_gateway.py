@@ -18,3 +18,6 @@ class RatingGateway(Protocol):
 
     def delete(self, rating: Rating) -> None:
         raise NotImplementedError
+
+    def delete_with_movie_id(self, movie_id: MovieId) -> None:
+        raise NotImplementedError

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import select, and_, inspect
+from sqlalchemy import select, delete, and_, inspect
 from sqlalchemy.orm.session import Session
 
 from amdb.domain.entities.user import UserId
@@ -55,3 +55,7 @@ class SQLAlchemyRatingGateway(RatingGateway):
             self._session.flush((rating_model,))
         elif rating_model_insp.pending:
             self._session.expunge(rating_model)
+
+    def delete_with_movie_id(self, movie_id: MovieId) -> None:
+        statement = delete(RatingModel).where(RatingModel.movie_id == movie_id)
+        self._session.execute(statement)
