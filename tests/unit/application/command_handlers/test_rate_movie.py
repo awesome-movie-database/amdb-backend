@@ -9,6 +9,8 @@ from amdb.domain.entities.movie import MovieId, Movie
 from amdb.domain.entities.rating import Rating
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.rate_movie import RateMovie
+from amdb.domain.constants.exceptions import INVALID_RATING_VALUE
+from amdb.domain.exception import DomainError
 from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
 from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
@@ -213,3 +215,54 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
         )
 
     assert error.value.message == MOVIE_ALREADY_RATED
+
+
+@pytest.mark.parametrize(
+    "rating_value", (11, 0, 4.2)
+)
+def test_rate_movie_should_raise_error_when_rating_is_invalid(
+    rating_value: float,
+    permissions_gateway: PermissionsGateway,
+    user_gateway: UserGateway,
+    movie_gateway: MovieGateway,
+    rating_gateway: RatingGateway,
+    unit_of_work: UnitOfWork,
+    identity_provider_with_valid_permissions: IdentityProvider,
+):
+    user = User(
+        id=USER_ID,
+        name="John Doe",
+    )
+    user_gateway.save(user)
+
+    movie = Movie(
+        id=MovieId(uuid4()),
+        title="Matrix",
+        rating=0,
+        rating_count=0,
+    )
+    movie_gateway.save(movie)
+
+    unit_of_work.commit()
+
+    rate_movie_command = RateMovieCommand(
+        movie_id=movie.id,
+        rating=rating_value,
+    )
+    rate_movie_handler = RateMovieHandler(
+        access_concern=AccessConcern(),
+        rate_movie=RateMovie(),
+        permissions_gateway=permissions_gateway,
+        user_gateway=user_gateway,
+        movie_gateway=movie_gateway,
+        rating_gateway=rating_gateway,
+        unit_of_work=unit_of_work,
+        identity_provider=identity_provider_with_valid_permissions,
+    )
+
+    with pytest.raises(DomainError) as error:
+        rate_movie_handler.execute(
+            command=rate_movie_command,
+        )
+
+    assert error.value.message == INVALID_RATING_VALUE
