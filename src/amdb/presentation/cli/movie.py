@@ -78,11 +78,11 @@ def delete(
     If --silently is not used, will print movie id.
     """
     if not force:
-        confirmed = typer.prompt(
+        typer.confirm(
             text="Are you sure you want to delete movie?",
+            default=True,
+            abort=True,
         )
-        if not confirmed:
-            typer.Abort()
 
     ioc: HandlerFactory = ctx.obj["ioc"]
     identity_provider: IdentityProvider = ctx.obj["identity_provider"]
