@@ -1,4 +1,6 @@
 class DomainError(Exception):
-    """Class for Domain errors"""
+    """
+    Class for Domain errors
+    """
 
     message: str

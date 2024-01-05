@@ -60,7 +60,6 @@ services:
         environment:
             - REDIS_PASSWORD=${SESSION_IDENTITY_PROVIDER_REDIS_PASSWORD}
 
-
 networks:
     amdb_backend.postgres.network: {}
     amdb_backend.redis.network: {}

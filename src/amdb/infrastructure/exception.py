@@ -1,2 +1,6 @@
 class InfrastructureError(Exception):
-    """Base class for Infrastructure Errors"""
+    """
+    Class for Infrastructure errors
+    """
+
+    message: str

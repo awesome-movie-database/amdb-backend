@@ -2,8 +2,12 @@ from typing import Optional
 
 from amdb.domain.entities.user import UserId
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
-from amdb.infrastructure.auth.exception import AuthenticationError
+from amdb.infrastructure.exception import InfrastructureError
 from .gateway import SessionId, Session, SessionGateway
+
+
+NO_SESSION_ID = "Session id is not passed"
+SESSION_DOES_NOT_EXIST = "Session doesn't exist"
 
 
 class SessionIdentityProvider(IdentityProvider):
@@ -24,12 +28,12 @@ class SessionIdentityProvider(IdentityProvider):
 
     def _get_session(self) -> Session:
         if not self._session_id:
-            raise AuthenticationError()
+            raise InfrastructureError(NO_SESSION_ID)
 
         session = self._session_gateway.get_session(
             session_id=self._session_id,
         )
         if not session:
-            raise AuthenticationError()
+            raise InfrastructureError(SESSION_DOES_NOT_EXIST)
 
         return session
