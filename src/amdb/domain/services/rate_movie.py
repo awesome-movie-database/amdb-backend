@@ -16,7 +16,7 @@ class RateMovie:
         rating: float,
         current_timestamp: datetime,
     ) -> Rating:
-        if 0 >= rating > 10 or rating % 0.5 != 0:
+        if rating <= 0 or rating > 10 or rating % 0.5 != 0:
             raise DomainError(INVALID_RATING_VALUE)
 
         movie.rating = (movie.rating * movie.rating_count + rating) / (movie.rating_count + 1)
