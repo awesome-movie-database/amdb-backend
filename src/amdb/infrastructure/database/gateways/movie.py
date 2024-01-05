@@ -1,5 +1,6 @@
 from typing import Optional
 
+from sqlalchemy import inspect
 from sqlalchemy.orm.session import Session
 
 from amdb.domain.entities.movie import MovieId, Movie as MovieEntity
@@ -43,5 +44,9 @@ class SQLAlchemyMovieGateway(MovieGateway):
         movie_model = self._mapper.to_model(
             movie=movie,
         )
-        self._session.delete(movie_model)
-        self._session.flush((movie_model,))
+        movie_model_insp = inspect(movie_model)
+        if movie_model_insp.persistent:
+            self._session.delete(movie_model)
+            self._session.flush((movie_model,))
+        elif movie_model_insp.pending:
+            self._session.expunge(movie_model)

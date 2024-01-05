@@ -7,11 +7,9 @@ migration_command = typer.Typer(name="migration")
 
 
 @migration_command.command()
-def upgrade() -> None:
+def run() -> None:
     """
     [green]Run[/green] all migrations.
     """
     alembic_config = Config("./amdb/infrastructure/database/alembic.ini")
     command.upgrade(alembic_config, "head")
-
-
