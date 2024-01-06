@@ -45,8 +45,8 @@ dev = [
 ]
 
 [project.scripts]
-amdb_cli = "amdb.main.cli.__main__:main"
-amdb_web_api = "amdb.main.web_api.__main__:main"
+amdb-cli = "amdb.main.cli.__main__:main"
+amdb-web_api = "amdb.main.web_api.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

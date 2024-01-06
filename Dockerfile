@@ -20,4 +20,4 @@ COPY --from=builder ./app/dist ./dist
 
 RUN pip install "./dist/amdb-0.1.0-py3-none-any.whl[web_api]"
 
-CMD ["amdb_web_api"]
+CMD ["amdb-web_api"]
