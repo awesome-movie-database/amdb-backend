@@ -21,23 +21,16 @@ class SQLAlchemyUserGateway(UserGateway):
     def with_id(self, user_id: UserId) -> Optional[UserEntity]:
         user_model = self._session.get(UserModel, user_id)
         if user_model:
-            return self._mapper.to_entity(
-                user=user_model,
-            )
+            return self._mapper.to_entity(user_model)
         return None
 
     def with_name(self, user_name: str) -> Optional[UserEntity]:
         statement = select(UserModel).where(UserModel.name == user_name)
         user_model = self._session.scalar(statement)
         if user_model:
-            return self._mapper.to_entity(
-                user=user_model,
-            )
+            return self._mapper.to_entity(user_model)
         return None
 
     def save(self, user: UserEntity) -> None:
-        user_model = self._mapper.to_model(
-            user=user,
-        )
+        user_model = self._mapper.to_model(user)
         self._session.add(user_model)
-        self._session.flush((user_model,))

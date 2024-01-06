@@ -6,4 +6,5 @@ class ApplicationError(Exception):
     """
     Class for Application errors
     """
+
     message: str

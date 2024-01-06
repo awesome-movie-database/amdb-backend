@@ -41,4 +41,3 @@ class HandlerFactory(ABC):
         identity_provider: IdentityProvider,
     ) -> ContextManager[UnrateMovieHandler]:
         raise NotImplementedError
-

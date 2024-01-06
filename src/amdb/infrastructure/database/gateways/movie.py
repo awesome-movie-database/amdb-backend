@@ -21,32 +21,18 @@ class SQLAlchemyMovieGateway(MovieGateway):
     def with_id(self, movie_id: MovieId) -> Optional[MovieEntity]:
         movie_model = self._session.get(MovieModel, movie_id)
         if movie_model:
-            return self._mapper.to_entity(
-                movie=movie_model,
-            )
+            return self._mapper.to_entity(movie_model)
         return None
 
     def save(self, movie: MovieEntity) -> None:
-        movie_model = self._mapper.to_model(
-            movie=movie,
-        )
+        movie_model = self._mapper.to_model(movie)
         self._session.add(movie_model)
-        self._session.flush((movie_model,))
 
     def update(self, movie: MovieEntity) -> None:
-        movie_model = self._mapper.to_model(
-            movie=movie,
-        )
+        movie_model = self._mapper.to_model(movie)
         self._session.merge(movie_model)
-        self._session.flush((movie_model,))
 
     def delete(self, movie: MovieEntity) -> None:
-        movie_model = self._mapper.to_model(
-            movie=movie,
-        )
-        movie_model_insp = inspect(movie_model)
-        if movie_model_insp.persistent:
+        movie_model = self.with_id(movie.id)
+        if movie_model:
             self._session.delete(movie_model)
-            self._session.flush((movie_model,))
-        elif movie_model_insp.pending:
-            self._session.expunge(movie_model)
