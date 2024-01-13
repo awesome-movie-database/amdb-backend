@@ -40,7 +40,7 @@ class IoC(HandlerFactory):
                 password_manager=HashingPasswordManager(
                     hasher=self._hasher,
                     user_password_hash_gateway=gateway_factory.create_user_password_hash_gateway(),
-                )
+                ),
             )
 
     @contextmanager

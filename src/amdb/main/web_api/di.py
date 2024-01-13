@@ -8,6 +8,7 @@ from amdb.infrastructure.persistence.sqlalchemy.builders import (
 from amdb.infrastructure.permissions_gateway import InMemoryPermissionsGateway
 from amdb.infrastructure.auth.session.gateway import SessionGateway
 from amdb.infrastructure.auth.session.builders import build_session_gateway
+from amdb.infrastructure.security.hasher import Hasher
 from amdb.presentation.handler_factory import HandlerFactory
 from amdb.presentation.web_api.dependencies.depends_stub import Stub
 from amdb.main.config import GenericConfig
@@ -25,6 +26,7 @@ def setup_dependecies(
     ioc = IoC(
         build_gateway_factory=BuildGatewayFactory(session_factory),
         permissions_gateway=InMemoryPermissionsGateway(),
+        hasher=Hasher(),
     )
     app.dependency_overrides[HandlerFactory] = ioc  # type: ignore
 

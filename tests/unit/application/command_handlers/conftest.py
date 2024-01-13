@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 from amdb.infrastructure.persistence.sqlalchemy.gateways.user import SQLAlchemyUserGateway
 from amdb.infrastructure.persistence.sqlalchemy.gateways.movie import SQLAlchemyMovieGateway
 from amdb.infrastructure.persistence.sqlalchemy.gateways.rating import SQLAlchemyRatingGateway
-from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password import SQLAlchemyUserPasswordHashGateway
+from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password import (
+    SQLAlchemyUserPasswordHashGateway,
+)
 from amdb.infrastructure.persistence.sqlalchemy.mappers.user import UserMapper
 from amdb.infrastructure.persistence.sqlalchemy.mappers.movie import MovieMapper
 from amdb.infrastructure.persistence.sqlalchemy.mappers.rating import RatingMapper
@@ -42,7 +44,7 @@ def password_manager(sqlalchemy_session: Session) -> HashingPasswordManager:
     )
     return HashingPasswordManager(
         hasher=Hasher(),
-        user_password_hash_gateway=user_password_hash_gateway
+        user_password_hash_gateway=user_password_hash_gateway,
     )
 
 

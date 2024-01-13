@@ -25,6 +25,4 @@ async def rate_movie(
             movie_id=movie_id,
             rating=data.rating,
         )
-        rate_movie_handler.execute(
-            command=rate_movie_command,
-        )
+        rate_movie_handler.execute(rate_movie_command)

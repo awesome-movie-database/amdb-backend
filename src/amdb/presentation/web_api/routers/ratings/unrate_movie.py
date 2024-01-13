@@ -18,6 +18,4 @@ async def unrate_movie(
         unrate_movie_command = UnrateMovieCommand(
             movie_id=movie_id,
         )
-        unrate_movie_handler.execute(
-            command=unrate_movie_command,
-        )
+        unrate_movie_handler.execute(unrate_movie_command)

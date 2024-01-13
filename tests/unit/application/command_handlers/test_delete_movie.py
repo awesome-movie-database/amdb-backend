@@ -96,7 +96,7 @@ def test_delete_movie_should_raise_error_when_access_is_denied(
     assert error.value.message == DELETE_MOVIE_ACCESS_DENIED
 
 
-def test_delete_movie_should_raise_error_when_access_is_denied(
+def test_delete_movie_should_raise_error_when_movie_does_not_exist(
     permissions_gateway: PermissionsGateway,
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,

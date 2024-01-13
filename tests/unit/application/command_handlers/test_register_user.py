@@ -48,7 +48,7 @@ def test_create_user_should_raise_error_when_user_name_already_exists(
 
     register_user_command = RegisterUserCommand(
         name=user_name,
-        password="Secret"
+        password="Secret",
     )
     register_user_handler = RegisterUserHandler(
         create_user=CreateUser(),
