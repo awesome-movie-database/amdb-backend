@@ -16,8 +16,8 @@ RUN pip install build && \
 
 FROM base AS web_api
 
-COPY --from=builder ./app/dist ./dist
+COPY --from=builder ./app/dist ./
 
-RUN pip install "./dist/amdb-0.1.0-py3-none-any.whl[web_api]"
+RUN $(printf "pip install %s[web_api]" amdb*.whl)
 
 CMD ["amdb-web_api"]
