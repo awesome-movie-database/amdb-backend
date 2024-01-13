@@ -95,9 +95,7 @@ def test_rate_movie(
         identity_provider=identity_provider_with_valid_permissions,
     )
 
-    rate_movie_handler.execute(
-        command=rate_movie_command,
-    )
+    rate_movie_handler.execute(rate_movie_command)
 
 
 def test_rate_movie_should_raise_error_when_access_is_denied(
@@ -124,9 +122,7 @@ def test_rate_movie_should_raise_error_when_access_is_denied(
     )
 
     with pytest.raises(ApplicationError) as error:
-        rate_movie_handler.execute(
-            command=rate_movie_command,
-        )
+        rate_movie_handler.execute(rate_movie_command)
 
     assert error.value.message == RATE_MOVIE_ACCESS_DENIED
 
@@ -155,9 +151,7 @@ def test_rate_movie_should_raise_error_when_movie_does_not_exist(
     )
 
     with pytest.raises(ApplicationError) as error:
-        rate_movie_handler.execute(
-            command=rate_movie_command,
-        )
+        rate_movie_handler.execute(rate_movie_command)
 
     assert error.value.message == MOVIE_DOES_NOT_EXIST
 
@@ -210,9 +204,7 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
     )
 
     with pytest.raises(ApplicationError) as error:
-        rate_movie_handler.execute(
-            command=rate_movie_command,
-        )
+        rate_movie_handler.execute(rate_movie_command)
 
     assert error.value.message == MOVIE_ALREADY_RATED
 
@@ -259,8 +251,6 @@ def test_rate_movie_should_raise_error_when_rating_is_invalid(
     )
 
     with pytest.raises(DomainError) as error:
-        rate_movie_handler.execute(
-            command=rate_movie_command,
-        )
+        rate_movie_handler.execute(rate_movie_command)
 
     assert error.value.message == INVALID_RATING_VALUE

@@ -100,9 +100,7 @@ def test_unrate_movie(
         identity_provider=identity_provider_with_valid_permissions,
     )
 
-    unrate_movie_handler.execute(
-        command=unrate_movie_command,
-    )
+    unrate_movie_handler.execute(unrate_movie_command)
 
 
 def test_unrate_movie_should_raise_error_when_access_is_denied(
@@ -128,9 +126,7 @@ def test_unrate_movie_should_raise_error_when_access_is_denied(
     )
 
     with pytest.raises(ApplicationError) as error:
-        unrate_movie_handler.execute(
-            command=unrate_movie_command,
-        )
+        unrate_movie_handler.execute(unrate_movie_command)
 
     assert error.value.message == UNRATE_MOVIE_ACCESS_DENIED
 
@@ -158,9 +154,7 @@ def test_unrate_movie_should_raise_error_when_movie_does_not_exist(
     )
 
     with pytest.raises(ApplicationError) as error:
-        unrate_movie_handler.execute(
-            command=unrate_movie_command,
-        )
+        unrate_movie_handler.execute(unrate_movie_command)
 
     assert error.value.message == MOVIE_DOES_NOT_EXIST
 
@@ -204,8 +198,6 @@ def test_unrate_movie_should_raise_error_when_movie_is_not_rated(
     )
 
     with pytest.raises(ApplicationError) as error:
-        unrate_movie_handler.execute(
-            command=unrate_movie_command,
-        )
+        unrate_movie_handler.execute(unrate_movie_command)
 
     assert error.value.message == MOVIE_NOT_RATED

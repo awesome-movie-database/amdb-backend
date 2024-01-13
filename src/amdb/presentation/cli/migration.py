@@ -11,5 +11,5 @@ def run() -> None:
     """
     [green]Run[/green] all migrations.
     """
-    alembic_config = alembic.config.Config("./amdb/infrastructure/database/alembic.ini")
+    alembic_config = alembic.config.Config("./amdb/infrastructure/database/alembic/alembic.ini")
     alembic.command.upgrade(alembic_config, "head")

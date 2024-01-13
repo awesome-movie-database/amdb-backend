@@ -1,5 +1,5 @@
 from amdb.domain.entities.user import UserId, User as UserEntity
-from amdb.infrastructure.database.models.user import User as UserModel
+from amdb.infrastructure.persistence.sqlalchemy.models.user import User as UserModel
 
 
 class UserMapper:

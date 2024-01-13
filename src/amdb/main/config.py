@@ -1,7 +1,7 @@
 import os
 from dataclasses import dataclass
 
-from amdb.infrastructure.database.config import DatabaseConfig
+from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
 
 
 DATABASE_PG_HOST_ENV = "DATABASE_PG_HOST"
@@ -12,7 +12,7 @@ DATABASE_PG_PASSWORD_ENV = "DATABASE_PG_PASSWORD"
 
 
 def build_generic_config() -> "GenericConfig":
-    database_config = DatabaseConfig(
+    database_config = PostgresConfig(
         pg_host=_get_env(DATABASE_PG_HOST_ENV),
         pg_port=_get_env(DATABASE_PG_PORT_ENV),
         pg_name=_get_env(DATABASE_PG_NAME_ENV),
@@ -34,4 +34,4 @@ def _get_env(key: str) -> str:
 
 @dataclass(frozen=True, slots=True)
 class GenericConfig:
-    database: DatabaseConfig
+    postgres: PostgresConfig

@@ -1,7 +1,7 @@
 from amdb.domain.entities.user import UserId
 from amdb.domain.entities.movie import MovieId
 from amdb.domain.entities.rating import Rating as RatingEntity
-from amdb.infrastructure.database.models.rating import Rating as RatingModel
+from amdb.infrastructure.persistence.sqlalchemy.models.rating import Rating as RatingModel
 
 
 class RatingMapper:

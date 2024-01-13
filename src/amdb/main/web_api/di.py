@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 
-from amdb.infrastructure.database.builders import (
+from amdb.infrastructure.persistence.sqlalchemy.builders import (
     build_engine,
     build_session_factory,
     BuildGatewayFactory,
 )
-from amdb.infrastructure.in_memory.permissions_gateway import InMemoryPermissionsGateway
+from amdb.infrastructure.permissions_gateway import InMemoryPermissionsGateway
 from amdb.infrastructure.auth.session.gateway import SessionGateway
 from amdb.infrastructure.auth.session.builders import build_session_gateway
 from amdb.presentation.handler_factory import HandlerFactory
@@ -20,7 +20,7 @@ def setup_dependecies(
     session_identity_provider_config: SessionIdentityProviderConfig,
     generic_config: GenericConfig,
 ) -> None:
-    engine = build_engine(generic_config.database)
+    engine = build_engine(generic_config.postgres)
     session_factory = build_session_factory(engine)
     ioc = IoC(
         build_gateway_factory=BuildGatewayFactory(session_factory),

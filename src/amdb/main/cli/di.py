@@ -2,12 +2,12 @@ from typing import TypedDict
 from uuid import UUID
 
 from amdb.domain.entities.user import UserId
-from amdb.infrastructure.database.builders import (
+from amdb.infrastructure.persistence.sqlalchemy.builders import (
     build_engine,
     build_session_factory,
     BuildGatewayFactory,
 )
-from amdb.infrastructure.in_memory.permissions_gateway import InMemoryPermissionsGateway
+from amdb.infrastructure.permissions_gateway import InMemoryPermissionsGateway
 from amdb.infrastructure.auth.raw.identity_provider import RawIdentityProvider
 from amdb.main.config import GenericConfig
 from amdb.main.ioc import IoC

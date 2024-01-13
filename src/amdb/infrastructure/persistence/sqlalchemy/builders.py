@@ -4,12 +4,12 @@ from typing import Iterator
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm.session import Session, sessionmaker
 
-from .config import DatabaseConfig
+from .config import PostgresConfig
 from .gateway_factory import GatewayFactory
 
 
-def build_engine(config: DatabaseConfig) -> Engine:
-    return create_engine(url=config.pg_dsn)
+def build_engine(config: PostgresConfig) -> Engine:
+    return create_engine(url=config.dsn)
 
 
 def build_session_factory(engine: Engine) -> sessionmaker[Session]:

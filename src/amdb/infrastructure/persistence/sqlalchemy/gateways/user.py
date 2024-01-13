@@ -5,8 +5,8 @@ from sqlalchemy.orm.session import Session
 
 from amdb.domain.entities.user import UserId, User as UserEntity
 from amdb.application.common.interfaces.user_gateway import UserGateway
-from amdb.infrastructure.database.models.user import User as UserModel
-from amdb.infrastructure.database.mappers.user import UserMapper
+from amdb.infrastructure.persistence.sqlalchemy.models.user import User as UserModel
+from amdb.infrastructure.persistence.sqlalchemy.mappers.user import UserMapper
 
 
 class SQLAlchemyUserGateway(UserGateway):
