@@ -33,6 +33,6 @@ class SQLAlchemyMovieGateway(MovieGateway):
         self._session.merge(movie_model)
 
     def delete(self, movie: MovieEntity) -> None:
-        movie_model = self.with_id(movie.id)
+        movie_model = self._session.get(MovieModel, movie.id)
         if movie_model:
             self._session.delete(movie_model)

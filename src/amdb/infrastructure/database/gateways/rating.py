@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import select, delete, and_, inspect
+from sqlalchemy import delete
 from sqlalchemy.orm.session import Session
 
 from amdb.domain.entities.user import UserId
@@ -25,15 +25,10 @@ class SQLAlchemyRatingGateway(RatingGateway):
         user_id: UserId,
         movie_id: MovieId,
     ) -> Optional[RatingEntity]:
-        statement = (
-            select(RatingModel).where(
-                and_(
-                    RatingModel.user_id == user_id,
-                    RatingModel.movie_id == movie_id,
-                ),
-            ),
+        rating_model = self._session.get(
+            RatingModel,
+            {"user_id": user_id, "movie_id": movie_id},
         )
-        rating_model = self._session.scalar(statement)
         if rating_model:
             return self._mapper.to_entity(rating_model)
         return None
@@ -43,9 +38,9 @@ class SQLAlchemyRatingGateway(RatingGateway):
         self._session.add(rating_model)
 
     def delete(self, rating: RatingEntity) -> None:
-        rating_model = self.with_user_id_and_movie_id(
-            user_id=rating.user_id,
-            movie_id=rating.movie_id,
+        rating_model = self._session.get(
+            RatingModel,
+            {"user_id": rating.user_id, "movie_id": rating.movie_id},
         )
         if rating_model:
             self._session.delete(rating_model)
