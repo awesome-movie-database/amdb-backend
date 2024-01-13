@@ -5,7 +5,7 @@ services:
         profiles: [web_api]
         container_name: amdb_backend.web_api
         depends_on: [postgres, redis]
-        ports: ["${UVICORN_HOST}:${UVICORN_PORT}:${UVICORN_PORT}"]
+        ports: ["127.0.0.1:${UVICORN_PORT}:${UVICORN_PORT}"]
         restart: unless-stopped
 
         build:
@@ -37,7 +37,7 @@ services:
             - SESSION_IDENTITY_PROVIDER_SESSION_LIFETIME=${SESSION_IDENTITY_PROVIDER_SESSION_LIFETIME}
 
     postgres:
-        profiles: [web_api, postgres_migration]
+        profiles: [web_api, cli, postgres_migration]
         container_name: amdb_backend.postgres
         image: postgres:15-alpine
         restart: unless-stopped

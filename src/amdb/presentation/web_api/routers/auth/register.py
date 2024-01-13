@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends
+from fastapi import Response, Depends
 from pydantic import BaseModel
 
 from amdb.domain.entities.user import UserId
@@ -19,6 +19,7 @@ async def register(
     ioc: Annotated[HandlerFactory, Depends()],
     session_gateway: Annotated[SessionGateway, Depends(Stub(SessionGateway))],
     data: RegisterSchema,
+    response: Response,
 ) -> UserId:
     with ioc.register_user() as register_user_handler:
         register_user_command = RegisterUserCommand(
@@ -28,6 +29,13 @@ async def register(
         user_id = register_user_handler.execute(register_user_command)
 
     session = Session(user_id=user_id, permissions=4)
-    session_gateway.save_session(session)
+    session_id = session_gateway.save_session(session)
+
+    response.set_cookie(
+        key="session_id",
+        value=session_id,
+        httponly=True,
+        secure=True,
+    )
 
     return user_id

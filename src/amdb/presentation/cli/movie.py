@@ -2,6 +2,7 @@ from typing import Annotated
 from uuid import UUID
 
 import typer
+import rich
 
 from amdb.domain.entities.movie import MovieId
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
@@ -41,12 +42,10 @@ def create(
         create_movie_command = CreateMovieCommand(
             title=title,
         )
-        movie_id = create_movie_handler.execute(
-            command=create_movie_command,
-        )
+        movie_id = create_movie_handler.execute(create_movie_command)
 
     if not silently:
-        print(movie_id)
+        rich.print(movie_id)
 
 
 @movie_command.command()
@@ -91,9 +90,7 @@ def delete(
         delete_movie_command = DeleteMovieCommand(
             movie_id=MovieId(movie_id),
         )
-        delete_movie_handler = delete_movie_handler.execute(
-            command=delete_movie_command,
-        )
+        delete_movie_handler.execute(delete_movie_command)
 
     if not silently:
-        print(movie_id)
+        rich.print(movie_id)

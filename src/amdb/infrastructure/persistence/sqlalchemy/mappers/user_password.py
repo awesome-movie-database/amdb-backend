@@ -1,3 +1,4 @@
+from amdb.domain.entities.user import UserId
 from amdb.infrastructure.persistence.sqlalchemy.models.user_password import (
     UserPasswordHash as UserPasswordHashModel,
 )
@@ -25,6 +26,6 @@ class UserPasswordHashMapper:
             salt=user_password_hash.salt,
         )
         return UserPasswordHash(
-            user_id=user_password_hash.user_id,
+            user_id=UserId(user_password_hash.user_id),
             password_hash=password_hash,
         )
