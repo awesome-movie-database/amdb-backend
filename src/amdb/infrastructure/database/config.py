@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 
 
@@ -17,4 +18,10 @@ class DatabaseConfig:
             self.pg_host,
             self.pg_port,
             self.pg_name,
+        )
+
+    @property
+    def alembic_config_path(self) -> str:
+        return os.path.join(
+            os.path.dirname(os.path.abspath())
         )
