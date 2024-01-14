@@ -5,7 +5,7 @@ services:
         profiles: [web_api]
         container_name: amdb_backend.web_api
         depends_on: [postgres, redis]
-        ports: ["127.0.0.1:${UVICORN_PORT}:${UVICORN_PORT}"]
+        ports: ["${UVICORN_HOST}:${UVICORN_PORT}:${UVICORN_PORT}"]
         restart: unless-stopped
 
         build:
@@ -19,7 +19,7 @@ services:
             - DATABASE_PG_USER=${DATABASE_PG_USER}
             - DATABASE_PG_PASSWORD=${DATABASE_PG_PASSWORD}
             - DATABASE_PG_NAME=${DATABASE_PG_NAME}
-            - DATABASE_PG_HOST=${DATABASE_PG_HOST}
+            - DATABASE_PG_HOST=postgres
             - DATABASE_PG_PORT=${DATABASE_PG_PORT}
 
             - FASTAPI_TITLE=${FASTAPI_TITLE}
@@ -30,14 +30,14 @@ services:
             - UVICORN_HOST=0.0.0.0
             - UVICORN_PORT=${UVICORN_PORT}
 
-            - SESSION_IDENTITY_PROVIDER_REDIS_HOST=${SESSION_IDENTITY_PROVIDER_REDIS_HOST}
+            - SESSION_IDENTITY_PROVIDER_REDIS_HOST=redis
             - SESSION_IDENTITY_PROVIDER_REDIS_PORT=${SESSION_IDENTITY_PROVIDER_REDIS_PORT}
             - SESSION_IDENTITY_PROVIDER_REDIS_DB=${SESSION_IDENTITY_PROVIDER_REDIS_DB}
             - SESSION_IDENTITY_PROVIDER_REDIS_PASSWORD=${SESSION_IDENTITY_PROVIDER_REDIS_PASSWORD}
             - SESSION_IDENTITY_PROVIDER_SESSION_LIFETIME=${SESSION_IDENTITY_PROVIDER_SESSION_LIFETIME}
 
     postgres:
-        profiles: [web_api, cli, postgres_migration]
+        profiles: [web_api]
         container_name: amdb_backend.postgres
         image: postgres:15-alpine
         restart: unless-stopped

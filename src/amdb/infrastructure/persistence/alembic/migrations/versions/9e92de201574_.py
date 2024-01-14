@@ -37,8 +37,8 @@ def upgrade() -> None:
     op.create_table(
         "user_password_hashes",
         sa.Column("user_id", sa.Uuid(), nullable=False),
-        sa.Column("hash", sa.BINARY(), nullable=False),
-        sa.Column("salt", sa.BINARY(), nullable=False),
+        sa.Column("hash", sa.LargeBinary(), nullable=False),
+        sa.Column("salt", sa.LargeBinary(), nullable=False),
         sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("user_id"),
     )

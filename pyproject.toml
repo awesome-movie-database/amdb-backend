@@ -52,6 +52,9 @@ amdb-web_api = "amdb.main.web_api.__main__:main"
 where = ["src"]
 include = ["amdb*"]
 
+[tool.setuptools.package-data]
+amdb = ["infrastructure/persistence/alembic/alembic.ini"]
+
 [tool.pytest.ini_options]
 pythonpath = "src/"
 

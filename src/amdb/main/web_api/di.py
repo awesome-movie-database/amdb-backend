@@ -28,9 +28,9 @@ def setup_dependecies(
         permissions_gateway=InMemoryPermissionsGateway(),
         hasher=Hasher(),
     )
-    app.dependency_overrides[HandlerFactory] = ioc  # type: ignore
+    app.dependency_overrides[HandlerFactory] = lambda: ioc  # type: ignore
 
     session_gateway = build_session_gateway(
         session_identity_provider_config=session_identity_provider_config,
     )
-    app.dependency_overrides[Stub(SessionGateway)] = session_gateway  # type: ignore
+    app.dependency_overrides[Stub(SessionGateway)] = lambda: session_gateway  # type: ignore

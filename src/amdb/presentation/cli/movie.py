@@ -11,10 +11,10 @@ from amdb.application.commands.delete_movie import DeleteMovieCommand
 from amdb.presentation.handler_factory import HandlerFactory
 
 
-movie_command = typer.Typer(name="movie")
+movie_commands = typer.Typer(name="movie")
 
 
-@movie_command.command()
+@movie_commands.command()
 def create(
     ctx: typer.Context,
     title: Annotated[
@@ -48,7 +48,7 @@ def create(
         rich.print(movie_id)
 
 
-@movie_command.command()
+@movie_commands.command()
 def delete(
     ctx: typer.Context,
     movie_id: Annotated[
