@@ -1,7 +1,6 @@
 from typing import Optional
 
 from amdb.domain.entities.user import UserId
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.infrastructure.exception import InfrastructureError
 from .gateway import SessionId, Session, SessionGateway
 
@@ -10,7 +9,7 @@ NO_SESSION_ID = "Session id is not passed"
 SESSION_DOES_NOT_EXIST = "Session doesn't exist"
 
 
-class SessionIdentityProvider(IdentityProvider):
+class SessionIdentityProvider:
     def __init__(
         self,
         *,

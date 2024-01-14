@@ -34,7 +34,7 @@ class SessionGateway:
         }
         self._redis.hset(
             name=session_id,
-            mapping=session_data,
+            mapping=session_data, # type: ignore
         )
         self._redis.expire(
             name=session_id,

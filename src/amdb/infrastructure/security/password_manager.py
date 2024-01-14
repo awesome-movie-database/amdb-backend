@@ -1,5 +1,6 @@
+from typing import cast
+
 from amdb.domain.entities.user import UserId
-from amdb.application.common.interfaces.password_manager import PasswordManager
 from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password import (
     SQLAlchemyUserPasswordHashGateway,
 )
@@ -7,7 +8,7 @@ from .hasher import Hasher
 from .model import UserPasswordHash
 
 
-class HashingPasswordManager(PasswordManager):
+class HashingPasswordManager:
     def __init__(
         self,
         hasher: Hasher,
@@ -23,4 +24,5 @@ class HashingPasswordManager(PasswordManager):
 
     def verify(self, user_id: UserId, password: str) -> bool:
         user_password_hash = self._user_password_hash_gateway.get(user_id)
+        user_password_hash = cast(UserPasswordHash, user_password_hash)
         return self._hasher.verify(password, user_password_hash.password_hash)

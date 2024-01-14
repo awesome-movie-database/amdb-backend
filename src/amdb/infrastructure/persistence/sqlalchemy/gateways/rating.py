@@ -6,12 +6,11 @@ from sqlalchemy.orm.session import Session
 from amdb.domain.entities.user import UserId
 from amdb.domain.entities.movie import MovieId
 from amdb.domain.entities.rating import Rating as RatingEntity
-from amdb.application.common.interfaces.rating_gateway import RatingGateway
 from amdb.infrastructure.persistence.sqlalchemy.models.rating import Rating as RatingModel
 from amdb.infrastructure.persistence.sqlalchemy.mappers.rating import RatingMapper
 
 
-class SQLAlchemyRatingGateway(RatingGateway):
+class SQLAlchemyRatingGateway:
     def __init__(
         self,
         session: Session,

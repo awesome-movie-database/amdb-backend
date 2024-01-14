@@ -3,12 +3,11 @@ from typing import Optional
 from sqlalchemy.orm.session import Session
 
 from amdb.domain.entities.movie import MovieId, Movie as MovieEntity
-from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.infrastructure.persistence.sqlalchemy.models.movie import Movie as MovieModel
 from amdb.infrastructure.persistence.sqlalchemy.mappers.movie import MovieMapper
 
 
-class SQLAlchemyMovieGateway(MovieGateway):
+class SQLAlchemyMovieGateway:
     def __init__(
         self,
         session: Session,

@@ -1,7 +1,4 @@
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
-
-
-class InMemoryPermissionsGateway(PermissionsGateway):
+class InMemoryPermissionsGateway:
     def for_create_movie(self) -> int:
         return 2
 
