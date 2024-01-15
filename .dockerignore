@@ -5,9 +5,9 @@ __pycache__/
 .env.template
 .pre-commit-config.yaml
 .env
-.mypy_cache
-.ruff_cache
-.pytest_cache
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
 .coverage
 venv/
 assets/
