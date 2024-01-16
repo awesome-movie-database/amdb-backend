@@ -33,14 +33,15 @@ class IoC(HandlerFactory):
     @contextmanager
     def register_user(self) -> Iterator[RegisterUserHandler]:
         with self._build_gateway_factory() as gateway_factory:
+            hashing_password_manager = HashingPasswordManager(
+                hasher=self._hasher,
+                user_password_hash_gateway=gateway_factory.create_user_password_hash_gateway(),
+            )
             yield RegisterUserHandler(
                 create_user=CreateUser(),
                 user_gateway=gateway_factory.create_user_gateway(),
                 unit_of_work=gateway_factory.create_unit_of_work(),
-                password_manager=HashingPasswordManager(
-                    hasher=self._hasher,
-                    user_password_hash_gateway=gateway_factory.create_user_password_hash_gateway(),
-                ),
+                password_manager=hashing_password_manager,
             )
 
     @contextmanager
