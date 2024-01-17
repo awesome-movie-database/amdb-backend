@@ -1,6 +1,5 @@
-from uuid import uuid4
-
 import pytest
+from uuid_extensions import uuid7
 
 from amdb.domain.entities.user import UserId, User
 from amdb.domain.services.create_user import CreateUser
@@ -40,7 +39,7 @@ def test_create_user_should_raise_error_when_user_name_already_exists(
     user_name = "John Doe"
 
     user = User(
-        id=UserId(uuid4()),
+        id=UserId(uuid7()),
         name=user_name,
     )
     user_gateway.save(user)

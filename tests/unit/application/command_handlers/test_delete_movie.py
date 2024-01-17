@@ -1,7 +1,7 @@
 from unittest.mock import Mock
-from uuid import uuid4
 
 import pytest
+from uuid_extensions import uuid7
 
 from amdb.domain.entities.movie import MovieId, Movie
 from amdb.domain.services.access_concern import AccessConcern
@@ -47,7 +47,7 @@ def test_delete_movie(
     identity_provider_with_valid_permissions: IdentityProvider,
 ):
     movie = Movie(
-        id=MovieId(uuid4()),
+        id=MovieId(uuid7()),
         title="Matrix",
         rating=0,
         rating_count=0,
@@ -79,7 +79,7 @@ def test_delete_movie_should_raise_error_when_access_is_denied(
     identity_provider_with_invalid_permissions: IdentityProvider,
 ):
     delete_movie_command = DeleteMovieCommand(
-        movie_id=MovieId(uuid4()),
+        movie_id=MovieId(uuid7()),
     )
     delete_movie_handler = DeleteMovieHandler(
         access_concern=AccessConcern(),
@@ -104,7 +104,7 @@ def test_delete_movie_should_raise_error_when_movie_does_not_exist(
     identity_provider_with_valid_permissions: IdentityProvider,
 ):
     delete_movie_command = DeleteMovieCommand(
-        movie_id=MovieId(uuid4()),
+        movie_id=MovieId(uuid7()),
     )
     delete_movie_handler = DeleteMovieHandler(
         access_concern=AccessConcern(),

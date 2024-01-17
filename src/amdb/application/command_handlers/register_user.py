@@ -1,4 +1,4 @@
-from uuid import uuid4
+from uuid_extensions import uuid7
 
 from amdb.domain.entities.user import UserId
 from amdb.domain.services.create_user import CreateUser
@@ -30,7 +30,7 @@ class RegisterUserHandler:
             raise ApplicationError(USER_NAME_ALREADY_EXISTS)
 
         new_user = self._create_user(
-            id=UserId(uuid4()),
+            id=UserId(uuid7()),
             name=command.name,
         )
         self._user_gateway.save(new_user)

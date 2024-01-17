@@ -1,8 +1,8 @@
 from unittest.mock import Mock
 from datetime import datetime, timezone
-from uuid import uuid4
 
 import pytest
+from uuid_extensions import uuid7
 
 from amdb.domain.entities.user import UserId, User
 from amdb.domain.entities.movie import MovieId, Movie
@@ -27,7 +27,7 @@ from amdb.application.common.constants.exceptions import (
 from amdb.application.common.exception import ApplicationError
 
 
-USER_ID = UserId(uuid4())
+USER_ID = UserId(uuid7())
 
 
 @pytest.fixture(scope="module")
@@ -71,7 +71,7 @@ def test_rate_movie(
     user_gateway.save(user)
 
     movie = Movie(
-        id=MovieId(uuid4()),
+        id=MovieId(uuid7()),
         title="Matrix",
         rating=0,
         rating_count=0,
@@ -107,7 +107,7 @@ def test_rate_movie_should_raise_error_when_access_is_denied(
     identity_provider_with_invalid_permissions: IdentityProvider,
 ):
     rate_movie_command = RateMovieCommand(
-        movie_id=MovieId(uuid4()),
+        movie_id=MovieId(uuid7()),
         rating=9,
     )
     rate_movie_handler = RateMovieHandler(
@@ -136,7 +136,7 @@ def test_rate_movie_should_raise_error_when_movie_does_not_exist(
     identity_provider_with_valid_permissions: IdentityProvider,
 ):
     rate_movie_command = RateMovieCommand(
-        movie_id=MovieId(uuid4()),
+        movie_id=MovieId(uuid7()),
         rating=9,
     )
     rate_movie_handler = RateMovieHandler(
@@ -171,7 +171,7 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
     user_gateway.save(user)
 
     movie = Movie(
-        id=MovieId(uuid4()),
+        id=MovieId(uuid7()),
         title="Matrix",
         rating=0,
         rating_count=0,
@@ -226,7 +226,7 @@ def test_rate_movie_should_raise_error_when_rating_is_invalid(
     user_gateway.save(user)
 
     movie = Movie(
-        id=MovieId(uuid4()),
+        id=MovieId(uuid7()),
         title="Matrix",
         rating=0,
         rating_count=0,

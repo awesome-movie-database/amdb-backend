@@ -1,4 +1,4 @@
-from uuid import uuid4
+from uuid_extensions import uuid7
 
 from amdb.domain.entities.movie import MovieId
 from amdb.domain.services.access_concern import AccessConcern
@@ -41,7 +41,7 @@ class CreateMovieHandler:
             raise ApplicationError(CREATE_MOVIE_ACCESS_DENIED)
 
         movie = self._create_movie(
-            id=MovieId(uuid4()),
+            id=MovieId(uuid7()),
             title=command.title,
         )
         self._movie_gateway.save(movie)
