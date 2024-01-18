@@ -1,12 +1,10 @@
 from typing import Optional
 
 from amdb.domain.entities.user import UserId
+from amdb.infrastructure.persistence.redis.gateways.session import RedisSessionGateway
 from amdb.infrastructure.exception import InfrastructureError
-from .gateway import SessionId, Session, SessionGateway
-
-
-NO_SESSION_ID = "Session id is not passed"
-SESSION_DOES_NOT_EXIST = "Session doesn't exist"
+from .constants.exceptions import NO_SESSION_ID, SESSION_DOES_NOT_EXIST
+from .model import SessionId, Session
 
 
 class SessionIdentityProvider:
@@ -14,7 +12,7 @@ class SessionIdentityProvider:
         self,
         *,
         session_id: Optional[SessionId],
-        session_gateway: SessionGateway,
+        session_gateway: RedisSessionGateway,
     ) -> None:
         self._session_id = session_id
         self._session_gateway = session_gateway
@@ -29,9 +27,7 @@ class SessionIdentityProvider:
         if not self._session_id:
             raise InfrastructureError(NO_SESSION_ID)
 
-        session = self._session_gateway.get_session(
-            session_id=self._session_id,
-        )
+        session = self._session_gateway.with_id(self._session_id)
         if not session:
             raise InfrastructureError(SESSION_DOES_NOT_EXIST)
 

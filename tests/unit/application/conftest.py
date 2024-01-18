@@ -2,19 +2,18 @@ import os
 from typing import Iterator
 
 import pytest
-from sqlalchemy import Engine
+from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session
 
 from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
 from amdb.infrastructure.persistence.sqlalchemy.models.base import Model
-from amdb.infrastructure.persistence.sqlalchemy.builders import build_engine
 
 
-TEST_DATABASE_PG_HOST_ENV = "TEST_DATABASE_PG_HOST"
-TEST_DATABASE_PG_PORT_ENV = "TEST_DATABASE_PG_PORT"
-TEST_DATABASE_PG_NAME_ENV = "TEST_DATABASE_PG_NAME"
-TEST_DATABASE_PG_USER_ENV = "TEST_DATABASE_PG_USER"
-TEST_DATABASE_PG_PASSWORD_ENV = "TEST_DATABASE_PG_PASSWORD"
+TEST_POSTGRES_HOST_ENV = "TEST_POSTGRES_HOST"
+TEST_POSTGRES_PORT_ENV = "TEST_POSTGRES_PORT"
+TEST_POSTGRES_NAME_ENV = "TEST_POSTGRES_NAME"
+TEST_POSTGRES_USER_ENV = "TEST_POSTGRES_USER"
+TEST_POSTGRES_PASSWORD_ENV = "TEST_POSTGRES_PASSWORD"
 
 
 def get_env(key: str) -> str:
@@ -28,17 +27,17 @@ def get_env(key: str) -> str:
 @pytest.fixture(scope="package")
 def postgres_config() -> PostgresConfig:
     return PostgresConfig(
-        host=get_env(TEST_DATABASE_PG_HOST_ENV),
-        port=get_env(TEST_DATABASE_PG_PORT_ENV),
-        name=get_env(TEST_DATABASE_PG_NAME_ENV),
-        user=get_env(TEST_DATABASE_PG_USER_ENV),
-        password=get_env(TEST_DATABASE_PG_PASSWORD_ENV),
+        host=get_env(TEST_POSTGRES_HOST_ENV),
+        port=get_env(TEST_POSTGRES_PORT_ENV),
+        name=get_env(TEST_POSTGRES_NAME_ENV),
+        user=get_env(TEST_POSTGRES_USER_ENV),
+        password=get_env(TEST_POSTGRES_PASSWORD_ENV),
     )
 
 
 @pytest.fixture(scope="package")
 def sqlalchemy_engine(postgres_config: PostgresConfig) -> Engine:
-    return build_engine(postgres_config)
+    return create_engine(url=postgres_config.dsn)
 
 
 @pytest.fixture(autouse=True)

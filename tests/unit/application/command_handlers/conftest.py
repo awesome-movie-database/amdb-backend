@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from amdb.infrastructure.persistence.sqlalchemy.gateways.user import SQLAlchemyUserGateway
 from amdb.infrastructure.persistence.sqlalchemy.gateways.movie import SQLAlchemyMovieGateway
 from amdb.infrastructure.persistence.sqlalchemy.gateways.rating import SQLAlchemyRatingGateway
-from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password import (
+from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password_hash import (
     SQLAlchemyUserPasswordHashGateway,
 )
 from amdb.infrastructure.persistence.sqlalchemy.mappers.user import UserMapper
@@ -12,13 +12,13 @@ from amdb.infrastructure.persistence.sqlalchemy.mappers.movie import MovieMapper
 from amdb.infrastructure.persistence.sqlalchemy.mappers.rating import RatingMapper
 from amdb.infrastructure.persistence.sqlalchemy.mappers.user_password import UserPasswordHashMapper
 from amdb.infrastructure.security.hasher import Hasher
-from amdb.infrastructure.security.password_manager import HashingPasswordManager
-from amdb.infrastructure.permissions_gateway import InMemoryPermissionsGateway
+from amdb.infrastructure.password_manager.password_manager import HashingPasswordManager
+from amdb.infrastructure.permissions_gateway import RawPermissionsGateway
 
 
 @pytest.fixture(scope="package")
-def permissions_gateway() -> InMemoryPermissionsGateway:
-    return InMemoryPermissionsGateway()
+def permissions_gateway() -> RawPermissionsGateway:
+    return RawPermissionsGateway()
 
 
 @pytest.fixture

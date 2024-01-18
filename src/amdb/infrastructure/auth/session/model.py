@@ -1,10 +1,14 @@
 from dataclasses import dataclass
+from typing import NewType
 
 from amdb.domain.entities.user import UserId
-from .hasher import PasswordHash
+
+
+SessionId = NewType("SessionId", str)
 
 
 @dataclass(frozen=True, slots=True)
-class UserPasswordHash:
+class Session:
+    id: SessionId
     user_id: UserId
-    password_hash: PasswordHash
+    permissions: int

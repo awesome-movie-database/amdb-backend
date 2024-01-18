@@ -1,36 +1,47 @@
 from fastapi import FastAPI
+from sqlalchemy import create_engine
+from sqlalchemy.orm.session import sessionmaker
+from redis.client import Redis
 
-from amdb.infrastructure.persistence.sqlalchemy.builders import (
-    build_engine,
-    build_session_factory,
-    BuildGatewayFactory,
-)
-from amdb.infrastructure.permissions_gateway import InMemoryPermissionsGateway
-from amdb.infrastructure.auth.session.gateway import SessionGateway
-from amdb.infrastructure.auth.session.builders import build_session_gateway
+from amdb.infrastructure.permissions_gateway import RawPermissionsGateway
 from amdb.infrastructure.security.hasher import Hasher
+from amdb.infrastructure.auth.session.config import SessionConfig
+from amdb.infrastructure.persistence.redis.config import RedisConfig
+from amdb.infrastructure.persistence.redis.gateways.session import RedisSessionGateway
+from amdb.infrastructure.auth.session.session_processor import SessionProcessor
 from amdb.presentation.handler_factory import HandlerFactory
 from amdb.presentation.web_api.dependencies.depends_stub import Stub
 from amdb.main.config import GenericConfig
 from amdb.main.ioc import IoC
-from .config import SessionIdentityProviderConfig
 
 
 def setup_dependecies(
     app: FastAPI,
-    session_identity_provider_config: SessionIdentityProviderConfig,
+    redis_config: RedisConfig,
+    session_config: SessionConfig,
     generic_config: GenericConfig,
 ) -> None:
-    engine = build_engine(generic_config.postgres)
-    session_factory = build_session_factory(engine)
+    hasher = Hasher()
+
+    engine = create_engine(generic_config.postgres.dsn)
     ioc = IoC(
-        build_gateway_factory=BuildGatewayFactory(session_factory),
-        permissions_gateway=InMemoryPermissionsGateway(),
-        hasher=Hasher(),
+        sessionmaker=sessionmaker(engine),
+        permissions_gateway=RawPermissionsGateway(),
+        hasher=hasher,
     )
     app.dependency_overrides[HandlerFactory] = lambda: ioc  # type: ignore
 
-    session_gateway = build_session_gateway(
-        session_identity_provider_config=session_identity_provider_config,
+    redis = Redis(
+        host=redis_config.host,
+        port=redis_config.port,
+        db=redis_config.db,
+        password=redis_config.password,
     )
-    app.dependency_overrides[Stub(SessionGateway)] = lambda: session_gateway  # type: ignore
+    redis_session_gateway = RedisSessionGateway(
+        redis=redis,
+        session_lifetime=session_config.session_lifetime,
+    )
+    app.dependency_overrides[Stub(RedisSessionGateway)] = lambda: redis_session_gateway  # type: ignore
+
+    session_processor = SessionProcessor(hasher=hasher)
+    app.dependency_overrides[Stub(SessionProcessor)] = lambda: session_processor  # type: ignore

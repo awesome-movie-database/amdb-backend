@@ -7,7 +7,7 @@ from amdb.infrastructure.persistence.sqlalchemy.models.user_password import (
     UserPasswordHash as UserPasswordHashModel,
 )
 from amdb.infrastructure.persistence.sqlalchemy.mappers.user_password import UserPasswordHashMapper
-from amdb.infrastructure.security.model import UserPasswordHash
+from amdb.infrastructure.password_manager.model import UserPasswordHash
 
 
 class SQLAlchemyUserPasswordHashGateway:

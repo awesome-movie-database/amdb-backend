@@ -13,7 +13,8 @@ async def main() -> None:
 
     app = create_app(
         fastapi_config=web_api_config.fastapi,
-        session_identity_provider_config=web_api_config.session_identity_provider,
+        redis_config=web_api_config.redis,
+        session_config=web_api_config.session,
         generic_config=generic_config,
     )
     server = Server(

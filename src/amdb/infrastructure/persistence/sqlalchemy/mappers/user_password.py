@@ -2,8 +2,8 @@ from amdb.domain.entities.user import UserId
 from amdb.infrastructure.persistence.sqlalchemy.models.user_password import (
     UserPasswordHash as UserPasswordHashModel,
 )
-from amdb.infrastructure.security.hasher import PasswordHash
-from amdb.infrastructure.security.model import UserPasswordHash
+from amdb.infrastructure.security.hasher import HashData
+from amdb.infrastructure.password_manager.model import UserPasswordHash
 
 
 class UserPasswordHashMapper:
@@ -21,7 +21,7 @@ class UserPasswordHashMapper:
         self,
         user_password_hash: UserPasswordHashModel,
     ) -> UserPasswordHash:
-        password_hash = PasswordHash(
+        password_hash = HashData(
             hash=user_password_hash.hash,
             salt=user_password_hash.salt,
         )

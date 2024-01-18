@@ -2,48 +2,45 @@ import os
 from dataclasses import dataclass
 from datetime import timedelta
 
-from amdb.infrastructure.auth.session.config import SessionIdentityProviderConfig
+from amdb.infrastructure.persistence.redis.config import RedisConfig
+from amdb.infrastructure.auth.session.config import SessionConfig
 
 
-FASTAPI_TITLE_ENV = "FASTAPI_TITLE"
-FASTAPI_SUMMARY_ENV = "FASTAPI_SUMMARY"
-FASTAPI_DESCRIPTION_ENV = "FASTAPI_DESCRIPTION"
 FASTAPI_VERSION_ENV = "FASTAPI_VERSION"
 
 UVICORN_HOST_ENV = "UVICORN_HOST"
 UVICORN_PORT_ENV = "UVICORN_PORT"
 
-SESSION_IDENTITY_PROVIDER_REDIS_HOST_ENV = "SESSION_IDENTITY_PROVIDER_REDIS_HOST"
-SESSION_IDENTITY_PROVIDER_REDIS_PORT_ENV = "SESSION_IDENTITY_PROVIDER_REDIS_PORT"
-SESSION_IDENTITY_PROVIDER_REDIS_DB_ENV = "SESSION_IDENTITY_PROVIDER_REDIS_DB"
-SESSION_IDENTITY_PROVIDER_REDIS_PASSWORD_ENV = "SESSION_IDENTITY_PROVIDER_REDIS_PASSWORD"
-SESSION_IDENTITY_PROVIDER_SESSION_LIFETIME_ENV = "SESSION_IDENTITY_PROVIDER_SESSION_LIFETIME"
+REDIS_HOST_ENV = "REDIS_HOST"
+REDIS_PORT_ENV = "REDIS_PORT"
+REDIS_DB_ENV = "REDIS_DB"
+REDIS_PASSWORD_ENV = "REDIS_PASSWORD"
+
+SESSION_LIFETIME_ENV = "SESSION_LIFETIME"
 
 
 def build_web_api_config() -> "WebAPIConfig":
     fastapi_config = FastAPIConfig(
-        title=_get_env(FASTAPI_TITLE_ENV),
-        summary=_get_env(FASTAPI_SUMMARY_ENV),
-        description=_get_env(FASTAPI_DESCRIPTION_ENV),
         version=_get_env(FASTAPI_VERSION_ENV),
     )
     uvicorn_config = UvicornConfig(
         host=_get_env(UVICORN_HOST_ENV),
         port=int(_get_env(UVICORN_PORT_ENV)),
     )
-    session_identity_provider_config = SessionIdentityProviderConfig(
-        redis_host=_get_env(SESSION_IDENTITY_PROVIDER_REDIS_HOST_ENV),
-        redis_port=int(_get_env(SESSION_IDENTITY_PROVIDER_REDIS_PORT_ENV)),
-        redis_db=int(_get_env(SESSION_IDENTITY_PROVIDER_REDIS_DB_ENV)),
-        redis_password=_get_env(SESSION_IDENTITY_PROVIDER_REDIS_PASSWORD_ENV),
-        session_lifetime=timedelta(
-            minutes=int(_get_env(SESSION_IDENTITY_PROVIDER_SESSION_LIFETIME_ENV)),
-        ),
+    redis_config = RedisConfig(
+        host=_get_env(REDIS_HOST_ENV),
+        port=int(_get_env(REDIS_PORT_ENV)),
+        db=int(_get_env(REDIS_DB_ENV)),
+        password=_get_env(REDIS_PASSWORD_ENV),
+    )
+    session_config = SessionConfig(
+        session_lifetime=timedelta(minutes=int(_get_env(SESSION_LIFETIME_ENV))),
     )
     return WebAPIConfig(
         fastapi=fastapi_config,
         uvicorn=uvicorn_config,
-        session_identity_provider=session_identity_provider_config,
+        redis=redis_config,
+        session=session_config,
     )
 
 
@@ -57,9 +54,6 @@ def _get_env(key: str) -> str:
 
 @dataclass(frozen=True, slots=True)
 class FastAPIConfig:
-    title: str
-    summary: str
-    description: str
     version: str
 
 
@@ -73,4 +67,5 @@ class UvicornConfig:
 class WebAPIConfig:
     fastapi: FastAPIConfig
     uvicorn: UvicornConfig
-    session_identity_provider: SessionIdentityProviderConfig
+    redis: RedisConfig
+    session: SessionConfig

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
-from amdb.infrastructure.auth.session.config import SessionIdentityProviderConfig
+from amdb.infrastructure.persistence.redis.config import RedisConfig
+from amdb.infrastructure.auth.session.config import SessionConfig
 from amdb.presentation.web_api.exception_handlers import setup_exception_handlers
 from amdb.presentation.web_api.routers.setup import setup_routers
 from amdb.main.config import GenericConfig
@@ -10,18 +11,15 @@ from .di import setup_dependecies
 
 def create_app(
     fastapi_config: FastAPIConfig,
-    session_identity_provider_config: SessionIdentityProviderConfig,
+    redis_config: RedisConfig,
+    session_config: SessionConfig,
     generic_config: GenericConfig,
 ) -> FastAPI:
-    app = FastAPI(
-        title=fastapi_config.title,
-        summary=fastapi_config.summary,
-        description=fastapi_config.description,
-        version=fastapi_config.version,
-    )
+    app = FastAPI(version=fastapi_config.version)
     setup_dependecies(
         app=app,
-        session_identity_provider_config=session_identity_provider_config,
+        redis_config=redis_config,
+        session_config=session_config,
         generic_config=generic_config,
     )
     setup_exception_handlers(app)

@@ -1,4 +1,4 @@
-class InMemoryPermissionsGateway:
+class RawPermissionsGateway:
     def for_create_movie(self) -> int:
         return 2
 

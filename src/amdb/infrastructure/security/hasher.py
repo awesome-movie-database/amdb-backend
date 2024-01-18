@@ -4,27 +4,27 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)
-class PasswordHash:
+class HashData:
     hash: bytes
     salt: bytes
 
 
 class Hasher:
-    def hash(self, password: str) -> PasswordHash:
+    def hash(self, value: bytes) -> HashData:
         salt = os.urandom(32)
         hash = hashlib.pbkdf2_hmac(
             hash_name="sha256",
-            password=password.encode(),
+            password=value,
             salt=salt,
             iterations=10000,
         )
-        return PasswordHash(hash=hash, salt=salt)
+        return HashData(hash=hash, salt=salt)
 
-    def verify(self, password: str, hashed_password: PasswordHash) -> bool:
+    def verify(self, value: bytes, hash_data: HashData) -> bool:
         hash = hashlib.pbkdf2_hmac(
             hash_name="sha256",
-            password=password.encode(),
-            salt=hashed_password.salt,
+            password=value,
+            salt=hash_data.salt,
             iterations=10000,
         )
-        return hash == hashed_password.hash
+        return hash == hash_data.hash
