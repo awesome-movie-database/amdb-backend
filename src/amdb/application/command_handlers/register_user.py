@@ -3,6 +3,7 @@ from uuid_extensions import uuid7
 from amdb.domain.entities.user import UserId
 from amdb.domain.services.create_user import CreateUser
 from amdb.application.common.interfaces.user_gateway import UserGateway
+from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
 from amdb.application.common.interfaces.password_manager import PasswordManager
 from amdb.application.common.constants.exceptions import USER_NAME_ALREADY_EXISTS
@@ -16,11 +17,13 @@ class RegisterUserHandler:
         *,
         create_user: CreateUser,
         user_gateway: UserGateway,
+        permissions_gateway: PermissionsGateway,
         unit_of_work: UnitOfWork,
         password_manager: PasswordManager,
     ) -> None:
         self._create_user = create_user
         self._user_gateway = user_gateway
+        self._permissions_gateway = permissions_gateway
         self._unit_of_work = unit_of_work
         self._password_manager = password_manager
 
@@ -35,6 +38,10 @@ class RegisterUserHandler:
         )
         self._user_gateway.save(new_user)
 
+        self._permissions_gateway.set(
+            user_id=new_user.id,
+            permissions=self._permissions_gateway.for_new_user(),
+        )
         self._password_manager.set(
             user_id=new_user.id,
             password=command.password,

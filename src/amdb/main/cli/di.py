@@ -5,7 +5,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm.session import sessionmaker
 
 from amdb.domain.entities.user import UserId
-from amdb.infrastructure.permissions_gateway import RawPermissionsGateway
 from amdb.infrastructure.auth.raw.identity_provider import RawIdentityProvider
 from amdb.infrastructure.security.hasher import Hasher
 from amdb.main.config import GenericConfig
@@ -21,7 +20,6 @@ def create_dependencies_dict(generic_config: GenericConfig) -> DependenciesDict:
     engine = create_engine(generic_config.postgres.dsn)
     ioc = IoC(
         sessionmaker=sessionmaker(engine),
-        permissions_gateway=RawPermissionsGateway(),
         hasher=Hasher(),
     )
     identity_provider = RawIdentityProvider(

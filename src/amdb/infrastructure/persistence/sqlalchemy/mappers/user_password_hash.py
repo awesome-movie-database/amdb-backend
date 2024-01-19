@@ -1,5 +1,5 @@
 from amdb.domain.entities.user import UserId
-from amdb.infrastructure.persistence.sqlalchemy.models.user_password import (
+from amdb.infrastructure.persistence.sqlalchemy.models.user_password_hash import (
     UserPasswordHash as UserPasswordHashModel,
 )
 from amdb.infrastructure.security.hasher import HashData

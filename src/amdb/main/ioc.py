@@ -17,7 +17,6 @@ from amdb.application.command_handlers.unrate_movie import UnrateMovieHandler
 from amdb.infrastructure.persistence.sqlalchemy.gateway_factory import (
     build_sqlalchemy_gateway_factory,
 )
-from amdb.infrastructure.permissions_gateway import RawPermissionsGateway
 from amdb.infrastructure.security.hasher import Hasher
 from amdb.infrastructure.password_manager.password_manager import HashingPasswordManager
 from amdb.presentation.handler_factory import HandlerFactory
@@ -27,11 +26,9 @@ class IoC(HandlerFactory):
     def __init__(
         self,
         sessionmaker: sessionmaker[Session],
-        permissions_gateway: RawPermissionsGateway,
         hasher: Hasher,
     ) -> None:
         self._sessionmaker = sessionmaker
-        self._permissions_gateway = permissions_gateway
         self._hasher = hasher
 
     @contextmanager
@@ -44,6 +41,7 @@ class IoC(HandlerFactory):
             yield RegisterUserHandler(
                 create_user=CreateUser(),
                 user_gateway=gateway_factory.user(),
+                permissions_gateway=gateway_factory.permissions_gateway(),
                 unit_of_work=gateway_factory.unit_of_work(),
                 password_manager=hashing_password_manager,
             )
@@ -57,7 +55,7 @@ class IoC(HandlerFactory):
             yield CreateMovieHandler(
                 access_concern=AccessConcern(),
                 create_movie=CreateMovie(),
-                permissions_gateway=self._permissions_gateway,
+                permissions_gateway=gateway_factory.permissions_gateway(),
                 movie_gateway=gateway_factory.movie(),
                 unit_of_work=gateway_factory.unit_of_work(),
                 identity_provider=identity_provider,
@@ -71,7 +69,7 @@ class IoC(HandlerFactory):
         with build_sqlalchemy_gateway_factory(self._sessionmaker) as gateway_factory:
             yield DeleteMovieHandler(
                 access_concern=AccessConcern(),
-                permissions_gateway=self._permissions_gateway,
+                permissions_gateway=gateway_factory.permissions_gateway(),
                 movie_gateway=gateway_factory.movie(),
                 rating_gateway=gateway_factory.rating(),
                 unit_of_work=gateway_factory.unit_of_work(),
@@ -87,7 +85,7 @@ class IoC(HandlerFactory):
             yield RateMovieHandler(
                 access_concern=AccessConcern(),
                 rate_movie=RateMovie(),
-                permissions_gateway=self._permissions_gateway,
+                permissions_gateway=gateway_factory.permissions_gateway(),
                 user_gateway=gateway_factory.user(),
                 movie_gateway=gateway_factory.movie(),
                 rating_gateway=gateway_factory.rating(),
@@ -104,7 +102,7 @@ class IoC(HandlerFactory):
             yield UnrateMovieHandler(
                 access_concern=AccessConcern(),
                 unrate_movie=UnrateMovie(),
-                permissions_gateway=self._permissions_gateway,
+                permissions_gateway=gateway_factory.permissions_gateway(),
                 user_gateway=gateway_factory.user(),
                 movie_gateway=gateway_factory.movie(),
                 rating_gateway=gateway_factory.rating(),

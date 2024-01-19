@@ -30,7 +30,7 @@ async def register(
         )
         user_id = register_user_handler.execute(register_user_command)
 
-    session = session_processor.create(user_id=user_id, permissions=4)
+    session = session_processor.create(user_id=user_id)
     session_gateway.save(session)
 
     response.set_cookie(

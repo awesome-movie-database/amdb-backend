@@ -19,10 +19,7 @@ class RedisSessionGateway:
         self._session_lifetime = session_lifetime
 
     def save(self, session: Session) -> SessionId:
-        session_data = {
-            "user_id": session.user_id.hex,
-            "permissions": session.permissions,
-        }
+        session_data = {"user_id": session.user_id.hex}
         self._redis.hset(
             name=session.id,
             mapping=session_data,  # type: ignore
@@ -40,6 +37,5 @@ class RedisSessionGateway:
             return Session(
                 id=session_id,
                 user_id=UserId(UUID(session_data["user_id"])),
-                permissions=session_data["permissions"],
             )
         return None

@@ -12,10 +12,9 @@ class SessionProcessor:
     ) -> None:
         self._hasher = hasher
 
-    def create(self, user_id: UserId, permissions: int) -> Session:
+    def create(self, user_id: UserId) -> Session:
         random_hash = self._hasher.hash(os.urandom(32))
         return Session(
             id=SessionId(str(random_hash)),
             user_id=user_id,
-            permissions=permissions,
         )

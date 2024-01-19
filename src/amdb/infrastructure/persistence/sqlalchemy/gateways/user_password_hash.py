@@ -3,10 +3,12 @@ from typing import Optional
 from sqlalchemy.orm.session import Session
 
 from amdb.domain.entities.user import UserId
-from amdb.infrastructure.persistence.sqlalchemy.models.user_password import (
+from amdb.infrastructure.persistence.sqlalchemy.models.user_password_hash import (
     UserPasswordHash as UserPasswordHashModel,
 )
-from amdb.infrastructure.persistence.sqlalchemy.mappers.user_password import UserPasswordHashMapper
+from amdb.infrastructure.persistence.sqlalchemy.mappers.user_password_hash import (
+    UserPasswordHashMapper,
+)
 from amdb.infrastructure.password_manager.model import UserPasswordHash
 
 

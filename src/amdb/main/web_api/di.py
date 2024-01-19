@@ -3,7 +3,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm.session import sessionmaker
 from redis.client import Redis
 
-from amdb.infrastructure.permissions_gateway import RawPermissionsGateway
 from amdb.infrastructure.security.hasher import Hasher
 from amdb.infrastructure.auth.session.config import SessionConfig
 from amdb.infrastructure.persistence.redis.config import RedisConfig
@@ -21,13 +20,10 @@ def setup_dependecies(
     session_config: SessionConfig,
     generic_config: GenericConfig,
 ) -> None:
-    hasher = Hasher()
-
     engine = create_engine(generic_config.postgres.dsn)
     ioc = IoC(
         sessionmaker=sessionmaker(engine),
-        permissions_gateway=RawPermissionsGateway(),
-        hasher=hasher,
+        hasher=Hasher(),
     )
     app.dependency_overrides[HandlerFactory] = lambda: ioc  # type: ignore
 
@@ -43,5 +39,5 @@ def setup_dependecies(
     )
     app.dependency_overrides[Stub(RedisSessionGateway)] = lambda: redis_session_gateway  # type: ignore
 
-    session_processor = SessionProcessor(hasher=hasher)
+    session_processor = SessionProcessor(hasher=Hasher())
     app.dependency_overrides[Stub(SessionProcessor)] = lambda: session_processor  # type: ignore

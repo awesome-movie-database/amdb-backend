@@ -11,4 +11,3 @@ SessionId = NewType("SessionId", str)
 class Session:
     id: SessionId
     user_id: UserId
-    permissions: int
