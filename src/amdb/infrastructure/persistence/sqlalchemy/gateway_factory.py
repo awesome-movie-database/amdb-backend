@@ -6,12 +6,10 @@ from sqlalchemy.orm import Session, sessionmaker
 from .gateways.user import SQLAlchemyUserGateway
 from .gateways.movie import SQLAlchemyMovieGateway
 from .gateways.rating import SQLAlchemyRatingGateway
-from .gateways.permissions import SQLAlchemyPermissionsGateway
 from .gateways.user_password_hash import SQLAlchemyUserPasswordHashGateway
 from .mappers.user import UserMapper
 from .mappers.movie import MovieMapper
 from .mappers.rating import RatingMapper
-from .mappers.user_permissions import UserPermissionsMapper
 from .mappers.user_password_hash import UserPasswordHashMapper
 
 
@@ -36,9 +34,6 @@ class SQLAlchemyGatewayFactory:
 
     def rating(self) -> SQLAlchemyRatingGateway:
         return SQLAlchemyRatingGateway(self._session, RatingMapper())
-
-    def permissions_gateway(self) -> SQLAlchemyPermissionsGateway:
-        return SQLAlchemyPermissionsGateway(self._session, UserPermissionsMapper())
 
     def user_password_hash(self) -> SQLAlchemyUserPasswordHashGateway:
         return SQLAlchemyUserPasswordHashGateway(self._session, UserPasswordHashMapper())

@@ -2,9 +2,7 @@ from typing import Optional, cast
 
 from amdb.domain.entities.user import UserId
 from amdb.infrastructure.persistence.redis.gateways.session import RedisSessionGateway
-from amdb.infrastructure.persistence.sqlalchemy.gateways.permissions import (
-    SQLAlchemyPermissionsGateway,
-)
+from amdb.infrastructure.persistence.redis.gateways.permissions import RedisPermissionsGateway
 from amdb.infrastructure.exception import InfrastructureError
 from .constants.exceptions import NO_SESSION_ID, SESSION_DOES_NOT_EXIST
 from .model import SessionId
@@ -16,7 +14,7 @@ class SessionIdentityProvider:
         *,
         session_id: Optional[SessionId],
         session_gateway: RedisSessionGateway,
-        permissions_gateway: SQLAlchemyPermissionsGateway,
+        permissions_gateway: RedisPermissionsGateway,
     ) -> None:
         self._session_id = session_id
         self._session_gateway = session_gateway

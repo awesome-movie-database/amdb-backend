@@ -4,6 +4,7 @@ from typing import Iterator
 import pytest
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session
+from redis.client import Redis
 
 from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
 from amdb.infrastructure.persistence.sqlalchemy.models.base import Model
@@ -15,8 +16,12 @@ TEST_POSTGRES_NAME_ENV = "TEST_POSTGRES_NAME"
 TEST_POSTGRES_USER_ENV = "TEST_POSTGRES_USER"
 TEST_POSTGRES_PASSWORD_ENV = "TEST_POSTGRES_PASSWORD"
 
+TEST_REDIS_HOST_ENV = "TEST_REDIS_HOST"
+TEST_REDIS_PORT_ENV = "TEST_REDIS_PORT"
+TEST_REDIS_DB_ENV = "TEST_REDIS_DB"
 
-def get_env(key: str) -> str:
+
+def _get_env(key: str) -> str:
     value = os.getenv(key)
     if value is None:
         message = f"Env variable {key} is not set"
@@ -25,19 +30,25 @@ def get_env(key: str) -> str:
 
 
 @pytest.fixture(scope="package")
-def postgres_config() -> PostgresConfig:
-    return PostgresConfig(
-        host=get_env(TEST_POSTGRES_HOST_ENV),
-        port=get_env(TEST_POSTGRES_PORT_ENV),
-        name=get_env(TEST_POSTGRES_NAME_ENV),
-        user=get_env(TEST_POSTGRES_USER_ENV),
-        password=get_env(TEST_POSTGRES_PASSWORD_ENV),
+def sqlalchemy_engine() -> Engine:
+    postgres_config = PostgresConfig(
+        host=_get_env(TEST_POSTGRES_HOST_ENV),
+        port=_get_env(TEST_POSTGRES_PORT_ENV),
+        name=_get_env(TEST_POSTGRES_NAME_ENV),
+        user=_get_env(TEST_POSTGRES_USER_ENV),
+        password=_get_env(TEST_POSTGRES_PASSWORD_ENV),
     )
+    return create_engine(url=postgres_config.dsn)
 
 
 @pytest.fixture(scope="package")
-def sqlalchemy_engine(postgres_config: PostgresConfig) -> Engine:
-    return create_engine(url=postgres_config.dsn)
+def redis() -> Redis:
+    redis = Redis(
+        host=_get_env(TEST_REDIS_HOST_ENV),
+        port=int(_get_env(TEST_REDIS_PORT_ENV)),
+        db=int(_get_env(TEST_REDIS_DB_ENV)),
+    )
+    return redis
 
 
 @pytest.fixture(autouse=True)
