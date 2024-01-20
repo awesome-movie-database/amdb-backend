@@ -2,7 +2,7 @@
 
 set -x
 
-mypy src
-mypy tests --ignore-missing-imports
 ruff check src
 ruff check tests
+mypy src
+mypy tests --ignore-missing-imports

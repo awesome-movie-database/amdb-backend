@@ -1,64 +1,87 @@
-[tool.poetry]
-name = "amdb-backend"
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "amdb"
+description = "Awesome Movie Database Backend"
 version = "0.1.0"
-description = "Awesome Movie Database backend"
-authors = ["Madnoberson"]
+license = { file = "LICENSE" }
 readme = "README.md"
-packages = [{include = "src/"}]
-license = "Apache"
+requires-python = "==3.10.*"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-sqlalchemy = "^2.0.23"
-alembic = "^1.13.0"
-psycopg2-binary = "^2.9.9"
+authors = [
+    { name = "madnoberson", email = "baseddepartmentzx77@gmail.com" },
+]
+maintainers = [
+    { name = "madnoberson", email = "baseddepartmentzx77@gmail.com" },
+]
+dependencies = [
+    "uuid7",
+    "sqlalchemy==2.0.23",
+    "psycopg2-binary==2.9.9",
+    "alembic==1.13.0",
+]
 
-[tool.poetry.group.dev.dependencies]
-mypy = "^1.7.0"
-ruff = "^0.1.6"
-pre-commit = "^3.5.0"
+[project.optional-dependencies]
+web_api = [
+    "redis>=5.0.0",
+    "fastapi==0.103.*",
+    "uvicorn==0.22.*",
+]
+cli = [
+    "typer[all]==0.9.*",
+]
+style = [
+    "mypy==1.8.0",
+    "ruff==0.1.9",
+    "types-redis",
+]
+test = [
+    "pytest",
+]
+dev = [
+    "amdb[web_api,cli,style,test]",
+    "pre-commit==3.5.0",
+]
 
-[tool.poetry.group.test.dependencies]
-pytest = "^7.4.3"
-coverage = "^7.3.2"
-pytest-cov = "^4.1.0"
-pytest-clarity = "^1.0.1"
-polyfactory = "^2.13.0"
+[project.scripts]
+amdb-cli = "amdb.main.cli.__main__:main"
+amdb-web_api = "amdb.main.web_api.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["amdb*"]
+
+[tool.setuptools.package-data]
+amdb = ["infrastructure/persistence/alembic/alembic.ini"]
 
 [tool.pytest.ini_options]
 pythonpath = "src/"
-python_functions = "when_* test_*"
+
+[tool.ruff.lint]
+extend-select = [
+    "N",        # https://docs.astral.sh/ruff/settings/#pep8-naming
+    "EM",       # https://docs.astral.sh/ruff/settings/#flake8-errmsg
+    "ISC",      # https://docs.astral.sh/ruff/settings/#flake8-implicit-str-concat
+    "G",        # https://docs.astral.sh/ruff/rules/#flake8-logging-format-g
+    "Q",        # https://docs.astral.sh/ruff/rules/#flake8-pytest-style-pt
+]
+select = [
+    "F401",     # unused-import
+    "F406",     # undefined-local-with-nested-import-star-usage
+    "COM812",   # missing-trailing-comma
+    "DTZ003",   # call-datetime-utcnow
+    "EM102",    # f-string-in-exception
+    "INP001",   # implicit-namespace-package
+    "PIE794",   # duplicate-class-field-definition
+    "PIE796",   # non-unique-enums
+    "T201",     # print
+    "SLF001",   # private-member-access
+]
 
 [tool.ruff]
 line-length = 99
 
-[tool.ruff.lint]
-extend-select = [
-    "N",
-    "EM",
-    "ISC",
-    "G",
-    "Q",
-]
-select = [
-    "F401",
-    "F406",
-    "COM812",
-    "DTZ003",
-    "EM102",
-    "INP001",
-    "PIE794",
-    "PIE796",
-    "T201",
-    "SLF001",
-]
-ignore = [
-    "N999",
-]
-
 [tool.ruff.format]
 quote-style = "double"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"

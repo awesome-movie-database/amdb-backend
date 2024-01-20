@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+    web_api:
+        profiles: [web_api]
+        container_name: amdb_backend.web_api
+        depends_on: [postgres, redis]
+        ports: ["${UVICORN_HOST}:${UVICORN_PORT}:${UVICORN_PORT}"]
+        restart: unless-stopped
+
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
+            target: web_api
+        environment:
+            - POSTGRES_USER
+            - POSTGRES_PASSWORD
+            - POSTGRES_DB
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT
+
+            - FASTAPI_VERSION
+
+            - UVICORN_HOST=0.0.0.0
+            - UVICORN_PORT
+
+            - REDIS_HOST=redis
+            - REDIS_PORT
+            - REDIS_DB
+            - REDIS_PASSWORD
+
+            - SESSION_LIFETIME
+
+    postgres:
+        profiles: [web_api]
+        container_name: amdb_backend.postgres
+        image: postgres:15-alpine
+        restart: unless-stopped
+
+        environment:
+            - POSTGRES_USER
+            - POSTGRES_PASSWORD
+            - POSTGRES_DB
+
+    redis:
+        profiles: [web_api]
+        container_name: amdb_backend.redis
+        image: bitnami/redis:7.2
+        restart: unless-stopped
+
+        environment:
+            - REDIS_PASSWORD
+            - REDIS_PORT_NUMBER=${REDIS_PORT}

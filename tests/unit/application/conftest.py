@@ -1,102 +1,123 @@
-from unittest.mock import Mock
-from typing import Annotated
-from uuid import uuid4
+import os
+from typing import Iterator
 
 import pytest
-from sqlalchemy.orm.session import Session
+from sqlalchemy import Engine, create_engine
+from sqlalchemy.orm import Session
+from redis.client import Redis
 
-from amdb.domain.entities.user.user import UserId
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
-from amdb.infrastructure.in_memory.access_policy_gateway import InMemoryAccessPolicyGateway
-from amdb.infrastructure.database.gateways.user.user import SQLAlchemyUserGateway
-from amdb.infrastructure.database.gateways.user.profile import SQLAlchemyProfileGateway
-from amdb.infrastructure.database.gateways.person.person import SQLAlchemyPersonGateway
-from amdb.infrastructure.database.gateways.person.marriage import SQLAlchemyMarriageGateway
-from amdb.infrastructure.database.gateways.person.relation import SQLAlchemyRelationGateway
-from amdb.infrastructure.database.unit_of_work import SQLAlchemyUnitOfWork
-from amdb.infrastructure.database.mappers.user.user import UserMapper
-from amdb.infrastructure.database.mappers.user.profile import ProfileMapper
-from amdb.infrastructure.database.mappers.person.person import PersonMapper
-from amdb.infrastructure.database.mappers.person.marriage import MarriageMapper
-from amdb.infrastructure.database.mappers.person.relation import RelationMapper
-
-
-SYSTEM_USER_ID = UserId(uuid4())
-
-
-@pytest.fixture(scope="session")
-def system_user_id() -> UserId:
-    return SYSTEM_USER_ID
+from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
+from amdb.infrastructure.persistence.sqlalchemy.models.base import Model
+from amdb.infrastructure.persistence.sqlalchemy.gateways.user import SQLAlchemyUserGateway
+from amdb.infrastructure.persistence.sqlalchemy.gateways.movie import SQLAlchemyMovieGateway
+from amdb.infrastructure.persistence.sqlalchemy.gateways.rating import SQLAlchemyRatingGateway
+from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password_hash import (
+    SQLAlchemyUserPasswordHashGateway,
+)
+from amdb.infrastructure.persistence.redis.gateways.permissions import RedisPermissionsGateway
+from amdb.infrastructure.persistence.sqlalchemy.mappers.user import UserMapper
+from amdb.infrastructure.persistence.sqlalchemy.mappers.movie import MovieMapper
+from amdb.infrastructure.persistence.sqlalchemy.mappers.rating import RatingMapper
+from amdb.infrastructure.persistence.sqlalchemy.mappers.user_password_hash import (
+    UserPasswordHashMapper,
+)
+from amdb.infrastructure.security.hasher import Hasher
+from amdb.infrastructure.password_manager.password_manager import HashingPasswordManager
 
 
-@pytest.fixture(scope="session")
-def access_policy_gateway() -> InMemoryAccessPolicyGateway:
-    return InMemoryAccessPolicyGateway(
-        system_user_id=SYSTEM_USER_ID,
+TEST_POSTGRES_HOST_ENV = "TEST_POSTGRES_HOST"
+TEST_POSTGRES_PORT_ENV = "TEST_POSTGRES_PORT"
+TEST_POSTGRES_NAME_ENV = "TEST_POSTGRES_DB"
+TEST_POSTGRES_USER_ENV = "TEST_POSTGRES_USER"
+TEST_POSTGRES_PASSWORD_ENV = "TEST_POSTGRES_PASSWORD"
+
+TEST_REDIS_HOST_ENV = "TEST_REDIS_HOST"
+TEST_REDIS_PORT_ENV = "TEST_REDIS_PORT"
+TEST_REDIS_DB_ENV = "TEST_REDIS_DB"
+TEST_REDIS_PASSWORD_ENV = "TEST_REDIS_PASSWORD"
+
+
+def _get_env(key: str) -> str:
+    value = os.getenv(key)
+    if value is None:
+        message = f"Env variable {key} is not set"
+        raise ValueError(message)
+    return value
+
+
+@pytest.fixture(scope="package")
+def sqlalchemy_engine() -> Engine:
+    postgres_config = PostgresConfig(
+        host=_get_env(TEST_POSTGRES_HOST_ENV),
+        port=_get_env(TEST_POSTGRES_PORT_ENV),
+        name=_get_env(TEST_POSTGRES_NAME_ENV),
+        user=_get_env(TEST_POSTGRES_USER_ENV),
+        password=_get_env(TEST_POSTGRES_PASSWORD_ENV),
     )
+    return create_engine(url=postgres_config.dsn)
+
+
+@pytest.fixture(scope="package")
+def redis() -> Redis:
+    redis = Redis(
+        host=_get_env(TEST_REDIS_HOST_ENV),
+        port=int(_get_env(TEST_REDIS_PORT_ENV)),
+        db=int(_get_env(TEST_REDIS_DB_ENV)),
+        password=_get_env(TEST_REDIS_PASSWORD_ENV),
+    )
+    return redis
+
+
+@pytest.fixture(autouse=True)
+def clear_database(sqlalchemy_engine: Engine) -> Iterator[None]:
+    Model.metadata.create_all(sqlalchemy_engine)
+    yield
+    Model.metadata.drop_all(sqlalchemy_engine)
 
 
 @pytest.fixture
-def user_gateway(
-    sqlalchemy_session: Session,
-) -> SQLAlchemyUserGateway:
-    return SQLAlchemyUserGateway(
+def sqlalchemy_session(sqlalchemy_engine: Engine) -> Iterator[Session]:
+    connection = sqlalchemy_engine.connect()
+    session = Session(connection, expire_on_commit=False)
+
+    yield session
+
+    session.close()
+    connection.close()
+
+
+@pytest.fixture
+def permissions_gateway(redis: Redis) -> RedisPermissionsGateway:
+    return RedisPermissionsGateway(redis)
+
+
+@pytest.fixture
+def user_gateway(sqlalchemy_session: Session) -> SQLAlchemyUserGateway:
+    return SQLAlchemyUserGateway(sqlalchemy_session, UserMapper())
+
+
+@pytest.fixture
+def movie_gateway(sqlalchemy_session: Session) -> SQLAlchemyMovieGateway:
+    return SQLAlchemyMovieGateway(sqlalchemy_session, MovieMapper())
+
+
+@pytest.fixture
+def rating_gateway(sqlalchemy_session: Session) -> SQLAlchemyRatingGateway:
+    return SQLAlchemyRatingGateway(sqlalchemy_session, RatingMapper())
+
+
+@pytest.fixture
+def password_manager(sqlalchemy_session: Session) -> HashingPasswordManager:
+    user_password_hash_gateway = SQLAlchemyUserPasswordHashGateway(
         session=sqlalchemy_session,
-        mapper=UserMapper(),
+        mapper=UserPasswordHashMapper(),
+    )
+    return HashingPasswordManager(
+        hasher=Hasher(),
+        user_password_hash_gateway=user_password_hash_gateway,
     )
 
 
 @pytest.fixture
-def profile_gateway(
-    sqlalchemy_session: Session,
-) -> SQLAlchemyProfileGateway:
-    return SQLAlchemyProfileGateway(
-        session=sqlalchemy_session,
-        mapper=ProfileMapper(),
-    )
-
-
-@pytest.fixture
-def person_gateway(
-    sqlalchemy_session: Session,
-) -> SQLAlchemyPersonGateway:
-    return SQLAlchemyPersonGateway(
-        session=sqlalchemy_session,
-        mapper=PersonMapper(),
-    )
-
-
-@pytest.fixture
-def marriage_gateway(
-    sqlalchemy_session: Session,
-) -> SQLAlchemyMarriageGateway:
-    return SQLAlchemyMarriageGateway(
-        session=sqlalchemy_session,
-        mapper=MarriageMapper(),
-    )
-
-
-@pytest.fixture
-def relation_gateway(
-    sqlalchemy_session: Session,
-) -> SQLAlchemyMarriageGateway:
-    return SQLAlchemyRelationGateway(
-        session=sqlalchemy_session,
-        mapper=RelationMapper(),
-    )
-
-
-@pytest.fixture
-def unit_of_work(
-    sqlalchemy_session: Session,
-) -> SQLAlchemyUnitOfWork:
-    return SQLAlchemyUnitOfWork(
-        session=sqlalchemy_session,
-    )
-
-
-@pytest.fixture
-def identity_provider() -> Annotated[IdentityProvider, Mock]:
-    identity_provider_mock = Mock()
-    identity_provider_mock.get_access_policy = Mock()
-    return identity_provider_mock
+def unit_of_work(sqlalchemy_session: Session) -> Session:
+    return sqlalchemy_session
