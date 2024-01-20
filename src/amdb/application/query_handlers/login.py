@@ -24,11 +24,11 @@ class LoginHandler:
         if not user:
             raise ApplicationError(USER_DOES_NOT_EXIST)
 
-        password_is_valid = self._password_manager.verify(
+        password_is_correct = self._password_manager.verify(
             user_id=user.id,
             password=query.password,
         )
-        if not password_is_valid:
+        if not password_is_correct:
             raise ApplicationError(INCORRECT_PASSWORD)
 
         return user.id
