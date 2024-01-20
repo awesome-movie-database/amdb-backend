@@ -42,5 +42,5 @@ def setup_dependecies(
     )
     app.dependency_overrides[HandlerFactory] = lambda: ioc  # type: ignore
 
-    session_processor = SessionProcessor(hasher=Hasher())
+    session_processor = SessionProcessor()
     app.dependency_overrides[Stub(SessionProcessor)] = lambda: session_processor  # type: ignore

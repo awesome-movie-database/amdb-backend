@@ -19,23 +19,21 @@ class RedisSessionGateway:
         self._session_lifetime = session_lifetime
 
     def save(self, session: Session) -> SessionId:
-        session_data = {"user_id": session.user_id.hex}
-        self._redis.hset(
-            name=f"sessions:{session.id}",
-            mapping=session_data,  # type: ignore
+        self._redis.set(
+            name=f"user_id:session_id:{session.id}",
+            value=session.user_id.hex,
         )
         self._redis.expire(
-            name=session.id,
+            name=f"user_id:session_id:{session.id}",
             time=self._session_lifetime,
         )
-
         return session.id
 
     def with_id(self, session_id: SessionId) -> Optional[Session]:
-        session_data = self._redis.hgetall(f"sessions:{session_id}")
-        if session_data:
+        user_id = self._redis.get(f"user_id:session_id:{session_id}")
+        if user_id:
             return Session(
                 id=session_id,
-                user_id=UserId(UUID(session_data["user_id"])),
+                user_id=UserId(UUID(user_id)),
             )
         return None

@@ -1,20 +1,13 @@
-import os
+from uuid import uuid4
 
 from amdb.domain.entities.user import UserId
-from amdb.infrastructure.security.hasher import Hasher
 from .model import SessionId, Session
 
 
 class SessionProcessor:
-    def __init__(
-        self,
-        hasher: Hasher,
-    ) -> None:
-        self._hasher = hasher
-
     def create(self, user_id: UserId) -> Session:
-        random_hash = self._hasher.hash(os.urandom(32))
+        session_id = uuid4().hex + uuid4().hex
         return Session(
-            id=SessionId(str(random_hash)),
+            id=SessionId(session_id),
             user_id=user_id,
         )

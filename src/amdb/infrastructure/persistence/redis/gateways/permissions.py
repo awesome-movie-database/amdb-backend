@@ -10,14 +10,14 @@ class RedisPermissionsGateway:
         self._redis = redis
 
     def with_user_id(self, user_id: UserId) -> Optional[int]:
-        permissions = self._redis.get(f"permissions:{user_id.hex}")
+        permissions = self._redis.get(f"permissions:user_id:{user_id.hex}")
         if permissions:
             return int(permissions)
         return None
 
     def set(self, user_id: UserId, permissions: int) -> None:
         self._redis.set(
-            name=f"permissions:{user_id.hex}",
+            name=f"permissions:user_id:{user_id.hex}",
             value=permissions,
         )
 
