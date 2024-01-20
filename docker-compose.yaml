@@ -12,29 +12,24 @@ services:
             context: ./
             dockerfile: ./Dockerfile
             target: web_api
-        networks:
-            - amdb_backend.postgres.network
-            - amdb_backend.redis.network
         environment:
-            - DATABASE_PG_USER=${DATABASE_PG_USER}
-            - DATABASE_PG_PASSWORD=${DATABASE_PG_PASSWORD}
-            - DATABASE_PG_NAME=${DATABASE_PG_NAME}
-            - DATABASE_PG_HOST=postgres
-            - DATABASE_PG_PORT=${DATABASE_PG_PORT}
+            - POSTGRES_USER
+            - POSTGRES_PASSWORD
+            - POSTGRES_DB
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT
 
-            - FASTAPI_TITLE=${FASTAPI_TITLE}
-            - FASTAPI_SUMMARY=${FASTAPI_SUMMARY}
-            - FASTAPI_DESCRIPTION=${FASTAPI_DESCRIPTION}
-            - FASTAPI_VERSION=${FASTAPI_VERSION}
+            - FASTAPI_VERSION
 
             - UVICORN_HOST=0.0.0.0
-            - UVICORN_PORT=${UVICORN_PORT}
+            - UVICORN_PORT
 
-            - SESSION_IDENTITY_PROVIDER_REDIS_HOST=redis
-            - SESSION_IDENTITY_PROVIDER_REDIS_PORT=${SESSION_IDENTITY_PROVIDER_REDIS_PORT}
-            - SESSION_IDENTITY_PROVIDER_REDIS_DB=${SESSION_IDENTITY_PROVIDER_REDIS_DB}
-            - SESSION_IDENTITY_PROVIDER_REDIS_PASSWORD=${SESSION_IDENTITY_PROVIDER_REDIS_PASSWORD}
-            - SESSION_IDENTITY_PROVIDER_SESSION_LIFETIME=${SESSION_IDENTITY_PROVIDER_SESSION_LIFETIME}
+            - REDIS_HOST=redis
+            - REDIS_PORT
+            - REDIS_DB
+            - REDIS_PASSWORD
+
+            - SESSION_LIFETIME
 
     postgres:
         profiles: [web_api]
@@ -42,24 +37,17 @@ services:
         image: postgres:15-alpine
         restart: unless-stopped
 
-        networks:
-            - amdb_backend.postgres.network
         environment:
-            - POSTGRES_USER=${DATABASE_PG_USER}
-            - POSTGRES_PASSWORD=${DATABASE_PG_PASSWORD}
-            - POSTGRES_DB=${DATABASE_PG_NAME}
+            - POSTGRES_USER
+            - POSTGRES_PASSWORD
+            - POSTGRES_DB
 
     redis:
         profiles: [web_api]
         container_name: amdb_backend.redis
-        image: redis:7.2-alpine
+        image: bitnami/redis:7.2
         restart: unless-stopped
 
-        networks:
-            - amdb_backend.redis.network
         environment:
-            - REDIS_PASSWORD=${SESSION_IDENTITY_PROVIDER_REDIS_PASSWORD}
-
-networks:
-    amdb_backend.postgres.network: {}
-    amdb_backend.redis.network: {}
+            - REDIS_PASSWORD
+            - REDIS_PORT_NUMBER=${REDIS_PORT}

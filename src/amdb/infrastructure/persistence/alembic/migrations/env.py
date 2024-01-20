@@ -25,11 +25,11 @@ target_metadata = None
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-DATABASE_PG_HOST_ENV = "DATABASE_PG_HOST"
-DATABASE_PG_PORT_ENV = "DATABASE_PG_PORT"
-DATABASE_PG_NAME_ENV = "DATABASE_PG_NAME"
-DATABASE_PG_USER_ENV = "DATABASE_PG_USER"
-DATABASE_PG_PASSWORD_ENV = "DATABASE_PG_PASSWORD"
+POSTGRES_HOST_ENV = "POSTGRES_HOST"
+POSTGRES_PORT_ENV = "POSTGRES_PORT"
+POSTGRES_NAME_ENV = "POSTGRES_DB"
+POSTGRES_USER_ENV = "POSTGRES_USER"
+POSTGRES_PASSWORD_ENV = "POSTGRES_PASSWORD"
 
 
 def get_env(key: str) -> str:
@@ -41,11 +41,11 @@ def get_env(key: str) -> str:
 
 
 def get_sqlalchemy_url() -> str:
-    host = get_env(DATABASE_PG_HOST_ENV)
-    port = get_env(DATABASE_PG_PORT_ENV)
-    name = get_env(DATABASE_PG_NAME_ENV)
-    user = get_env(DATABASE_PG_USER_ENV)
-    password = get_env(DATABASE_PG_PASSWORD_ENV)
+    host = get_env(POSTGRES_HOST_ENV)
+    port = get_env(POSTGRES_PORT_ENV)
+    name = get_env(POSTGRES_NAME_ENV)
+    user = get_env(POSTGRES_USER_ENV)
+    password = get_env(POSTGRES_PASSWORD_ENV)
 
     return f"postgresql://{user}:{password}@{host}:{port}/{name}"
 

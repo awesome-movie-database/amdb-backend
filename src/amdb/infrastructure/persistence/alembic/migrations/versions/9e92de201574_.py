@@ -35,13 +35,6 @@ def upgrade() -> None:
         sa.UniqueConstraint("name"),
     )
     op.create_table(
-        "user_permissions",
-        sa.Column("user_id", sa.Uuid(), nullable=False),
-        sa.Column("permissions", sa.SmallInteger(), nullable=False),
-        sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
-        sa.PrimaryKeyConstraint("user_id"),
-    )
-    op.create_table(
         "user_password_hashes",
         sa.Column("user_id", sa.Uuid(), nullable=False),
         sa.Column("hash", sa.LargeBinary(), nullable=False),
@@ -64,6 +57,5 @@ def upgrade() -> None:
 def downgrade() -> None:
     op.drop_table("movies")
     op.drop_table("users")
-    op.drop_table("user_permissions")
     op.drop_table("user_password_hashes")
     op.drop_table("ratings")
