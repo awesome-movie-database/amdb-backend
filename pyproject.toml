@@ -40,8 +40,11 @@ style = [
 test = [
     "pytest",
 ]
+covergae = [
+    "pytest-cov",
+]
 dev = [
-    "amdb[web_api,cli,style,test]",
+    "amdb[web_api,cli,style,test,coverage]",
     "pre-commit==3.5.0",
 ]
 

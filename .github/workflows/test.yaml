@@ -1,0 +1,53 @@
+name: test
+run-name: testing
+
+on:
+  push:
+    branches: [main]
+    paths: ["src/**", "tests/**"]
+  pull_request:
+    types: [opened]
+    paths: ["src/**", "tests/**"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 1234
+          POSTGRES_DB: amdb_test
+        ports: ["5432:5432"]
+      redis:
+        images: bitnami/redis:7.2
+        env:
+          REDIS_PASSWORD: 1234
+        ports: ["6379:6379"]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: install python3.10.13
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.13"
+      - name: install dependencies
+        run: pip install ".[coverage]"
+      - name: run test
+        run: pytest --cov=./ --cov-report=xml
+        env:
+          TEST_POSTGRES_USER: postgres
+          TEST_POSTGRES_PASSWORD: 1234
+          TEST_POSTGRES_HOST: 127.0.0.1
+          TEST_POSTGRES_PORT: 5432
+          TEST_POSTGRES_DB: amdb_test
+          TEST_REDIS_HOST: redis
+          TEST_REDIS_PORT: 6379
+          TEST_REDIS_DB: 0
+          TEST_REDIS_PASSWORD: 1234
+      - name: upload coverage report to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          token: ${{ secrets.CODECOV_TOKEN }}
