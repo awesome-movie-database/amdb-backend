@@ -38,7 +38,6 @@ async def register(
         key=SESSION_ID_COOKIE,
         value=session.id,
         httponly=True,
-        secure=True,
     )
 
     return user_id

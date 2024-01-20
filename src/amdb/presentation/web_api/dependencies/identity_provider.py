@@ -16,10 +16,10 @@ def get_identity_provider(
         RedisPermissionsGateway,
         Depends(Stub(RedisPermissionsGateway)),
     ],
-    session_id: Annotated[Optional[SessionId], Cookie(alias=SESSION_ID_COOKIE)],
+    session_id: Annotated[Optional[str], Cookie(alias=SESSION_ID_COOKIE)] = None,
 ) -> SessionIdentityProvider:
     return SessionIdentityProvider(
-        session_id=session_id,
+        session_id=SessionId(session_id) if session_id else None,
         session_gateway=session_gateway,
         permissions_gateway=permissions_gateway,
     )

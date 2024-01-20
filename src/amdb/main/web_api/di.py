@@ -24,6 +24,7 @@ def setup_dependecies(
         port=generic_config.redis.port,
         db=generic_config.redis.db,
         password=generic_config.redis.password,
+        decode_responses=True,
     )
     redis_session_gateway = RedisSessionGateway(
         redis=redis,
