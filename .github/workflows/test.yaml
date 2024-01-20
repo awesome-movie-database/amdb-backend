@@ -22,7 +22,7 @@ jobs:
           POSTGRES_DB: amdb_test
         ports: ["5432:5432"]
       redis:
-        images: bitnami/redis:7.2
+        image: bitnami/redis:7.2
         env:
           REDIS_PASSWORD: 1234
         ports: ["6379:6379"]
