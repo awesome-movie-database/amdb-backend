@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: "3.10.13"
       - name: install dependencies
-        run: pip install ".[coverage]"
+        run: pip install ".[test,coverage]"
       - name: run test
         run: pytest --cov=./ --cov-report=xml
         env:
