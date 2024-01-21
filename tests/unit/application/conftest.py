@@ -35,7 +35,6 @@ TEST_POSTGRES_PASSWORD_ENV = "TEST_POSTGRES_PASSWORD"
 TEST_REDIS_HOST_ENV = "TEST_REDIS_HOST"
 TEST_REDIS_PORT_ENV = "TEST_REDIS_PORT"
 TEST_REDIS_DB_ENV = "TEST_REDIS_DB"
-TEST_REDIS_PASSWORD_ENV = "TEST_REDIS_PASSWORD"
 
 
 def _get_env(key: str) -> str:
@@ -64,7 +63,6 @@ def redis() -> Redis:
         host=_get_env(TEST_REDIS_HOST_ENV),
         port=int(_get_env(TEST_REDIS_PORT_ENV)),
         db=int(_get_env(TEST_REDIS_DB_ENV)),
-        password=_get_env(TEST_REDIS_PASSWORD_ENV),
     )
     return redis
 

@@ -200,7 +200,19 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
     assert error.value.message == MOVIE_ALREADY_RATED
 
 
-@pytest.mark.parametrize("rating_value", (11, 0, 4.2))
+RATING_GREATER_THAN_10 = 11
+RATING_LESS_THAN_A_HALF = 0
+RATING_THAT_IS_NOT_DIVISABLE_BY_ONE_HALF = 4.2
+
+
+@pytest.mark.parametrize(
+    "rating_value",
+    (
+        RATING_GREATER_THAN_10,
+        RATING_LESS_THAN_A_HALF,
+        RATING_THAT_IS_NOT_DIVISABLE_BY_ONE_HALF,
+    ),
+)
 def test_rate_movie_should_raise_error_when_rating_is_invalid(
     rating_value: float,
     permissions_gateway: PermissionsGateway,

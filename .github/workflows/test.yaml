@@ -23,8 +23,6 @@ jobs:
         ports: ["5432:5432"]
       redis:
         image: redis:7.2
-        env:
-          REDIS_PASSWORD: 1234
         ports: ["6379:6379"]
     steps:
       - name: checkout
@@ -46,7 +44,6 @@ jobs:
           TEST_REDIS_HOST: redis
           TEST_REDIS_PORT: 6379
           TEST_REDIS_DB: 0
-          TEST_REDIS_PASSWORD: 1234
       - name: upload coverage report to Codecov
         uses: codecov/codecov-action@v3
         env:
