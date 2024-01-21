@@ -27,6 +27,9 @@ class RedisPermissionsGateway:
     def for_new_user(self) -> int:
         return 6
 
+    def for_get_movie(self) -> int:
+        return 4
+
     def for_create_movie(self) -> int:
         return 8
 
