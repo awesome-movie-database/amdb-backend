@@ -19,22 +19,14 @@ from amdb.application.common.constants.exceptions import (
 from amdb.application.common.exception import ApplicationError
 
 
-@pytest.fixture(scope="module")
-def identity_provider_with_valid_permissions() -> IdentityProvider:
+@pytest.fixture
+def identity_provider_with_correct_permissions(
+    permissions_gateway: PermissionsGateway,
+) -> IdentityProvider:
     identity_provider = Mock()
-    identity_provider.get_permissions = Mock(
-        return_value=2,
-    )
 
-    return identity_provider
-
-
-@pytest.fixture(scope="module")
-def identity_provider_with_invalid_permissions() -> IdentityProvider:
-    identity_provider = Mock()
-    identity_provider.get_permissions = Mock(
-        return_value=4,
-    )
+    correct_permissions = permissions_gateway.for_delete_movie()
+    identity_provider.get_permissions = Mock(return_value=correct_permissions)
 
     return identity_provider
 
@@ -44,7 +36,7 @@ def test_delete_movie(
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     unit_of_work: UnitOfWork,
-    identity_provider_with_valid_permissions: IdentityProvider,
+    identity_provider_with_correct_permissions: IdentityProvider,
 ):
     movie = Movie(
         id=MovieId(uuid7()),
@@ -65,7 +57,7 @@ def test_delete_movie(
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,
-        identity_provider=identity_provider_with_valid_permissions,
+        identity_provider=identity_provider_with_correct_permissions,
     )
 
     delete_movie_handler.execute(delete_movie_command)
@@ -76,7 +68,7 @@ def test_delete_movie_should_raise_error_when_access_is_denied(
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     unit_of_work: UnitOfWork,
-    identity_provider_with_invalid_permissions: IdentityProvider,
+    identity_provider_with_incorrect_permissions: IdentityProvider,
 ):
     delete_movie_command = DeleteMovieCommand(
         movie_id=MovieId(uuid7()),
@@ -87,7 +79,7 @@ def test_delete_movie_should_raise_error_when_access_is_denied(
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,
-        identity_provider=identity_provider_with_invalid_permissions,
+        identity_provider=identity_provider_with_incorrect_permissions,
     )
 
     with pytest.raises(ApplicationError) as error:
@@ -101,7 +93,7 @@ def test_delete_movie_should_raise_error_when_movie_does_not_exist(
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     unit_of_work: UnitOfWork,
-    identity_provider_with_valid_permissions: IdentityProvider,
+    identity_provider_with_correct_permissions: IdentityProvider,
 ):
     delete_movie_command = DeleteMovieCommand(
         movie_id=MovieId(uuid7()),
@@ -112,7 +104,7 @@ def test_delete_movie_should_raise_error_when_movie_does_not_exist(
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,
-        identity_provider=identity_provider_with_valid_permissions,
+        identity_provider=identity_provider_with_correct_permissions,
     )
 
     with pytest.raises(ApplicationError) as error:

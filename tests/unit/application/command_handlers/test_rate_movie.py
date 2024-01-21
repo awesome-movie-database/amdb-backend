@@ -27,31 +27,14 @@ from amdb.application.common.constants.exceptions import (
 from amdb.application.common.exception import ApplicationError
 
 
-USER_ID = UserId(uuid7())
-
-
-@pytest.fixture(scope="module")
-def identity_provider_with_valid_permissions() -> IdentityProvider:
+@pytest.fixture
+def identity_provider_with_correct_permissions(
+    permissions_gateway: PermissionsGateway,
+) -> IdentityProvider:
     identity_provider = Mock()
-    identity_provider.get_user_id = Mock(
-        return_value=USER_ID,
-    )
-    identity_provider.get_permissions = Mock(
-        return_value=4,
-    )
 
-    return identity_provider
-
-
-@pytest.fixture(scope="module")
-def identity_provider_with_invalid_permissions() -> IdentityProvider:
-    identity_provider = Mock()
-    identity_provider.get_user_id = Mock(
-        return_value=USER_ID,
-    )
-    identity_provider.get_permissions = Mock(
-        return_value=2,
-    )
+    correct_permissions = permissions_gateway.for_rate_movie()
+    identity_provider.get_permissions = Mock(return_value=correct_permissions)
 
     return identity_provider
 
@@ -62,10 +45,10 @@ def test_rate_movie(
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     unit_of_work: UnitOfWork,
-    identity_provider_with_valid_permissions: IdentityProvider,
+    identity_provider_with_correct_permissions: IdentityProvider,
 ):
     user = User(
-        id=USER_ID,
+        id=UserId(uuid7()),
         name="John Doe",
     )
     user_gateway.save(user)
@@ -80,6 +63,10 @@ def test_rate_movie(
 
     unit_of_work.commit()
 
+    identity_provider_with_correct_permissions.get_user_id = Mock(
+        return_value=user.id,
+    )
+
     rate_movie_command = RateMovieCommand(
         movie_id=movie.id,
         rating=9,
@@ -92,7 +79,7 @@ def test_rate_movie(
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,
-        identity_provider=identity_provider_with_valid_permissions,
+        identity_provider=identity_provider_with_correct_permissions,
     )
 
     rate_movie_handler.execute(rate_movie_command)
@@ -104,7 +91,7 @@ def test_rate_movie_should_raise_error_when_access_is_denied(
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     unit_of_work: UnitOfWork,
-    identity_provider_with_invalid_permissions: IdentityProvider,
+    identity_provider_with_incorrect_permissions: IdentityProvider,
 ):
     rate_movie_command = RateMovieCommand(
         movie_id=MovieId(uuid7()),
@@ -118,7 +105,7 @@ def test_rate_movie_should_raise_error_when_access_is_denied(
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,
-        identity_provider=identity_provider_with_invalid_permissions,
+        identity_provider=identity_provider_with_incorrect_permissions,
     )
 
     with pytest.raises(ApplicationError) as error:
@@ -133,7 +120,7 @@ def test_rate_movie_should_raise_error_when_movie_does_not_exist(
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     unit_of_work: UnitOfWork,
-    identity_provider_with_valid_permissions: IdentityProvider,
+    identity_provider_with_correct_permissions: IdentityProvider,
 ):
     rate_movie_command = RateMovieCommand(
         movie_id=MovieId(uuid7()),
@@ -147,7 +134,7 @@ def test_rate_movie_should_raise_error_when_movie_does_not_exist(
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,
-        identity_provider=identity_provider_with_valid_permissions,
+        identity_provider=identity_provider_with_correct_permissions,
     )
 
     with pytest.raises(ApplicationError) as error:
@@ -162,10 +149,10 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     unit_of_work: UnitOfWork,
-    identity_provider_with_valid_permissions: IdentityProvider,
+    identity_provider_with_correct_permissions: IdentityProvider,
 ):
     user = User(
-        id=USER_ID,
+        id=UserId(uuid7()),
         name="John Doe",
     )
     user_gateway.save(user)
@@ -188,6 +175,10 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
 
     unit_of_work.commit()
 
+    identity_provider_with_correct_permissions.get_user_id = Mock(
+        return_value=user.id,
+    )
+
     rate_movie_command = RateMovieCommand(
         movie_id=movie.id,
         rating=9,
@@ -200,7 +191,7 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,
-        identity_provider=identity_provider_with_valid_permissions,
+        identity_provider=identity_provider_with_correct_permissions,
     )
 
     with pytest.raises(ApplicationError) as error:
@@ -217,10 +208,10 @@ def test_rate_movie_should_raise_error_when_rating_is_invalid(
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     unit_of_work: UnitOfWork,
-    identity_provider_with_valid_permissions: IdentityProvider,
+    identity_provider_with_correct_permissions: IdentityProvider,
 ):
     user = User(
-        id=USER_ID,
+        id=UserId(uuid7()),
         name="John Doe",
     )
     user_gateway.save(user)
@@ -235,6 +226,10 @@ def test_rate_movie_should_raise_error_when_rating_is_invalid(
 
     unit_of_work.commit()
 
+    identity_provider_with_correct_permissions.get_user_id = Mock(
+        return_value=user.id,
+    )
+
     rate_movie_command = RateMovieCommand(
         movie_id=movie.id,
         rating=rating_value,
@@ -247,7 +242,7 @@ def test_rate_movie_should_raise_error_when_rating_is_invalid(
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,
-        identity_provider=identity_provider_with_valid_permissions,
+        identity_provider=identity_provider_with_correct_permissions,
     )
 
     with pytest.raises(DomainError) as error:

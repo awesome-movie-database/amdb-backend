@@ -1,5 +1,6 @@
 import os
 from typing import Iterator
+from unittest.mock import Mock
 
 import pytest
 from sqlalchemy import Engine, create_engine
@@ -121,3 +122,11 @@ def password_manager(sqlalchemy_session: Session) -> HashingPasswordManager:
 @pytest.fixture
 def unit_of_work(sqlalchemy_session: Session) -> Session:
     return sqlalchemy_session
+
+
+@pytest.fixture(scope="package")
+def identity_provider_with_incorrect_permissions() -> Mock:
+    identity_provider = Mock()
+    identity_provider.get_permissions = Mock(return_value=0)
+
+    return identity_provider

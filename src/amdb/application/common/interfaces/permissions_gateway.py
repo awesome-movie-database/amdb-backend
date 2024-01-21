@@ -13,6 +13,9 @@ class PermissionsGateway(Protocol):
     def for_new_user(self) -> int:
         raise NotImplementedError
 
+    def for_login(self) -> int:
+        raise NotImplementedError
+
     def for_create_movie(self) -> int:
         raise NotImplementedError
 

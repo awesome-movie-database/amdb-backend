@@ -14,22 +14,14 @@ from amdb.application.common.constants.exceptions import CREATE_MOVIE_ACCESS_DEN
 from amdb.application.common.exception import ApplicationError
 
 
-@pytest.fixture(scope="module")
-def identity_provider_with_valid_permissions() -> IdentityProvider:
+@pytest.fixture
+def identity_provider_with_correct_permissions(
+    permissions_gateway: PermissionsGateway,
+) -> IdentityProvider:
     identity_provider = Mock()
-    identity_provider.get_permissions = Mock(
-        return_value=2,
-    )
 
-    return identity_provider
-
-
-@pytest.fixture(scope="module")
-def identity_provider_with_invalid_permissions() -> IdentityProvider:
-    identity_provider = Mock()
-    identity_provider.get_permissions = Mock(
-        return_value=4,
-    )
+    correct_permissions = permissions_gateway.for_create_movie()
+    identity_provider.get_permissions = Mock(return_value=correct_permissions)
 
     return identity_provider
 
@@ -38,7 +30,7 @@ def test_create_movie(
     permissions_gateway: PermissionsGateway,
     movie_gateway: MovieGateway,
     unit_of_work: UnitOfWork,
-    identity_provider_with_valid_permissions: IdentityProvider,
+    identity_provider_with_correct_permissions: IdentityProvider,
 ):
     create_movie_command = CreateMovieCommand(
         title="Matrix",
@@ -49,7 +41,7 @@ def test_create_movie(
         permissions_gateway=permissions_gateway,
         movie_gateway=movie_gateway,
         unit_of_work=unit_of_work,
-        identity_provider=identity_provider_with_valid_permissions,
+        identity_provider=identity_provider_with_correct_permissions,
     )
 
     create_movie_handler.execute(create_movie_command)
@@ -59,7 +51,7 @@ def test_create_movie_should_raise_error_when_access_is_denied(
     permissions_gateway: PermissionsGateway,
     movie_gateway: MovieGateway,
     unit_of_work: UnitOfWork,
-    identity_provider_with_invalid_permissions: IdentityProvider,
+    identity_provider_with_incorrect_permissions: IdentityProvider,
 ):
     create_movie_command = CreateMovieCommand(
         title="Matrix",
@@ -70,7 +62,7 @@ def test_create_movie_should_raise_error_when_access_is_denied(
         permissions_gateway=permissions_gateway,
         movie_gateway=movie_gateway,
         unit_of_work=unit_of_work,
-        identity_provider=identity_provider_with_invalid_permissions,
+        identity_provider=identity_provider_with_incorrect_permissions,
     )
 
     with pytest.raises(ApplicationError) as error:
