@@ -40,7 +40,7 @@ style = [
 test = [
     "pytest",
 ]
-covergae = [
+coverage = [
     "pytest-cov",
 ]
 dev = [
