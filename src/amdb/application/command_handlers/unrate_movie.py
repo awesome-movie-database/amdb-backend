@@ -1,7 +1,6 @@
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.unrate_movie import UnrateMovie
 from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
-from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.rating_gateway import RatingGateway
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
@@ -22,7 +21,6 @@ class UnrateMovieHandler:
         access_concern: AccessConcern,
         unrate_movie: UnrateMovie,
         permissions_gateway: PermissionsGateway,
-        user_gateway: UserGateway,
         movie_gateway: MovieGateway,
         rating_gateway: RatingGateway,
         unit_of_work: UnitOfWork,
@@ -31,7 +29,6 @@ class UnrateMovieHandler:
         self._access_concern = access_concern
         self._unrate_movie = unrate_movie
         self._permissions_gateway = permissions_gateway
-        self._user_gateway = user_gateway
         self._movie_gateway = movie_gateway
         self._rating_gateway = rating_gateway
         self._unit_of_work = unit_of_work

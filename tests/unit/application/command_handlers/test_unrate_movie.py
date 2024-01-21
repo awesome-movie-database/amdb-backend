@@ -80,7 +80,6 @@ def test_unrate_movie(
         access_concern=AccessConcern(),
         unrate_movie=UnrateMovie(),
         permissions_gateway=permissions_gateway,
-        user_gateway=user_gateway,
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,
@@ -92,7 +91,6 @@ def test_unrate_movie(
 
 def test_unrate_movie_should_raise_error_when_access_is_denied(
     permissions_gateway: PermissionsGateway,
-    user_gateway: UserGateway,
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     unit_of_work: UnitOfWork,
@@ -105,7 +103,6 @@ def test_unrate_movie_should_raise_error_when_access_is_denied(
         access_concern=AccessConcern(),
         unrate_movie=UnrateMovie(),
         permissions_gateway=permissions_gateway,
-        user_gateway=user_gateway,
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,
@@ -120,7 +117,6 @@ def test_unrate_movie_should_raise_error_when_access_is_denied(
 
 def test_unrate_movie_should_raise_error_when_movie_does_not_exist(
     permissions_gateway: PermissionsGateway,
-    user_gateway: UserGateway,
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     unit_of_work: UnitOfWork,
@@ -133,7 +129,6 @@ def test_unrate_movie_should_raise_error_when_movie_does_not_exist(
         access_concern=AccessConcern(),
         unrate_movie=UnrateMovie(),
         permissions_gateway=permissions_gateway,
-        user_gateway=user_gateway,
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,
@@ -181,7 +176,6 @@ def test_unrate_movie_should_raise_error_when_movie_is_not_rated(
         access_concern=AccessConcern(),
         unrate_movie=UnrateMovie(),
         permissions_gateway=permissions_gateway,
-        user_gateway=user_gateway,
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         unit_of_work=unit_of_work,

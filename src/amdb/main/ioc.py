@@ -150,7 +150,6 @@ class IoC(HandlerFactory):
                 access_concern=AccessConcern(),
                 unrate_movie=UnrateMovie(),
                 permissions_gateway=self._permissions_gateway,
-                user_gateway=gateway_factory.user(),
                 movie_gateway=gateway_factory.movie(),
                 rating_gateway=gateway_factory.rating(),
                 unit_of_work=gateway_factory.unit_of_work(),
