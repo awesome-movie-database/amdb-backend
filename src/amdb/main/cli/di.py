@@ -13,6 +13,10 @@ from amdb.main.config import GenericConfig
 from amdb.main.ioc import IoC
 
 
+IDENTITY_PROVIDER_USER_ID = UserId(UUID("00000000-0000-0000-0000-000000000000"))
+IDENTITY_PROVIDER_PERMISSIONS = 2
+
+
 class DependenciesDict(TypedDict):
     ioc: IoC
     identity_provider: RawIdentityProvider
@@ -32,8 +36,8 @@ def create_dependencies_dict(generic_config: GenericConfig) -> DependenciesDict:
         hasher=Hasher(),
     )
     identity_provider = RawIdentityProvider(
-        user_id=UserId(UUID("00000000-0000-0000-0000-000000000000")),
-        permissions=2,
+        user_id=IDENTITY_PROVIDER_USER_ID,
+        permissions=IDENTITY_PROVIDER_PERMISSIONS,
     )
 
     return DependenciesDict(ioc=ioc, identity_provider=identity_provider)
