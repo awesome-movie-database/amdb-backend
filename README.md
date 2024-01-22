@@ -18,3 +18,47 @@
         <img src="https://codecov.io/github/Awesome-Movie-Database/amdb-backend/graph/badge.svg?token=7JK9QG9N0X"/>
     </a>
 </p>
+
+## How to run:
+
+### Using docker-compose:
+
+1. Provide `.env` file with variables from `.env.template`
+
+2. Run docker-compose
+
+```sh
+docker-compose --env-file ./.env up web_api
+```
+
+### Manually:
+
+1. Install
+
+```sh
+pip install -e ".[web_api,cli]"
+```
+
+2. Provide env variables from `.env.template`
+
+3. Run server
+
+```sh
+amdb-web_api
+```
+
+4. Run cli
+
+```sh
+amdb-cli
+```
+
+## How to run migrations:
+
+1. Provide env variables for postgres from `.env.template`
+
+2. Run migrations:
+
+```
+amdb-cli migration alembic upgrade head
+```
