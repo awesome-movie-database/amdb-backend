@@ -28,5 +28,5 @@ def test_migrations_stairway(alembic_config: alembic.config.Config):
         alembic.command.upgrade(alembic_config, revision.revision)
 
         # We need -1 for downgrading first migration (its down_revision is None)
-        alembic.command.downgrade(alembic_config, revision.down_revision or "-1")
+        alembic.command.downgrade(alembic_config, revision.down_revision or "-1")  # type: ignore
         alembic.command.upgrade(alembic_config, revision.revision)

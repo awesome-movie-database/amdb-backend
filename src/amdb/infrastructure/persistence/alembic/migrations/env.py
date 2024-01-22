@@ -41,7 +41,10 @@ def get_env(key: str) -> str:
 
 
 def get_sqlalchemy_url() -> str:
-    if not config.get_main_option("sqlalchemy.url"):
+    sqlalchemy_url = config.get_main_option("sqlalchemy.url")
+    if sqlalchemy_url is not None:
+        return sqlalchemy_url
+    else:
         host = get_env(POSTGRES_HOST_ENV)
         port = get_env(POSTGRES_PORT_ENV)
         name = get_env(POSTGRES_NAME_ENV)
@@ -49,8 +52,6 @@ def get_sqlalchemy_url() -> str:
         password = get_env(POSTGRES_PASSWORD_ENV)
 
         return f"postgresql://{user}:{password}@{host}:{port}/{name}"
-    else:
-        return config.get_main_option("sqlalchemy.url")
 
 
 def run_migrations_offline() -> None:

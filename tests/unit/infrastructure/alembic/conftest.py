@@ -1,3 +1,5 @@
+from typing import Iterator
+
 import pytest
 import alembic.config
 import psycopg2
@@ -13,7 +15,7 @@ def alembic_config(postgres_url: str) -> alembic.config.Config:
 
 
 @pytest.fixture(scope="package", autouse=True)
-def clear_database(postgres_url: str) -> None:
+def clear_database(postgres_url: str) -> Iterator[None]:
     connection = psycopg2.connect(postgres_url)
     cursor = connection.cursor()
 
