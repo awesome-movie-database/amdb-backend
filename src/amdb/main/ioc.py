@@ -15,6 +15,7 @@ from amdb.application.command_handlers.delete_movie import DeleteMovieHandler
 from amdb.application.command_handlers.rate_movie import RateMovieHandler
 from amdb.application.command_handlers.unrate_movie import UnrateMovieHandler
 from amdb.application.query_handlers.login import LoginHandler
+from amdb.application.query_handlers.get_movies import GetMoviesHandler
 from amdb.application.query_handlers.get_movie import GetMovieHandler
 from amdb.application.query_handlers.get_rating import GetRatingHandler
 from amdb.infrastructure.persistence.sqlalchemy.gateway_factory import (
@@ -64,6 +65,19 @@ class IoC(HandlerFactory):
                 user_gateway=gateway_factory.user(),
                 permissions_gateway=self._permissions_gateway,
                 password_manager=hashing_password_manager,
+            )
+
+    @contextmanager
+    def get_movies(
+        self,
+        identity_provider: IdentityProvider,
+    ) -> Iterator[GetMoviesHandler]:
+        with build_sqlalchemy_gateway_factory(self._sessionmaker) as gateway_factory:
+            yield GetMoviesHandler(
+                access_concern=AccessConcern(),
+                permissions_gateway=self._permissions_gateway,
+                movie_gateway=gateway_factory.movie(),
+                identity_provider=identity_provider,
             )
 
     @contextmanager

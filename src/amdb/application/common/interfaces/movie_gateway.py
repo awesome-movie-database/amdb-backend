@@ -15,3 +15,6 @@ class MovieGateway(Protocol):
 
     def delete(self, movie: Movie) -> None:
         raise NotImplementedError
+
+    def list(self, limit: int, offset: int) -> list[Movie]:
+        raise NotImplementedError
