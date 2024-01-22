@@ -62,7 +62,6 @@ class UnrateMovieHandler:
             rating=rating,
         )
         self._rating_gateway.delete(rating)
-
         self._movie_gateway.update(movie)
 
         self._unit_of_work.commit()

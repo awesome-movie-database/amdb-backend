@@ -74,5 +74,6 @@ class RateMovieHandler:
             current_timestamp=datetime.now(timezone.utc),
         )
         self._rating_gateway.save(new_rating)
+        self._movie_gateway.update(movie)
 
         self._unit_of_work.commit()
