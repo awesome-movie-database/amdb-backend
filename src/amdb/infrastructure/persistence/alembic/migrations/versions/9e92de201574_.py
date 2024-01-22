@@ -55,7 +55,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.drop_table("movies")
-    op.drop_table("users")
     op.drop_table("user_password_hashes")
     op.drop_table("ratings")
+    op.drop_table("movies")
+    op.drop_table("users")

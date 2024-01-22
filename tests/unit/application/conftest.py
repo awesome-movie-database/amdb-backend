@@ -1,4 +1,3 @@
-import os
 from typing import Iterator
 from unittest.mock import Mock
 
@@ -7,7 +6,6 @@ from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session
 from redis.client import Redis
 
-from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
 from amdb.infrastructure.persistence.sqlalchemy.models.base import Model
 from amdb.infrastructure.persistence.sqlalchemy.gateways.user import SQLAlchemyUserGateway
 from amdb.infrastructure.persistence.sqlalchemy.gateways.movie import SQLAlchemyMovieGateway
@@ -26,45 +24,9 @@ from amdb.infrastructure.security.hasher import Hasher
 from amdb.infrastructure.password_manager.password_manager import HashingPasswordManager
 
 
-TEST_POSTGRES_HOST_ENV = "TEST_POSTGRES_HOST"
-TEST_POSTGRES_PORT_ENV = "TEST_POSTGRES_PORT"
-TEST_POSTGRES_NAME_ENV = "TEST_POSTGRES_DB"
-TEST_POSTGRES_USER_ENV = "TEST_POSTGRES_USER"
-TEST_POSTGRES_PASSWORD_ENV = "TEST_POSTGRES_PASSWORD"
-
-TEST_REDIS_HOST_ENV = "TEST_REDIS_HOST"
-TEST_REDIS_PORT_ENV = "TEST_REDIS_PORT"
-TEST_REDIS_DB_ENV = "TEST_REDIS_DB"
-
-
-def _get_env(key: str) -> str:
-    value = os.getenv(key)
-    if value is None:
-        message = f"Env variable {key} is not set"
-        raise ValueError(message)
-    return value
-
-
 @pytest.fixture(scope="package")
-def sqlalchemy_engine() -> Engine:
-    postgres_config = PostgresConfig(
-        host=_get_env(TEST_POSTGRES_HOST_ENV),
-        port=_get_env(TEST_POSTGRES_PORT_ENV),
-        name=_get_env(TEST_POSTGRES_NAME_ENV),
-        user=_get_env(TEST_POSTGRES_USER_ENV),
-        password=_get_env(TEST_POSTGRES_PASSWORD_ENV),
-    )
-    return create_engine(url=postgres_config.dsn)
-
-
-@pytest.fixture(scope="package")
-def redis() -> Redis:
-    redis = Redis(
-        host=_get_env(TEST_REDIS_HOST_ENV),
-        port=int(_get_env(TEST_REDIS_PORT_ENV)),
-        db=int(_get_env(TEST_REDIS_DB_ENV)),
-    )
-    return redis
+def sqlalchemy_engine(postgres_url: str) -> Engine:
+    return create_engine(url=postgres_url)
 
 
 @pytest.fixture(autouse=True)
@@ -122,7 +84,7 @@ def unit_of_work(sqlalchemy_session: Session) -> Session:
     return sqlalchemy_session
 
 
-@pytest.fixture(scope="package")
+@pytest.fixture(scope="session")
 def identity_provider_with_incorrect_permissions() -> Mock:
     identity_provider = Mock()
     identity_provider.get_permissions = Mock(return_value=0)
