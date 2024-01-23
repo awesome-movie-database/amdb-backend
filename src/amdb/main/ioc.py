@@ -5,11 +5,13 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.create_user import CreateUser
+from amdb.domain.services.create_person import CreatePerson
 from amdb.domain.services.create_movie import CreateMovie
 from amdb.domain.services.rate_movie import RateMovie
 from amdb.domain.services.unrate_movie import UnrateMovie
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.command_handlers.register_user import RegisterUserHandler
+from amdb.application.command_handlers.create_person import CreatePersonHandler
 from amdb.application.command_handlers.create_movie import CreateMovieHandler
 from amdb.application.command_handlers.delete_movie import DeleteMovieHandler
 from amdb.application.command_handlers.rate_movie import RateMovieHandler
@@ -65,6 +67,21 @@ class IoC(HandlerFactory):
                 user_gateway=gateway_factory.user(),
                 permissions_gateway=self._permissions_gateway,
                 password_manager=hashing_password_manager,
+            )
+
+    @contextmanager
+    def create_person(
+        self,
+        identity_provider: IdentityProvider,
+    ) -> Iterator[CreatePersonHandler]:
+        with build_sqlalchemy_gateway_factory(self._sessionmaker) as gateway_factory:
+            yield CreatePersonHandler(
+                access_concern=AccessConcern(),
+                create_person=CreatePerson(),
+                permissions_gateway=self._permissions_gateway,
+                person_gateway=gateway_factory.person(),
+                unit_of_work=gateway_factory.unit_of_work(),
+                identity_provider=identity_provider,
             )
 
     @contextmanager

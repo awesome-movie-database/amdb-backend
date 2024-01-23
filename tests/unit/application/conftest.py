@@ -8,6 +8,7 @@ from redis.client import Redis
 
 from amdb.infrastructure.persistence.sqlalchemy.models.base import Model
 from amdb.infrastructure.persistence.sqlalchemy.gateways.user import SQLAlchemyUserGateway
+from amdb.infrastructure.persistence.sqlalchemy.gateways.person import SQLAlchemyPersonGateway
 from amdb.infrastructure.persistence.sqlalchemy.gateways.movie import SQLAlchemyMovieGateway
 from amdb.infrastructure.persistence.sqlalchemy.gateways.rating import SQLAlchemyRatingGateway
 from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password_hash import (
@@ -15,6 +16,7 @@ from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password_hash impo
 )
 from amdb.infrastructure.persistence.redis.gateways.permissions import RedisPermissionsGateway
 from amdb.infrastructure.persistence.sqlalchemy.mappers.user import UserMapper
+from amdb.infrastructure.persistence.sqlalchemy.mappers.person import PersonMapper
 from amdb.infrastructure.persistence.sqlalchemy.mappers.movie import MovieMapper
 from amdb.infrastructure.persistence.sqlalchemy.mappers.rating import RatingMapper
 from amdb.infrastructure.persistence.sqlalchemy.mappers.user_password_hash import (
@@ -55,6 +57,11 @@ def permissions_gateway(redis: Redis) -> RedisPermissionsGateway:
 @pytest.fixture
 def user_gateway(sqlalchemy_session: Session) -> SQLAlchemyUserGateway:
     return SQLAlchemyUserGateway(sqlalchemy_session, UserMapper())
+
+
+@pytest.fixture
+def person_gateway(sqlalchemy_session: Session) -> SQLAlchemyPersonGateway:
+    return SQLAlchemyPersonGateway(sqlalchemy_session, PersonMapper())
 
 
 @pytest.fixture

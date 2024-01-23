@@ -3,6 +3,7 @@ from typing import ContextManager
 
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.command_handlers.register_user import RegisterUserHandler
+from amdb.application.command_handlers.create_person import CreatePersonHandler
 from amdb.application.command_handlers.create_movie import CreateMovieHandler
 from amdb.application.command_handlers.delete_movie import DeleteMovieHandler
 from amdb.application.command_handlers.rate_movie import RateMovieHandler
@@ -20,6 +21,13 @@ class HandlerFactory(ABC):
 
     @abstractmethod
     def login(self) -> ContextManager[LoginHandler]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def create_person(
+        self,
+        identity_provider: IdentityProvider,
+    ) -> ContextManager[CreatePersonHandler]:
         raise NotImplementedError
 
     @abstractmethod
