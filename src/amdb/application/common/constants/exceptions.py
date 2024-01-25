@@ -1,5 +1,4 @@
 LOGIN_ACCESS_DENIED = "Access to login in denied"
-CREATE_PERSON_ACCESS_DENIED = "Access to person creation is denied"
 GET_MOVIES_ACCESS_DENIED = "Access to getting movies is denied"
 GET_MOVIE_ACCESS_DENIED = "Access to getting movie is denied"
 CREATE_MOVIE_ACCESS_DENIED = "Access to movie creation is denied"

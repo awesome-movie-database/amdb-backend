@@ -16,9 +16,6 @@ class PermissionsGateway(Protocol):
     def for_login(self) -> int:
         raise NotImplementedError
 
-    def for_create_person(self) -> int:
-        raise NotImplementedError
-
     def for_get_movies(self) -> int:
         raise NotImplementedError
 
