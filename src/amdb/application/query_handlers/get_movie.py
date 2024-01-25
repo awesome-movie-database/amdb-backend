@@ -40,6 +40,7 @@ class GetMovieHandler:
 
         get_movie_result = GetMovieResult(
             title=movie.title,
+            release_date=movie.release_date,
             rating=movie.rating,
             rating_count=movie.rating_count,
         )

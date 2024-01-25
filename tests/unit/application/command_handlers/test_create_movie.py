@@ -1,4 +1,5 @@
 from unittest.mock import Mock
+from datetime import date
 
 import pytest
 
@@ -34,6 +35,7 @@ def test_create_movie(
 ):
     create_movie_command = CreateMovieCommand(
         title="Matrix",
+        release_date=date(1999, 3, 31),
     )
     create_movie_handler = CreateMovieHandler(
         access_concern=AccessConcern(),
@@ -55,6 +57,7 @@ def test_create_movie_should_raise_error_when_access_is_denied(
 ):
     create_movie_command = CreateMovieCommand(
         title="Matrix",
+        release_date=date(1999, 3, 31),
     )
     create_movie_handler = CreateMovieHandler(
         access_concern=AccessConcern(),

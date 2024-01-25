@@ -1,5 +1,5 @@
 from unittest.mock import Mock
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 import pytest
 from uuid_extensions import uuid7
@@ -53,6 +53,7 @@ def test_get_rating(
     movie = Movie(
         id=MovieId(uuid7()),
         title="Matrix",
+        release_date=date(1999, 3, 31),
         rating=10,
         rating_count=1,
     )
@@ -155,6 +156,7 @@ def test_get_rating_should_raise_error_when_movie_is_not_rated(
     movie = Movie(
         id=MovieId(uuid7()),
         title="Matrix",
+        release_date=date(1999, 3, 31),
         rating=0,
         rating_count=0,
     )

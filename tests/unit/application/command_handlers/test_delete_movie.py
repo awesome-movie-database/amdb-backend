@@ -1,4 +1,5 @@
 from unittest.mock import Mock
+from datetime import date
 
 import pytest
 from uuid_extensions import uuid7
@@ -41,6 +42,7 @@ def test_delete_movie(
     movie = Movie(
         id=MovieId(uuid7()),
         title="Matrix",
+        release_date=date(1999, 3, 31),
         rating=0,
         rating_count=0,
     )

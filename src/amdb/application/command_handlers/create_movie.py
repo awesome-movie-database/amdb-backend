@@ -43,6 +43,7 @@ class CreateMovieHandler:
         movie = self._create_movie(
             id=MovieId(uuid7()),
             title=command.title,
+            release_date=command.release_date,
         )
         self._movie_gateway.save(movie)
 

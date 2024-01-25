@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import date
 
 from amdb.domain.entities.movie import MovieId
 
@@ -11,5 +12,6 @@ class GetMovieQuery:
 @dataclass(frozen=True, slots=True)
 class GetMovieResult:
     title: str
+    release_date: date
     rating: float
     rating_count: int

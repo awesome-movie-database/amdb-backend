@@ -1,3 +1,4 @@
+from datetime import date
 from uuid import UUID
 
 from sqlalchemy.orm import Mapped, mapped_column
@@ -12,5 +13,6 @@ class Movie(Model):
         primary_key=True,
     )
     title: Mapped[str]
+    release_date: Mapped[date]
     rating: Mapped[float]
     rating_count: Mapped[int]

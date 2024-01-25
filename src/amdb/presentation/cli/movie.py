@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated
 from uuid import UUID
 
@@ -24,7 +25,9 @@ def list(
     limit: Annotated[
         int,
         typer.Option(
-            help="Limit of movies that should be [blue]listed[/blue].",
+            "--limi",
+            "-l",
+            help="Number of movies that should be [blue]listed[/blue].",
             max=200,
             min=1,
         ),
@@ -32,6 +35,8 @@ def list(
     offset: Annotated[
         int,
         typer.Option(
+            "--offset",
+            "-o",
             help="Number of movies that should be offsetted.",
             min=0,
         ),
@@ -53,6 +58,7 @@ def list(
     movies_table = rich.table.Table(
         "id",
         "title",
+        "release_date",
         "rating",
         "rating_count",
         box=rich.box.ROUNDED,
@@ -61,6 +67,7 @@ def list(
         movies_table.add_row(
             str(movie.id),
             movie.title,
+            str(movie.release_date),
             str(movie.rating),
             str(movie.rating_count),
         )
@@ -76,12 +83,7 @@ def list(
 @movie_commands.command()
 def get(
     ctx: typer.Context,
-    movie_id: Annotated[
-        UUID,
-        typer.Argument(
-            help="Movie id that will be used to [blue]get[/blue] movie.",
-        ),
-    ],
+    movie_id: Annotated[UUID, typer.Argument(help="Movie id.")],
 ) -> None:
     """
     [blue]Get[/blue] movie.
@@ -98,6 +100,7 @@ def get(
     movies_table = rich.table.Table(
         "id",
         "title",
+        "release_date",
         "rating",
         "rating_count",
         box=rich.box.ROUNDED,
@@ -105,6 +108,7 @@ def get(
     movies_table.add_row(
         str(movie_id),
         get_movie_result.title,
+        str(get_movie_result.release_date),
         str(get_movie_result.rating),
         str(get_movie_result.rating_count),
     )
@@ -115,18 +119,12 @@ def get(
 @movie_commands.command()
 def create(
     ctx: typer.Context,
-    title: Annotated[
-        str,
-        typer.Argument(
-            help="Title that will be used to [green]create[/green] movie.",
-        ),
+    title: Annotated[str, typer.Option("--title", "-t", help="Movie title.")],
+    release_date: Annotated[
+        datetime,
+        typer.Option("--release_date", "-rd", help="Movie release date."),
     ],
-    silently: Annotated[
-        bool,
-        typer.Option(
-            help="[green]Create[/green] movie without printing any information.",
-        ),
-    ] = False,
+    silently: Annotated[bool, typer.Option(help="Do not print movie id.")] = False,
 ) -> None:
     """
     [green]Create[/green] movie.
@@ -139,6 +137,7 @@ def create(
     with ioc.create_movie(identity_provider) as create_movie_handler:
         create_movie_command = CreateMovieCommand(
             title=title,
+            release_date=release_date.date(),
         )
         movie_id = create_movie_handler.execute(create_movie_command)
 
@@ -149,23 +148,14 @@ def create(
 @movie_commands.command()
 def delete(
     ctx: typer.Context,
-    movie_id: Annotated[
-        UUID,
-        typer.Argument(
-            help="Movie id that will be used to [red]delete[/red] movie.",
-        ),
-    ],
+    movie_id: Annotated[UUID, typer.Argument(help="Movie id.")],
     force: Annotated[
         bool,
-        typer.Option(
-            help="[red]Delete[/red] movie without confirmation.",
-        ),
+        typer.Option("--force", "-f", help="Do not ask for confirmation."),
     ] = False,
     silently: Annotated[
         bool,
-        typer.Option(
-            help="[red]Delete[/red] movie without printing any information.",
-        ),
+        typer.Option("--silently", "-s", help="Do not print movie id"),
     ] = False,
 ) -> None:
     """

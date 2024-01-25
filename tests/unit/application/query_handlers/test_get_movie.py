@@ -1,4 +1,5 @@
 from unittest.mock import Mock
+from datetime import date
 
 import pytest
 from uuid_extensions import uuid7
@@ -39,6 +40,7 @@ def test_get_movie(
     movie = Movie(
         id=MovieId(uuid7()),
         title="Matrix",
+        release_date=date(1999, 3, 31),
         rating=0,
         rating_count=0,
     )
@@ -59,6 +61,7 @@ def test_get_movie(
     get_movie_result = get_movie_handler.execute(get_movie_query)
     expected_get_movie_result = GetMovieResult(
         title=movie.title,
+        release_date=movie.release_date,
         rating=movie.rating,
         rating_count=movie.rating_count,
     )

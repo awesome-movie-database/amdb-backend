@@ -1,3 +1,5 @@
+from datetime import date
+
 from amdb.domain.entities.movie import MovieId, Movie
 
 
@@ -7,10 +9,12 @@ class CreateMovie:
         *,
         id: MovieId,
         title: str,
+        release_date: date,
     ) -> Movie:
         return Movie(
             id=id,
             title=title,
+            release_date=release_date,
             rating=0,
             rating_count=0,
         )

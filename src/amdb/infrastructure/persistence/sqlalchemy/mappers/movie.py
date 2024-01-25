@@ -7,6 +7,7 @@ class MovieMapper:
         return MovieModel(
             id=movie.id,
             title=movie.title,
+            release_date=movie.release_date,
             rating=movie.rating,
             rating_count=movie.rating_count,
         )
@@ -15,6 +16,7 @@ class MovieMapper:
         return MovieEntity(
             id=MovieId(movie.id),
             title=movie.title,
+            release_date=movie.release_date,
             rating=movie.rating,
             rating_count=movie.rating_count,
         )
