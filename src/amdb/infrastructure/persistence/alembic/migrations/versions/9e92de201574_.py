@@ -1,4 +1,5 @@
-"""Initial
+"""
+Initial
 
 Revision ID: 9e92de201574
 Revises:

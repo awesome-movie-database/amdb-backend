@@ -7,10 +7,12 @@ from .gateways.user import SQLAlchemyUserGateway
 from .gateways.movie import SQLAlchemyMovieGateway
 from .gateways.rating import SQLAlchemyRatingGateway
 from .gateways.user_password_hash import SQLAlchemyUserPasswordHashGateway
+from .gateways.review import SQLAlchemyReviewGateway
 from .mappers.user import UserMapper
 from .mappers.movie import MovieMapper
 from .mappers.rating import RatingMapper
 from .mappers.user_password_hash import UserPasswordHashMapper
+from .mappers.review import ReviewMapper
 
 
 @contextmanager
@@ -37,6 +39,9 @@ class SQLAlchemyGatewayFactory:
 
     def user_password_hash(self) -> SQLAlchemyUserPasswordHashGateway:
         return SQLAlchemyUserPasswordHashGateway(self._session, UserPasswordHashMapper())
+
+    def review(self) -> SQLAlchemyReviewGateway:
+        return SQLAlchemyReviewGateway(self._session, ReviewMapper())
 
     def unit_of_work(self) -> Session:
         return self._session

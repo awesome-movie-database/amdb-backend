@@ -47,3 +47,6 @@ class RedisPermissionsGateway:
 
     def for_unrate_movie(self) -> int:
         return 4
+
+    def for_review_movie(self) -> int:
+        return 4

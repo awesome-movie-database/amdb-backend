@@ -8,12 +8,14 @@ from amdb.domain.services.create_user import CreateUser
 from amdb.domain.services.create_movie import CreateMovie
 from amdb.domain.services.rate_movie import RateMovie
 from amdb.domain.services.unrate_movie import UnrateMovie
+from amdb.domain.services.review_movie import ReviewMovie
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.command_handlers.register_user import RegisterUserHandler
 from amdb.application.command_handlers.create_movie import CreateMovieHandler
 from amdb.application.command_handlers.delete_movie import DeleteMovieHandler
 from amdb.application.command_handlers.rate_movie import RateMovieHandler
 from amdb.application.command_handlers.unrate_movie import UnrateMovieHandler
+from amdb.application.command_handlers.review_movie import ReviewMovieHandler
 from amdb.application.query_handlers.login import LoginHandler
 from amdb.application.query_handlers.get_movies import GetMoviesHandler
 from amdb.application.query_handlers.get_movie import GetMovieHandler
@@ -166,6 +168,23 @@ class IoC(HandlerFactory):
                 permissions_gateway=self._permissions_gateway,
                 movie_gateway=gateway_factory.movie(),
                 rating_gateway=gateway_factory.rating(),
+                unit_of_work=gateway_factory.unit_of_work(),
+                identity_provider=identity_provider,
+            )
+
+    @contextmanager
+    def review_movie(
+        self,
+        identity_provider: IdentityProvider,
+    ) -> Iterator[ReviewMovieHandler]:
+        with build_sqlalchemy_gateway_factory(self._sessionmaker) as gateway_factory:
+            yield ReviewMovieHandler(
+                access_concern=AccessConcern(),
+                review_movie=ReviewMovie(),
+                permissions_gateway=self._permissions_gateway,
+                user_gateway=gateway_factory.user(),
+                movie_gateway=gateway_factory.movie(),
+                review_gateway=gateway_factory.review(),
                 unit_of_work=gateway_factory.unit_of_work(),
                 identity_provider=identity_provider,
             )

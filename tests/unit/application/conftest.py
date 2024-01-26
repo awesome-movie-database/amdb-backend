@@ -13,6 +13,7 @@ from amdb.infrastructure.persistence.sqlalchemy.gateways.rating import SQLAlchem
 from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password_hash import (
     SQLAlchemyUserPasswordHashGateway,
 )
+from amdb.infrastructure.persistence.sqlalchemy.gateways.review import SQLAlchemyReviewGateway
 from amdb.infrastructure.persistence.redis.gateways.permissions import RedisPermissionsGateway
 from amdb.infrastructure.persistence.sqlalchemy.mappers.user import UserMapper
 from amdb.infrastructure.persistence.sqlalchemy.mappers.movie import MovieMapper
@@ -20,6 +21,7 @@ from amdb.infrastructure.persistence.sqlalchemy.mappers.rating import RatingMapp
 from amdb.infrastructure.persistence.sqlalchemy.mappers.user_password_hash import (
     UserPasswordHashMapper,
 )
+from amdb.infrastructure.persistence.sqlalchemy.mappers.review import ReviewMapper
 from amdb.infrastructure.security.hasher import Hasher
 from amdb.infrastructure.password_manager.password_manager import HashingPasswordManager
 
@@ -65,6 +67,11 @@ def movie_gateway(sqlalchemy_session: Session) -> SQLAlchemyMovieGateway:
 @pytest.fixture
 def rating_gateway(sqlalchemy_session: Session) -> SQLAlchemyRatingGateway:
     return SQLAlchemyRatingGateway(sqlalchemy_session, RatingMapper())
+
+
+@pytest.fixture
+def review_gateway(sqlalchemy_session: Session) -> SQLAlchemyReviewGateway:
+    return SQLAlchemyReviewGateway(sqlalchemy_session, ReviewMapper())
 
 
 @pytest.fixture

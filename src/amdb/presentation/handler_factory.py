@@ -7,6 +7,7 @@ from amdb.application.command_handlers.create_movie import CreateMovieHandler
 from amdb.application.command_handlers.delete_movie import DeleteMovieHandler
 from amdb.application.command_handlers.rate_movie import RateMovieHandler
 from amdb.application.command_handlers.unrate_movie import UnrateMovieHandler
+from amdb.application.command_handlers.review_movie import ReviewMovieHandler
 from amdb.application.query_handlers.login import LoginHandler
 from amdb.application.query_handlers.get_movies import GetMoviesHandler
 from amdb.application.query_handlers.get_movie import GetMovieHandler
@@ -69,4 +70,11 @@ class HandlerFactory(ABC):
         self,
         identity_provider: IdentityProvider,
     ) -> ContextManager[UnrateMovieHandler]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def review_movie(
+        self,
+        identity_provider: IdentityProvider,
+    ) -> ContextManager[ReviewMovieHandler]:
         raise NotImplementedError
