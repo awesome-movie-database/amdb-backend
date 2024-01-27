@@ -24,6 +24,14 @@ async def register(
     data: RegisterSchema,
     response: Response,
 ) -> UserId:
+    """
+    ## Returns: \n
+        - user id \n
+        - session id in cookies \n
+
+    ## Errors: \n
+        - When user name already exists \n
+    """
     with ioc.register_user() as register_user_handler:
         register_user_command = RegisterUserCommand(
             name=data.name,

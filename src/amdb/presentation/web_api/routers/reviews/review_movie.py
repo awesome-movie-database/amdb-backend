@@ -23,6 +23,12 @@ async def review_movie(
     movie_id: MovieId,
     data: ReviewMovieSchema,
 ) -> ReviewId:
+    """
+    ## Errors: \n
+        - When access is denied \n
+        - When movie doesn't exist \n
+        - When movie is already reviewd \n
+    """
     with ioc.review_movie(identity_provider) as review_movie_handler:
         review_movie_command = ReviewMovieCommand(
             movie_id=movie_id,

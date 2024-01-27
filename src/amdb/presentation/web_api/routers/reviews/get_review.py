@@ -14,6 +14,11 @@ async def get_review(
     identity_provider: Annotated[IdentityProvider, Depends(get_identity_provider)],
     review_id: ReviewId,
 ) -> GetReviewResult:
+    """
+    ## Errors: \n
+        - When access is denied \n
+        - When review doesn't exist \n
+    """
     with ioc.get_review(identity_provider) as get_review_handler:
         get_review_query = GetReviewQuery(
             review_id=review_id,

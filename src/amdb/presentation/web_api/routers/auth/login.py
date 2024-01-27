@@ -24,6 +24,16 @@ async def login(
     data: LoginSchema,
     response: Response,
 ) -> UserId:
+    """
+    ## Returns: \n
+        - user id \n
+        - session id in cookies \n
+
+    ## Errors: \n
+        - When access is denied \n
+        - When user name doesn't exist \n
+        - When password is incorrect \n
+    """
     with ioc.login() as login_handler:
         login_query = LoginQuery(
             name=data.name,

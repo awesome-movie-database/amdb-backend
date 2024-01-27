@@ -20,6 +20,12 @@ async def rate_movie(
     movie_id: MovieId,
     data: RateMovieSchema,
 ) -> None:
+    """
+    ## Errors: \n
+        - When access is denied \n
+        - When movie doesn't exist \n
+        - When movie is already rated \n
+    """
     with ioc.rate_movie(identity_provider) as rate_movie_handler:
         rate_movie_command = RateMovieCommand(
             movie_id=movie_id,

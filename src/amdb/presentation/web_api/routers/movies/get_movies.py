@@ -14,6 +14,10 @@ async def get_movies(
     limit: int = 100,
     offset: int = 0,
 ) -> GetMoviesResult:
+    """
+    ## Errors: \n
+        - When access is denied \n
+    """
     with ioc.get_movies(identity_provider) as get_movies_handler:
         get_movies_query = GetMoviesQuery(
             limit=limit,

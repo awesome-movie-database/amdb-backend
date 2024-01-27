@@ -9,11 +9,17 @@ from amdb.presentation.handler_factory import HandlerFactory
 from amdb.presentation.web_api.dependencies.identity_provider import get_identity_provider
 
 
-async def get_rating(
+async def get_movie_rating(
     ioc: Annotated[HandlerFactory, Depends()],
     identity_provider: Annotated[IdentityProvider, Depends(get_identity_provider)],
     movie_id: MovieId,
 ) -> GetRatingResult:
+    """
+    ## Errors: \n
+        - When access is denied \n
+        - When movie doesn't exist \n
+        - When rating doesn't exist \n
+    """
     with ioc.get_rating(identity_provider) as get_rating_handler:
         get_rating_query = GetRatingQuery(
             movie_id=movie_id,

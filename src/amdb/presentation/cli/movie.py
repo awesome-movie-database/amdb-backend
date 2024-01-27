@@ -25,7 +25,7 @@ def list(
     limit: Annotated[
         int,
         typer.Option(
-            "--limi",
+            "--limit",
             "-l",
             help="Number of movies that should be [blue]listed[/blue].",
             max=200,
@@ -124,7 +124,10 @@ def create(
         datetime,
         typer.Option("--release_date", "-rd", help="Movie release date."),
     ],
-    silently: Annotated[bool, typer.Option(help="Do not print movie id.")] = False,
+    silently: Annotated[
+        bool,
+        typer.Option("--silently", "-s", help="Do not print movie id."),
+    ] = False,
 ) -> None:
     """
     [green]Create[/green] movie.
@@ -159,7 +162,8 @@ def delete(
     ] = False,
 ) -> None:
     """
-    [red]Delete[/red] movie.
+    [red]Delete[/red] movie. Also [red]deletes[/red] ratings and
+    reviews related to movie.
 
     If --force is not used, will ask for confirmation.
     If --silently is not used, will print movie id.

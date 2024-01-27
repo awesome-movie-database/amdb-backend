@@ -14,6 +14,12 @@ async def unrate_movie(
     identity_provider: Annotated[IdentityProvider, Depends(get_identity_provider)],
     movie_id: MovieId,
 ) -> None:
+    """
+    ## Errors: \n
+        - When access is denied \n
+        - When movie doesn't exist \n
+        - When movie is already rated \n
+    """
     with ioc.unrate_movie(identity_provider) as unrate_movie_handler:
         unrate_movie_command = UnrateMovieCommand(
             movie_id=movie_id,

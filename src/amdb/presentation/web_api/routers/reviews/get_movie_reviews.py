@@ -16,6 +16,11 @@ async def get_movie_reviews(
     limit: int = 100,
     offset: int = 0,
 ) -> GetMovieReviewsResult:
+    """
+    ## Errors: \n
+        - When access is denied \n
+        - When movie doesn't exist \n
+    """
     with ioc.get_movie_reviews(identity_provider) as get_movie_reviews_handler:
         get_movie_reviews_query = GetMovieReviewsQuery(
             movie_id=movie_id,

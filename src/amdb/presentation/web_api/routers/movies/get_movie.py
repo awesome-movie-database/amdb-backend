@@ -14,6 +14,11 @@ def get_movie(
     identity_provider: Annotated[IdentityProvider, Depends(get_identity_provider)],
     movie_id: MovieId,
 ) -> GetMovieResult:
+    """
+    ## Errors: \n
+        - When access is denied \n
+        - When movie doesn't exist \n
+    """
     with ioc.get_movie(identity_provider) as get_movie_handler:
         get_movie_query = GetMovieQuery(
             movie_id=movie_id,
