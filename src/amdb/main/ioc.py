@@ -20,6 +20,7 @@ from amdb.application.query_handlers.login import LoginHandler
 from amdb.application.query_handlers.get_movies import GetMoviesHandler
 from amdb.application.query_handlers.get_movie import GetMovieHandler
 from amdb.application.query_handlers.get_rating import GetRatingHandler
+from amdb.application.query_handlers.get_movie_reviews import GetMovieReviewsHandler
 from amdb.infrastructure.persistence.sqlalchemy.gateway_factory import (
     build_sqlalchemy_gateway_factory,
 )
@@ -169,6 +170,20 @@ class IoC(HandlerFactory):
                 movie_gateway=gateway_factory.movie(),
                 rating_gateway=gateway_factory.rating(),
                 unit_of_work=gateway_factory.unit_of_work(),
+                identity_provider=identity_provider,
+            )
+
+    @contextmanager
+    def get_movie_reviews(
+        self,
+        identity_provider: IdentityProvider,
+    ) -> Iterator[GetMovieReviewsHandler]:
+        with build_sqlalchemy_gateway_factory(self._sessionmaker) as gateway_factory:
+            yield GetMovieReviewsHandler(
+                access_concern=AccessConcern(),
+                permissions_gateway=self._permissions_gateway,
+                movie_gateway=gateway_factory.movie(),
+                review_gateway=gateway_factory.review(),
                 identity_provider=identity_provider,
             )
 

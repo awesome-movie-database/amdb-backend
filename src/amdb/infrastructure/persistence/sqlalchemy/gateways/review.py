@@ -35,6 +35,24 @@ class SQLAlchemyReviewGateway:
             return self._mapper.to_entity(review_model)
         return None
 
+    def list_with_movie_id(
+        self,
+        movie_id: MovieId,
+        limit: int,
+        offset: int,
+    ) -> list[ReviewEntity]:
+        statement = (
+            select(ReviewModel).where(ReviewModel.movie_id == movie_id).limit(limit).offset(offset)
+        )
+        review_models = self._session.scalars(statement)
+
+        review_entities = []
+        for review_model in review_models:
+            review_entity = self._mapper.to_entity(review_model)
+            review_entities.append(review_entity)
+
+        return review_entities
+
     def save(self, review: ReviewEntity) -> None:
         review_model = self._mapper.to_model(review)
         self._session.add(review_model)
