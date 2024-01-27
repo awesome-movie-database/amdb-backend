@@ -2,6 +2,7 @@ from amdb.domain.services.access_concern import AccessConcern
 from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.rating_gateway import RatingGateway
+from amdb.application.common.interfaces.review_gateway import ReviewGateway
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.common.constants.exceptions import (
@@ -20,6 +21,7 @@ class DeleteMovieHandler:
         permissions_gateway: PermissionsGateway,
         movie_gateway: MovieGateway,
         rating_gateway: RatingGateway,
+        review_gateway: ReviewGateway,
         unit_of_work: UnitOfWork,
         identity_provider: IdentityProvider,
     ) -> None:
@@ -27,6 +29,7 @@ class DeleteMovieHandler:
         self._permissions_gateway = permissions_gateway
         self._movie_gateway = movie_gateway
         self._rating_gateway = rating_gateway
+        self._review_gateway = review_gateway
         self._unit_of_work = unit_of_work
         self._identity_provider = identity_provider
 
@@ -46,5 +49,6 @@ class DeleteMovieHandler:
 
         self._movie_gateway.delete(movie)
         self._rating_gateway.delete_with_movie_id(command.movie_id)
+        self._review_gateway.delete_with_movie_id(command.movie_id)
 
         self._unit_of_work.commit()

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import select, and_
+from sqlalchemy import select, delete, and_
 from sqlalchemy.orm.session import Session
 
 from amdb.domain.entities.user import UserId
@@ -62,3 +62,7 @@ class SQLAlchemyReviewGateway:
     def save(self, review: ReviewEntity) -> None:
         review_model = self._mapper.to_model(review)
         self._session.add(review_model)
+
+    def delete_with_movie_id(self, movie_id: MovieId) -> None:
+        statement = delete(ReviewModel).where(ReviewModel.movie_id == movie_id)
+        self._session.execute(statement)

@@ -26,3 +26,6 @@ class ReviewGateway(Protocol):
 
     def save(self, review: Review) -> None:
         raise NotImplementedError
+
+    def delete_with_movie_id(self, movie_id: MovieId) -> None:
+        raise NotImplementedError

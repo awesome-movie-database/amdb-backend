@@ -123,6 +123,7 @@ class IoC(HandlerFactory):
                 permissions_gateway=self._permissions_gateway,
                 movie_gateway=gateway_factory.movie(),
                 rating_gateway=gateway_factory.rating(),
+                review_gateway=gateway_factory.review(),
                 unit_of_work=gateway_factory.unit_of_work(),
                 identity_provider=identity_provider,
             )
