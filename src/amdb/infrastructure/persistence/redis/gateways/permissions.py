@@ -39,6 +39,9 @@ class RedisPermissionsGateway:
     def for_delete_movie(self) -> int:
         return 8
 
+    def for_get_movie_ratings(self) -> int:
+        return 4
+
     def for_get_rating(self) -> int:
         return 4
 

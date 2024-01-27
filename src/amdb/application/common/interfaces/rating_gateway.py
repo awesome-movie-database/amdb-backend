@@ -13,6 +13,14 @@ class RatingGateway(Protocol):
     ) -> Optional[Rating]:
         raise NotImplementedError
 
+    def list_with_movie_id(
+        self,
+        movie_id: MovieId,
+        limit: int,
+        offset: int,
+    ) -> list[Rating]:
+        raise NotImplementedError
+
     def save(self, rating: Rating) -> None:
         raise NotImplementedError
 

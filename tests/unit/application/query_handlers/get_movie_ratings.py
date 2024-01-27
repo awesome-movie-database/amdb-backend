@@ -1,21 +1,23 @@
 from unittest.mock import Mock
-from datetime import date
+from datetime import date, datetime, timezone
 
 import pytest
 from uuid_extensions import uuid7
 
+from amdb.domain.entities.user import UserId, User
 from amdb.domain.entities.movie import MovieId, Movie
+from amdb.domain.entities.rating import Rating
 from amdb.domain.services.access_concern import AccessConcern
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.rating_gateway import RatingGateway
-from amdb.application.common.interfaces.review_gateway import ReviewGateway
+from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
-from amdb.application.commands.delete_movie import DeleteMovieCommand
-from amdb.application.command_handlers.delete_movie import DeleteMovieHandler
+from amdb.application.queries.get_movie_ratings import GetMovieRatingsQuery, GetMovieRatingsResult
+from amdb.application.query_handlers.get_movie_ratings import GetMovieRatingsHandler
 from amdb.application.common.constants.exceptions import (
-    DELETE_MOVIE_ACCESS_DENIED,
+    GET_RATING_ACCESS_DENIED,
     MOVIE_DOES_NOT_EXIST,
 )
 from amdb.application.common.exception import ApplicationError
@@ -27,96 +29,116 @@ def identity_provider_with_correct_permissions(
 ) -> IdentityProvider:
     identity_provider = Mock()
 
-    correct_permissions = permissions_gateway.for_delete_movie()
+    correct_permissions = permissions_gateway.for_get_movie_ratings()
     identity_provider.get_permissions = Mock(return_value=correct_permissions)
 
     return identity_provider
 
 
-def test_delete_movie(
-    permissions_gateway: PermissionsGateway,
+def test_get_movie_ratings(
+    user_gateway: UserGateway,
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
-    review_gateway: ReviewGateway,
+    permissions_gateway: PermissionsGateway,
     unit_of_work: UnitOfWork,
     identity_provider_with_correct_permissions: IdentityProvider,
 ):
+    user = User(
+        id=UserId(uuid7()),
+        name="John Doe",
+    )
+    user_gateway.save(user)
+
     movie = Movie(
         id=MovieId(uuid7()),
         title="Matrix",
         release_date=date(1999, 3, 31),
-        rating=0,
-        rating_count=0,
+        rating=10,
+        rating_count=1,
     )
     movie_gateway.save(movie)
 
+    rating = Rating(
+        movie_id=movie.id,
+        user_id=user.id,
+        value=10,
+        created_at=datetime.now(timezone.utc),
+    )
+    rating_gateway.save(rating)
+
     unit_of_work.commit()
 
-    delete_movie_command = DeleteMovieCommand(
-        movie_id=movie.id,
+    identity_provider_with_correct_permissions.get_user_id = Mock(
+        return_value=user.id,
     )
-    delete_movie_handler = DeleteMovieHandler(
+
+    get_movie_ratings_query = GetMovieRatingsQuery(
+        movie_id=movie.id,
+        limit=10,
+        offset=0,
+    )
+    get_movie_ratings_handler = GetMovieRatingsHandler(
         access_concern=AccessConcern(),
         permissions_gateway=permissions_gateway,
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
-        review_gateway=review_gateway,
-        unit_of_work=unit_of_work,
         identity_provider=identity_provider_with_correct_permissions,
     )
 
-    delete_movie_handler.execute(delete_movie_command)
+    get_movie_ratings_result = get_movie_ratings_handler.execute(get_movie_ratings_query)
+    expected_get_movie_ratings_result = GetMovieRatingsResult(
+        ratings=[rating],
+        rating_count=1,
+    )
+
+    assert get_movie_ratings_result == expected_get_movie_ratings_result
 
 
-def test_delete_movie_should_raise_error_when_access_is_denied(
-    permissions_gateway: PermissionsGateway,
+def test_get_movie_ratings_should_raise_error_when_access_is_denied(
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
-    review_gateway: ReviewGateway,
-    unit_of_work: UnitOfWork,
+    permissions_gateway: PermissionsGateway,
     identity_provider_with_incorrect_permissions: IdentityProvider,
 ):
-    delete_movie_command = DeleteMovieCommand(
+    get_movie_ratings_query = GetMovieRatingsQuery(
         movie_id=MovieId(uuid7()),
+        limit=10,
+        offset=0,
     )
-    delete_movie_handler = DeleteMovieHandler(
+    get_movie_ratings_handler = GetMovieRatingsHandler(
         access_concern=AccessConcern(),
         permissions_gateway=permissions_gateway,
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
-        review_gateway=review_gateway,
-        unit_of_work=unit_of_work,
         identity_provider=identity_provider_with_incorrect_permissions,
     )
 
     with pytest.raises(ApplicationError) as error:
-        delete_movie_handler.execute(delete_movie_command)
+        get_movie_ratings_handler.execute(get_movie_ratings_query)
 
-    assert error.value.message == DELETE_MOVIE_ACCESS_DENIED
+    assert error.value.message == GET_RATING_ACCESS_DENIED
 
 
-def test_delete_movie_should_raise_error_when_movie_does_not_exist(
-    permissions_gateway: PermissionsGateway,
+def test_get_movie_ratings_should_raise_error_when_movie_does_not_exist(
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
-    review_gateway: ReviewGateway,
-    unit_of_work: UnitOfWork,
+    permissions_gateway: PermissionsGateway,
     identity_provider_with_correct_permissions: IdentityProvider,
 ):
-    delete_movie_command = DeleteMovieCommand(
+    get_movie_ratings_query = GetMovieRatingsQuery(
         movie_id=MovieId(uuid7()),
+        limit=10,
+        offset=0,
     )
-    delete_movie_handler = DeleteMovieHandler(
+    get_movie_ratings_handler = GetMovieRatingsHandler(
         access_concern=AccessConcern(),
         permissions_gateway=permissions_gateway,
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
-        review_gateway=review_gateway,
-        unit_of_work=unit_of_work,
         identity_provider=identity_provider_with_correct_permissions,
     )
 
     with pytest.raises(ApplicationError) as error:
-        delete_movie_handler.execute(delete_movie_command)
+        get_movie_ratings_handler.execute(get_movie_ratings_query)
 
     assert error.value.message == MOVIE_DOES_NOT_EXIST

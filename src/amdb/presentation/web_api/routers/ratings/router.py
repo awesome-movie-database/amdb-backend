@@ -1,30 +1,40 @@
 from fastapi import APIRouter
 
-from .get_rating import get_movie_rating
+from .get_movie_ratings import get_movie_ratings
+from .get_rating import get_rating
 from .rate_movie import rate_movie
 from .unrate_movie import unrate_movie
 
 
 def create_ratings_router() -> APIRouter:
     router = APIRouter(
-        prefix="/me/ratings",
+        prefix="",
         tags=["ratings"],
     )
 
     router.add_api_route(
-        path="/{movie_id}",
-        endpoint=get_movie_rating,
+        path="/movies/{movie_id}/ratings",
+        endpoint=get_movie_ratings,
         methods=["GET"],
+        tags=["movies"],
     )
     router.add_api_route(
-        path="/{movie_id}",
+        path="/movies/{movie_id}/ratings",
         endpoint=rate_movie,
         methods=["POST"],
+        tags=["movies"],
     )
     router.add_api_route(
-        path="/{movie_id}",
+        path="/me/ratings",
+        endpoint=get_rating,
+        methods=["GET"],
+        tags=["me"],
+    )
+    router.add_api_route(
+        path="/me/ratings",
         endpoint=unrate_movie,
         methods=["DELETE"],
+        tags=["me"],
     )
 
     return router

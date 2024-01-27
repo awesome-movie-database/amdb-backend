@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import delete
+from sqlalchemy import select, delete
 from sqlalchemy.orm.session import Session
 
 from amdb.domain.entities.user import UserId
@@ -31,6 +31,24 @@ class SQLAlchemyRatingGateway:
         if rating_model:
             return self._mapper.to_entity(rating_model)
         return None
+
+    def list_with_movie_id(
+        self,
+        movie_id: MovieId,
+        limit: int,
+        offset: int,
+    ) -> list[RatingEntity]:
+        statement = (
+            select(RatingModel).where(RatingModel.movie_id == movie_id).limit(limit).offset(offset)
+        )
+        rating_models = self._session.scalars(statement)
+
+        rating_entities = []
+        for rating_model in rating_models:
+            rating_entity = self._mapper.to_entity(rating_model)
+            rating_entities.append(rating_entity)
+
+        return rating_entities
 
     def save(self, rating: RatingEntity) -> None:
         rating_model = self._mapper.to_model(rating)
