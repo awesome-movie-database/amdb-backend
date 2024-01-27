@@ -1,11 +1,27 @@
 # Changelog
 
+## [v0.4.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v0.3.0) (2024-01-27)
+
+### Added
+
+- `User` now can list `Movie` `Reviews`
+
+### Changed
+
+- [*Breaking change*] New WEB API pathes for rate and unrate `Movie`
+
+### Enhancements
+
+- Add endpoint docs for WEB API endpoints
+- Update docs for CLI
+
+
 ## [v0.3.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v0.3.0) (2024-01-27)
 
 ### Added
 
 - `User` now can review `Movies`
-- `User` can get `Review` and list movie `Reviews`
+- `User` can get `Review` and list `Movie` `Reviews`
 
 ### Changed
 
