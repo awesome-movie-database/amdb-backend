@@ -28,6 +28,7 @@
 - `Movie` now has release date attribute
 - [*Breaking change*] Now, to create `Movie`, you must also specify the release date
 
+
 ## [v0.2.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v0.2.0) (2024-01-23)
 
 ### Added
