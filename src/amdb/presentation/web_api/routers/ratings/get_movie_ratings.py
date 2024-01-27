@@ -13,8 +13,8 @@ async def get_movie_ratings(
     ioc: Annotated[HandlerFactory, Depends()],
     identity_provider: Annotated[IdentityProvider, Depends(get_identity_provider)],
     movie_id: MovieId,
-    limit: int,
-    offset: int,
+    limit: int = 100,
+    offset: int = 0,
 ) -> GetMovieRatingsResult:
     """
     ## Errors: \n
