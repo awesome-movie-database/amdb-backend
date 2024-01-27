@@ -7,6 +7,7 @@ GET_RATING_ACCESS_DENIED = "Access to getting movie rating is denied"
 RATE_MOVIE_ACCESS_DENIED = "Access to movie rating is denied"
 UNRATE_MOVIE_ACCESS_DENIED = "Access to movie unrating is denied"
 GET_MOVIE_REVIEWS_ACCESS_DENIED = "Access to getting movie reviews is denied"
+GET_REVIEW_ACCESS_DENIED = "Access to getting review is denied"
 REVIEW_MOVIE_ACCESS_DENIED = "Access to movie reviewing is denied"
 
 USER_NAME_ALREADY_EXISTS = "User name already exists"
@@ -18,3 +19,5 @@ MOVIE_ALREADY_RATED = "Movie is already rated"
 MOVIE_NOT_RATED = "Movie is not rated"
 MOVIE_ALREADY_REVIEWED = "Review is already reviewed"
 MOVIE_NOT_REVIEWED = "Movie is not reviewed"
+
+REVIEW_DOES_NOT_EXIST = "Review doesn't exist"

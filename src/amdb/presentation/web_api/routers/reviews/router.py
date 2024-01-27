@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from .get_movie_reviews import get_movie_reviews
 from .review_movie import review_movie
+from .get_review import get_review
 
 
 def create_reviews_router() -> APIRouter:
@@ -21,6 +22,11 @@ def create_reviews_router() -> APIRouter:
         endpoint=review_movie,
         methods=["POST"],
         tags=["movies"],
+    )
+    router.add_api_route(
+        path="/reviews/{review_id}",
+        endpoint=get_review,
+        methods=["GET"],
     )
 
     return router

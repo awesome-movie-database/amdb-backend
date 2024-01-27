@@ -5,7 +5,7 @@ from sqlalchemy.orm.session import Session
 
 from amdb.domain.entities.user import UserId
 from amdb.domain.entities.movie import MovieId
-from amdb.domain.entities.review import Review as ReviewEntity
+from amdb.domain.entities.review import ReviewId, Review as ReviewEntity
 from amdb.infrastructure.persistence.sqlalchemy.models.review import Review as ReviewModel
 from amdb.infrastructure.persistence.sqlalchemy.mappers.review import ReviewMapper
 
@@ -18,6 +18,12 @@ class SQLAlchemyReviewGateway:
     ) -> None:
         self._session = session
         self._mapper = mapper
+
+    def with_id(self, review_id: ReviewId) -> Optional[ReviewEntity]:
+        review_model = self._session.get(ReviewModel, review_id)
+        if review_model:
+            return self._mapper.to_entity(review_model)
+        return None
 
     def with_movie_id_and_user_id(
         self,

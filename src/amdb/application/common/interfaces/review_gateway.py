@@ -2,10 +2,13 @@ from typing import Optional, Protocol
 
 from amdb.domain.entities.user import UserId
 from amdb.domain.entities.movie import MovieId
-from amdb.domain.entities.review import Review
+from amdb.domain.entities.review import ReviewId, Review
 
 
 class ReviewGateway(Protocol):
+    def with_id(self, review_id: ReviewId) -> Optional[Review]:
+        raise NotImplementedError
+
     def with_movie_id_and_user_id(
         self,
         user_id: UserId,
