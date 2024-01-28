@@ -9,7 +9,11 @@ class UnrateMovie:
         movie: Movie,
         rating: Rating,
     ) -> None:
-        movie.rating = (movie.rating * movie.rating_count - rating.value) / (
-            movie.rating_count - 1
-        )
-        movie.rating_count -= 1
+        if movie.rating_count == 1:
+            movie.rating = 0
+            movie.rating_count = 0
+        else:
+            movie.rating = (movie.rating * movie.rating_count - rating.value) / (
+                movie.rating_count - 1
+            )
+            movie.rating_count -= 1
