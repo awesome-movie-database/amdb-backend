@@ -18,15 +18,21 @@ def create_reviews_router() -> APIRouter:
         tags=["movies"],
     )
     router.add_api_route(
-        path="/movies/{movie_id}/reviews",
-        endpoint=review_movie,
-        methods=["POST"],
-        tags=["movies"],
-    )
-    router.add_api_route(
         path="/reviews/{review_id}",
         endpoint=get_review,
         methods=["GET"],
+    )
+    router.add_api_route(
+        path="/me/reviews",
+        endpoint=review_movie,
+        methods=["POST"],
+        tags=["me"],
+    )
+    router.add_api_route(
+        path="/me/reviews/{review_id}",
+        endpoint=get_review,
+        methods=["GET"],
+        tags=["me"],
     )
 
     return router

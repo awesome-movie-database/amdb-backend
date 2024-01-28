@@ -6,7 +6,7 @@ from uuid_extensions import uuid7
 
 from amdb.domain.entities.user import UserId, User
 from amdb.domain.entities.movie import MovieId, Movie
-from amdb.domain.entities.rating import Rating
+from amdb.domain.entities.rating import RatingId, Rating
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
@@ -59,6 +59,7 @@ def test_get_movie_ratings(
     movie_gateway.save(movie)
 
     rating = Rating(
+        id=RatingId(uuid7()),
         movie_id=movie.id,
         user_id=user.id,
         value=10,

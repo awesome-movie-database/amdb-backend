@@ -1,13 +1,11 @@
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
-from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.rating_gateway import RatingGateway
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.queries.get_rating import GetRatingQuery, GetRatingResult
 from amdb.application.common.constants.exceptions import (
     GET_RATING_ACCESS_DENIED,
-    MOVIE_DOES_NOT_EXIST,
-    MOVIE_NOT_RATED,
+    RATING_DOES_NOT_EXIST,
 )
 from amdb.application.common.exception import ApplicationError
 
@@ -18,13 +16,11 @@ class GetRatingHandler:
         *,
         access_concern: AccessConcern,
         permissions_gateway: PermissionsGateway,
-        movie_gateway: MovieGateway,
         rating_gateway: RatingGateway,
         identity_provider: IdentityProvider,
     ) -> None:
         self._access_concern = access_concern
         self._permissions_gateway = permissions_gateway
-        self._movie_gateway = movie_gateway
         self._rating_gateway = rating_gateway
         self._identity_provider = identity_provider
 
@@ -38,20 +34,13 @@ class GetRatingHandler:
         if not access:
             raise ApplicationError(GET_RATING_ACCESS_DENIED)
 
-        movie = self._movie_gateway.with_id(query.movie_id)
-        if not movie:
-            raise ApplicationError(MOVIE_DOES_NOT_EXIST)
-
-        current_user_id = self._identity_provider.get_user_id()
-
-        rating = self._rating_gateway.with_user_id_and_movie_id(
-            user_id=current_user_id,
-            movie_id=movie.id,
-        )
+        rating = self._rating_gateway.with_id(query.rating_id)
         if not rating:
-            raise ApplicationError(MOVIE_NOT_RATED)
+            raise ApplicationError(RATING_DOES_NOT_EXIST)
 
         get_rating_result = GetRatingResult(
+            user_id=rating.user_id,
+            movie_id=rating.movie_id,
             value=rating.value,
             created_at=rating.created_at,
         )

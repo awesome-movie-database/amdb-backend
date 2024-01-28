@@ -152,7 +152,6 @@ class IoC(HandlerFactory):
             yield GetRatingHandler(
                 access_concern=AccessConcern(),
                 permissions_gateway=self._permissions_gateway,
-                movie_gateway=gateway_factory.movie(),
                 rating_gateway=gateway_factory.rating(),
                 identity_provider=identity_provider,
             )

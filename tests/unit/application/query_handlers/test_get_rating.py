@@ -6,7 +6,7 @@ from uuid_extensions import uuid7
 
 from amdb.domain.entities.user import UserId, User
 from amdb.domain.entities.movie import MovieId, Movie
-from amdb.domain.entities.rating import Rating
+from amdb.domain.entities.rating import RatingId, Rating
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
@@ -18,8 +18,7 @@ from amdb.application.queries.get_rating import GetRatingQuery, GetRatingResult
 from amdb.application.query_handlers.get_rating import GetRatingHandler
 from amdb.application.common.constants.exceptions import (
     GET_RATING_ACCESS_DENIED,
-    MOVIE_DOES_NOT_EXIST,
-    MOVIE_NOT_RATED,
+    RATING_DOES_NOT_EXIST,
 )
 from amdb.application.common.exception import ApplicationError
 
@@ -60,6 +59,7 @@ def test_get_rating(
     movie_gateway.save(movie)
 
     rating = Rating(
+        id=RatingId(uuid7()),
         movie_id=movie.id,
         user_id=user.id,
         value=10,
@@ -74,18 +74,19 @@ def test_get_rating(
     )
 
     get_rating_query = GetRatingQuery(
-        movie_id=movie.id,
+        rating_id=rating.id,
     )
     get_rating_handler = GetRatingHandler(
         access_concern=AccessConcern(),
         permissions_gateway=permissions_gateway,
-        movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         identity_provider=identity_provider_with_correct_permissions,
     )
 
     get_rating_result = get_rating_handler.execute(get_rating_query)
     expected_get_rating_result = GetRatingResult(
+        user_id=rating.user_id,
+        movie_id=rating.movie_id,
         value=rating.value,
         created_at=rating.created_at,
     )
@@ -94,18 +95,16 @@ def test_get_rating(
 
 
 def test_get_rating_should_raise_error_when_access_is_denied(
-    movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     permissions_gateway: PermissionsGateway,
     identity_provider_with_incorrect_permissions: IdentityProvider,
 ):
     get_rating_query = GetRatingQuery(
-        movie_id=MovieId(uuid7()),
+        rating_id=RatingId(uuid7()),
     )
     get_rating_handler = GetRatingHandler(
         access_concern=AccessConcern(),
         permissions_gateway=permissions_gateway,
-        movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         identity_provider=identity_provider_with_incorrect_permissions,
     )
@@ -116,19 +115,17 @@ def test_get_rating_should_raise_error_when_access_is_denied(
     assert error.value.message == GET_RATING_ACCESS_DENIED
 
 
-def test_get_rating_should_raise_error_when_movie_does_not_exist(
-    movie_gateway: MovieGateway,
+def test_get_rating_should_raise_error_when_rating_does_not_exist(
     rating_gateway: RatingGateway,
     permissions_gateway: PermissionsGateway,
     identity_provider_with_correct_permissions: IdentityProvider,
 ):
     get_rating_query = GetRatingQuery(
-        movie_id=MovieId(uuid7()),
+        rating_id=RatingId(uuid7()),
     )
     get_rating_handler = GetRatingHandler(
         access_concern=AccessConcern(),
         permissions_gateway=permissions_gateway,
-        movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         identity_provider=identity_provider_with_correct_permissions,
     )
@@ -136,50 +133,4 @@ def test_get_rating_should_raise_error_when_movie_does_not_exist(
     with pytest.raises(ApplicationError) as error:
         get_rating_handler.execute(get_rating_query)
 
-    assert error.value.message == MOVIE_DOES_NOT_EXIST
-
-
-def test_get_rating_should_raise_error_when_movie_is_not_rated(
-    user_gateway: UserGateway,
-    movie_gateway: MovieGateway,
-    rating_gateway: RatingGateway,
-    permissions_gateway: PermissionsGateway,
-    unit_of_work: UnitOfWork,
-    identity_provider_with_correct_permissions: IdentityProvider,
-):
-    user = User(
-        id=UserId(uuid7()),
-        name="John Doe",
-    )
-    user_gateway.save(user)
-
-    movie = Movie(
-        id=MovieId(uuid7()),
-        title="Matrix",
-        release_date=date(1999, 3, 31),
-        rating=0,
-        rating_count=0,
-    )
-    movie_gateway.save(movie)
-
-    unit_of_work.commit()
-
-    identity_provider_with_correct_permissions.get_user_id = Mock(
-        return_value=user.id,
-    )
-
-    get_rating_query = GetRatingQuery(
-        movie_id=movie.id,
-    )
-    get_rating_handler = GetRatingHandler(
-        access_concern=AccessConcern(),
-        permissions_gateway=permissions_gateway,
-        movie_gateway=movie_gateway,
-        rating_gateway=rating_gateway,
-        identity_provider=identity_provider_with_correct_permissions,
-    )
-
-    with pytest.raises(ApplicationError) as error:
-        get_rating_handler.execute(get_rating_query)
-
-    assert error.value.message == MOVIE_NOT_RATED
+    assert error.value.message == RATING_DOES_NOT_EXIST

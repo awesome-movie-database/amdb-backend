@@ -11,7 +11,7 @@ from amdb.presentation.handler_factory import HandlerFactory
 from amdb.presentation.web_api.dependencies.identity_provider import get_identity_provider
 
 
-class ReviewMovieSchema(BaseModel):
+class ReviewMovie(BaseModel):
     title: str
     content: str
     type: ReviewType
@@ -21,7 +21,7 @@ async def review_movie(
     ioc: Annotated[HandlerFactory, Depends()],
     identity_provider: Annotated[IdentityProvider, Depends(get_identity_provider)],
     movie_id: MovieId,
-    data: ReviewMovieSchema,
+    data: ReviewMovie,
 ) -> ReviewId:
     """
     ## Errors: \n

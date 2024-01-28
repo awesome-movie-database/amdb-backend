@@ -6,7 +6,7 @@ from uuid_extensions import uuid7
 
 from amdb.domain.entities.user import UserId, User
 from amdb.domain.entities.movie import MovieId, Movie
-from amdb.domain.entities.rating import Rating
+from amdb.domain.entities.rating import RatingId, Rating
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.rate_movie import RateMovie
 from amdb.domain.constants.exceptions import INVALID_RATING_VALUE
@@ -168,6 +168,7 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
     movie_gateway.save(movie)
 
     rating = Rating(
+        id=RatingId(uuid7()),
         movie_id=movie.id,
         user_id=user.id,
         value=10,

@@ -2,10 +2,13 @@ from typing import Optional, Protocol
 
 from amdb.domain.entities.user import UserId
 from amdb.domain.entities.movie import MovieId
-from amdb.domain.entities.rating import Rating
+from amdb.domain.entities.rating import RatingId, Rating
 
 
 class RatingGateway(Protocol):
+    def with_id(self, rating_id: RatingId) -> Optional[Rating]:
+        raise NotImplementedError
+
     def with_user_id_and_movie_id(
         self,
         user_id: UserId,

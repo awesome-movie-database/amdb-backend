@@ -19,19 +19,24 @@ def create_ratings_router() -> APIRouter:
         tags=["movies"],
     )
     router.add_api_route(
-        path="/movies/{movie_id}/ratings",
-        endpoint=rate_movie,
-        methods=["POST"],
-        tags=["movies"],
+        path="/ratings/{rating_id}",
+        endpoint=get_rating,
+        methods=["GET"],
     )
     router.add_api_route(
         path="/me/ratings",
+        endpoint=rate_movie,
+        methods=["POST"],
+        tags=["me"],
+    )
+    router.add_api_route(
+        path="/me/ratings/{rating_id}",
         endpoint=get_rating,
         methods=["GET"],
         tags=["me"],
     )
     router.add_api_route(
-        path="/me/ratings",
+        path="/me/ratings/{rating_id}",
         endpoint=unrate_movie,
         methods=["DELETE"],
         tags=["me"],

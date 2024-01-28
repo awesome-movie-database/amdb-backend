@@ -1,7 +1,6 @@
 from typing import Annotated
 
 from fastapi import Response, Depends
-from pydantic import BaseModel
 
 from amdb.domain.entities.user import UserId
 from amdb.application.commands.register_user import RegisterUserCommand
@@ -12,16 +11,11 @@ from amdb.presentation.web_api.dependencies.depends_stub import Stub
 from amdb.presentation.web_api.constants import SESSION_ID_COOKIE
 
 
-class RegisterSchema(BaseModel):
-    name: str
-    password: str
-
-
 async def register(
     ioc: Annotated[HandlerFactory, Depends()],
     session_processor: Annotated[SessionProcessor, Depends(Stub(SessionProcessor))],
     session_gateway: Annotated[RedisSessionGateway, Depends(Stub(RedisSessionGateway))],
-    data: RegisterSchema,
+    register_user_command: RegisterUserCommand,
     response: Response,
 ) -> UserId:
     """
@@ -33,10 +27,6 @@ async def register(
         - When user name already exists \n
     """
     with ioc.register_user() as register_user_handler:
-        register_user_command = RegisterUserCommand(
-            name=data.name,
-            password=data.password,
-        )
         user_id = register_user_handler.execute(register_user_command)
 
     session = session_processor.create(user_id=user_id)

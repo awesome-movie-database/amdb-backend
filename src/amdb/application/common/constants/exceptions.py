@@ -11,6 +11,8 @@ GET_MOVIE_REVIEWS_ACCESS_DENIED = "Access to getting movie reviews is denied"
 GET_REVIEW_ACCESS_DENIED = "Access to getting review is denied"
 REVIEW_MOVIE_ACCESS_DENIED = "Access to movie reviewing is denied"
 
+USER_IS_NOT_OWNER = "User is not owner"
+
 USER_NAME_ALREADY_EXISTS = "User name already exists"
 USER_DOES_NOT_EXIST = "User doesn't exist"
 INCORRECT_PASSWORD = "Password is not correct"
@@ -21,4 +23,5 @@ MOVIE_NOT_RATED = "Movie is not rated"
 MOVIE_ALREADY_REVIEWED = "Review is already reviewed"
 MOVIE_NOT_REVIEWED = "Movie is not reviewed"
 
+RATING_DOES_NOT_EXIST = "Rating doesn't exist"
 REVIEW_DOES_NOT_EXIST = "Review doesn't exist"

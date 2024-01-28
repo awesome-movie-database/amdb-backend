@@ -1,7 +1,10 @@
 from datetime import datetime, timezone
 from typing import cast
 
+from uuid_extensions import uuid7
+
 from amdb.domain.entities.user import User
+from amdb.domain.entities.rating import RatingId
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.rate_movie import RateMovie
 from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
@@ -41,7 +44,7 @@ class RateMovieHandler:
         self._unit_of_work = unit_of_work
         self._identity_provider = identity_provider
 
-    def execute(self, command: RateMovieCommand) -> None:
+    def execute(self, command: RateMovieCommand) -> RatingId:
         current_permissions = self._identity_provider.get_permissions()
         required_permissions = self._permissions_gateway.for_rate_movie()
         access = self._access_concern.authorize(
@@ -68,6 +71,7 @@ class RateMovieHandler:
         user = cast(User, user)
 
         new_rating = self._rate_movie(
+            id=RatingId(uuid7()),
             user=user,
             movie=movie,
             rating=command.rating,
@@ -77,3 +81,5 @@ class RateMovieHandler:
         self._movie_gateway.update(movie)
 
         self._unit_of_work.commit()
+
+        return new_rating.id

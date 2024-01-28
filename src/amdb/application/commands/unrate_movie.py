@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from amdb.domain.entities.movie import MovieId
+from amdb.domain.entities.rating import RatingId
 
 
 @dataclass(frozen=True, slots=True)
 class UnrateMovieCommand:
-    movie_id: MovieId
+    rating_id: RatingId

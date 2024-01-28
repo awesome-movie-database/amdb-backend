@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from amdb.domain.entities.movie import MovieId
+from amdb.domain.entities.rating import RatingId
 from amdb.application.common.interfaces.identity_provider import IdentityProvider
 from amdb.application.queries.get_rating import GetRatingQuery, GetRatingResult
 from amdb.presentation.handler_factory import HandlerFactory
@@ -12,7 +12,7 @@ from amdb.presentation.web_api.dependencies.identity_provider import get_identit
 async def get_rating(
     ioc: Annotated[HandlerFactory, Depends()],
     identity_provider: Annotated[IdentityProvider, Depends(get_identity_provider)],
-    movie_id: MovieId,
+    rating_id: RatingId,
 ) -> GetRatingResult:
     """
     ## Errors: \n
@@ -22,7 +22,7 @@ async def get_rating(
     """
     with ioc.get_rating(identity_provider) as get_rating_handler:
         get_rating_query = GetRatingQuery(
-            movie_id=movie_id,
+            rating_id=rating_id,
         )
         get_rating_result = get_rating_handler.execute(get_rating_query)
 

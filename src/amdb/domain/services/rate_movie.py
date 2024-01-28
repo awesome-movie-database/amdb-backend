@@ -2,7 +2,7 @@ from datetime import datetime
 
 from amdb.domain.entities.user import User
 from amdb.domain.entities.movie import Movie
-from amdb.domain.entities.rating import Rating
+from amdb.domain.entities.rating import RatingId, Rating
 from amdb.domain.constants.exceptions import INVALID_RATING_VALUE
 from amdb.domain.exception import DomainError
 
@@ -11,6 +11,7 @@ class RateMovie:
     def __call__(
         self,
         *,
+        id: RatingId,
         user: User,
         movie: Movie,
         rating: float,
@@ -23,6 +24,7 @@ class RateMovie:
         movie.rating_count += 1
 
         return Rating(
+            id=id,
             movie_id=movie.id,
             user_id=user.id,
             value=rating,
