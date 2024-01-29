@@ -1,6 +1,26 @@
 # Changelog
 
-## [v0.4.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v0.3.0) (2024-01-27)
+## [v0.5.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v0.5.0) (2024-01-29)
+
+### Added
+
+- `User` now can list his `Ratings`
+
+### Changed
+
+- [*Breaking change*] `Rating` now has release date attribute
+- Now `Rate movie` endpoint returns `Rating` id
+
+### Fixed
+
+- Bug when `UnrateMovie` endpoint returns error when `Movie` has only one `Rating`
+
+### Echancements
+
+- Added unique constraint for ratings table on user_id and movie_id columns
+
+
+## [v0.4.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v0.4.0) (2024-01-27)
 
 ### Added
 
