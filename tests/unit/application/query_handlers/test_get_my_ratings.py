@@ -32,7 +32,7 @@ def identity_provider_with_correct_permissions(
     return identity_provider
 
 
-def test_get_rating(
+def test_get_my_ratings(
     user_gateway: UserGateway,
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
@@ -90,7 +90,7 @@ def test_get_rating(
     assert get_my_ratings_result == expected_get_my_ratings_result
 
 
-def test_get_rating_should_raise_error_when_access_is_denied(
+def test_get_my_ratings_should_raise_error_when_access_is_denied(
     rating_gateway: RatingGateway,
     permissions_gateway: PermissionsGateway,
     identity_provider_with_incorrect_permissions: IdentityProvider,

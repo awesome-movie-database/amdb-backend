@@ -17,7 +17,7 @@ from amdb.application.common.interfaces.identity_provider import IdentityProvide
 from amdb.application.queries.get_movie_ratings import GetMovieRatingsQuery, GetMovieRatingsResult
 from amdb.application.query_handlers.get_movie_ratings import GetMovieRatingsHandler
 from amdb.application.common.constants.exceptions import (
-    GET_RATING_ACCESS_DENIED,
+    GET_MOVIE_RATINGS_ACCESS_DENIED,
     MOVIE_DOES_NOT_EXIST,
 )
 from amdb.application.common.exception import ApplicationError
@@ -117,7 +117,7 @@ def test_get_movie_ratings_should_raise_error_when_access_is_denied(
     with pytest.raises(ApplicationError) as error:
         get_movie_ratings_handler.execute(get_movie_ratings_query)
 
-    assert error.value.message == GET_RATING_ACCESS_DENIED
+    assert error.value.message == GET_MOVIE_RATINGS_ACCESS_DENIED
 
 
 def test_get_movie_ratings_should_raise_error_when_movie_does_not_exist(
