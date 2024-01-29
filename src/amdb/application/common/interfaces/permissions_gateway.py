@@ -46,6 +46,9 @@ class PermissionsGateway(Protocol):
     def for_get_movie_reviews(self) -> int:
         raise NotImplementedError
 
+    def for_get_my_reviews(self) -> int:
+        raise NotImplementedError
+
     def for_get_review(self) -> int:
         raise NotImplementedError
 

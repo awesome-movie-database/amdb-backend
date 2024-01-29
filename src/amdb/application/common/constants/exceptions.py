@@ -9,6 +9,7 @@ GET_RATING_ACCESS_DENIED = "Access to getting rating is denied"
 RATE_MOVIE_ACCESS_DENIED = "Access to movie rating is denied"
 UNRATE_MOVIE_ACCESS_DENIED = "Access to movie unrating is denied"
 GET_MOVIE_REVIEWS_ACCESS_DENIED = "Access to getting movie reviews is denied"
+GET_MY_REVIEWS_ACCESS_DENIED = "Access to getting your reviews is denied"
 GET_REVIEW_ACCESS_DENIED = "Access to getting review is denied"
 REVIEW_MOVIE_ACCESS_DENIED = "Access to movie reviewing is denied"
 

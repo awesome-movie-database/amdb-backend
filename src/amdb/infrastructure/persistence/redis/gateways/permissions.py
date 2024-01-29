@@ -57,6 +57,9 @@ class RedisPermissionsGateway:
     def for_get_movie_reviews(self) -> int:
         return 4
 
+    def for_get_my_reviews(self) -> int:
+        return 4
+
     def for_get_review(self) -> int:
         return 4
 
