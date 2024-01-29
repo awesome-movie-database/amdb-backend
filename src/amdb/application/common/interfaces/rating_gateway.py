@@ -24,6 +24,14 @@ class RatingGateway(Protocol):
     ) -> list[Rating]:
         raise NotImplementedError
 
+    def list_with_user_id(
+        self,
+        user_id: UserId,
+        limit: int,
+        offset: int,
+    ) -> list[Rating]:
+        raise NotImplementedError
+
     def save(self, rating: Rating) -> None:
         raise NotImplementedError
 

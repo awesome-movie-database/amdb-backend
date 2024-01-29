@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from .get_movie_ratings import get_movie_ratings
+from .get_my_ratings import get_my_ratings
 from .get_rating import get_rating
 from .rate_movie import rate_movie
 from .unrate_movie import unrate_movie
@@ -27,6 +28,12 @@ def create_ratings_router() -> APIRouter:
         path="/me/ratings",
         endpoint=rate_movie,
         methods=["POST"],
+        tags=["me"],
+    )
+    router.add_api_route(
+        path="/me/ratings",
+        endpoint=get_my_ratings,
+        methods=["GET"],
         tags=["me"],
     )
     router.add_api_route(

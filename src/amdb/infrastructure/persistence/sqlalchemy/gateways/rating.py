@@ -56,6 +56,24 @@ class SQLAlchemyRatingGateway:
 
         return rating_entities
 
+    def list_with_user_id(
+        self,
+        user_id: UserId,
+        limit: int,
+        offset: int,
+    ) -> list[RatingEntity]:
+        statement = (
+            select(RatingModel).where(RatingModel.user_id == user_id).limit(limit).offset(offset)
+        )
+        rating_models = self._session.scalars(statement)
+
+        rating_entities = []
+        for rating_model in rating_models:
+            rating_entity = self._mapper.to_entity(rating_model)
+            rating_entities.append(rating_entity)
+
+        return rating_entities
+
     def save(self, rating: RatingEntity) -> None:
         rating_model = self._mapper.to_model(rating)
         self._session.add(rating_model)
