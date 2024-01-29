@@ -18,6 +18,7 @@
 ### Echancements
 
 - Added unique constraint for ratings table on user_id and movie_id columns
+- Added unique constraint for reviews table on user_id and movie_id columns
 
 
 ## [v0.4.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v0.4.0) (2024-01-27)

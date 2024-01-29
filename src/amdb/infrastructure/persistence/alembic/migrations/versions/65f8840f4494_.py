@@ -2,6 +2,7 @@
 Add id column to ratings table,
 Add primary key constraint on id in ratings table,
 Add unique constraint on pair of user_id and movie_id in ratings table
+Add unique constraint on pair of user_id and movie_id in reviews table
 
 Revision ID: 65f8840f4494
 Revises: 85a348467b90
@@ -27,6 +28,7 @@ def upgrade() -> None:
         batch_op.drop_constraint("pk_ratings", type_="primary")
         batch_op.create_primary_key("pk_ratings", ["id"])
         batch_op.create_unique_constraint("uq_ratings", ("user_id", "movie_id"))
+    op.create_unique_constraint("uq_reviews", "reviews", ("user_id", "movie_id"))
 
 
 def downgrade() -> None:
@@ -35,3 +37,4 @@ def downgrade() -> None:
         batch_op.drop_column("id")
         batch_op.create_primary_key("pk_ratings", ["user_id", "movie_id"])
         batch_op.drop_constraint("uq_ratings")
+    op.drop_constraint("uq_reviews", "reviews")
