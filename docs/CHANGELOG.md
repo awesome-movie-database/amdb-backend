@@ -14,6 +14,7 @@
 ### Fixed
 
 - Bug when `UnrateMovie` endpoint returns error when `Movie` has only one `Rating`
+- Some tests have no 'test' prefix
 
 ### Echancements
 
