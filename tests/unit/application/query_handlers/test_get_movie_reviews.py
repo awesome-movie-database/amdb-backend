@@ -8,14 +8,23 @@ from amdb.domain.entities.user import UserId, User
 from amdb.domain.entities.movie import MovieId, Movie
 from amdb.domain.entities.review import ReviewId, ReviewType, Review
 from amdb.domain.services.access_concern import AccessConcern
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.review_gateway import ReviewGateway
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
-from amdb.application.queries.get_movie_reviews import GetMovieReviewsQuery, GetMovieReviewsResult
-from amdb.application.query_handlers.get_movie_reviews import GetMovieReviewsHandler
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
+from amdb.application.queries.get_movie_reviews import (
+    GetMovieReviewsQuery,
+    GetMovieReviewsResult,
+)
+from amdb.application.query_handlers.get_movie_reviews import (
+    GetMovieReviewsHandler,
+)
 from amdb.application.common.constants.exceptions import (
     GET_MOVIE_REVIEWS_ACCESS_DENIED,
     MOVIE_DOES_NOT_EXIST,
@@ -84,7 +93,9 @@ def test_get_movie_reviews(
         identity_provider=identity_provider_with_correct_permissions,
     )
 
-    get_movie_reviews_result = get_movie_reviews_handler.execute(get_movie_reviews_query)
+    get_movie_reviews_result = get_movie_reviews_handler.execute(
+        get_movie_reviews_query
+    )
     expected_get_movie_reviews_result = GetMovieReviewsResult(
         reviews=[review],
         review_count=1,

@@ -1,14 +1,21 @@
 from amdb.domain.services.access_concern import AccessConcern
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.review_gateway import ReviewGateway
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
 from amdb.application.common.constants.exceptions import (
     GET_MOVIE_REVIEWS_ACCESS_DENIED,
     MOVIE_DOES_NOT_EXIST,
 )
 from amdb.application.common.exception import ApplicationError
-from amdb.application.queries.get_movie_reviews import GetMovieReviewsQuery, GetMovieReviewsResult
+from amdb.application.queries.get_movie_reviews import (
+    GetMovieReviewsQuery,
+    GetMovieReviewsResult,
+)
 
 
 class GetMovieReviewsHandler:
@@ -29,7 +36,9 @@ class GetMovieReviewsHandler:
 
     def execute(self, query: GetMovieReviewsQuery) -> GetMovieReviewsResult:
         current_permissions = self._identity_provider.get_permissions()
-        required_permissions = self._permissions_gateway.for_get_movie_reviews()
+        required_permissions = (
+            self._permissions_gateway.for_get_movie_reviews()
+        )
         access = self._access_concern.authorize(
             current_permissions=current_permissions,
             required_permissions=required_permissions,

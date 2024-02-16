@@ -1,5 +1,7 @@
 from amdb.domain.entities.movie import MovieId, Movie as MovieEntity
-from amdb.infrastructure.persistence.sqlalchemy.models.movie import Movie as MovieModel
+from amdb.infrastructure.persistence.sqlalchemy.models.movie import (
+    Movie as MovieModel,
+)
 
 
 class MovieMapper:

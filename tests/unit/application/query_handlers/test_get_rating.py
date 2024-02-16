@@ -11,9 +11,13 @@ from amdb.domain.services.access_concern import AccessConcern
 from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.rating_gateway import RatingGateway
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
 from amdb.application.queries.get_rating import GetRatingQuery, GetRatingResult
 from amdb.application.query_handlers.get_rating import GetRatingHandler
 from amdb.application.common.constants.exceptions import (

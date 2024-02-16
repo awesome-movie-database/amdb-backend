@@ -3,10 +3,14 @@ from uuid_extensions import uuid7
 from amdb.domain.entities.user import UserId
 from amdb.domain.services.create_user import CreateUser
 from amdb.application.common.interfaces.user_gateway import UserGateway
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
 from amdb.application.common.interfaces.password_manager import PasswordManager
-from amdb.application.common.constants.exceptions import USER_NAME_ALREADY_EXISTS
+from amdb.application.common.constants.exceptions import (
+    USER_NAME_ALREADY_EXISTS,
+)
 from amdb.application.common.exception import ApplicationError
 from amdb.application.commands.register_user import RegisterUserCommand
 

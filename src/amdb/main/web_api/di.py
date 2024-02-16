@@ -5,8 +5,12 @@ from redis.client import Redis
 
 from amdb.infrastructure.security.hasher import Hasher
 from amdb.infrastructure.auth.session.config import SessionConfig
-from amdb.infrastructure.persistence.redis.gateways.session import RedisSessionGateway
-from amdb.infrastructure.persistence.redis.gateways.permissions import RedisPermissionsGateway
+from amdb.infrastructure.persistence.redis.gateways.session import (
+    RedisSessionGateway,
+)
+from amdb.infrastructure.persistence.redis.gateways.permissions import (
+    RedisPermissionsGateway,
+)
 from amdb.infrastructure.auth.session.session_processor import SessionProcessor
 from amdb.presentation.handler_factory import HandlerFactory
 from amdb.presentation.web_api.dependencies.depends_stub import Stub
@@ -30,10 +34,14 @@ def setup_dependecies(
         redis=redis,
         session_lifetime=session_config.session_lifetime,
     )
-    app.dependency_overrides[Stub(RedisSessionGateway)] = lambda: redis_session_gateway  # type: ignore
+    app.dependency_overrides[Stub(RedisSessionGateway)] = (
+        lambda: redis_session_gateway
+    )  # type: ignore
 
     redis_permissions_gateway = RedisPermissionsGateway(redis)
-    app.dependency_overrides[Stub(RedisPermissionsGateway)] = lambda: redis_permissions_gateway  # type: ignore
+    app.dependency_overrides[Stub(RedisPermissionsGateway)] = (
+        lambda: redis_permissions_gateway
+    )  # type: ignore
 
     engine = create_engine(generic_config.postgres.dsn)
     ioc = IoC(
@@ -44,4 +52,6 @@ def setup_dependecies(
     app.dependency_overrides[HandlerFactory] = lambda: ioc  # type: ignore
 
     session_processor = SessionProcessor()
-    app.dependency_overrides[Stub(SessionProcessor)] = lambda: session_processor  # type: ignore
+    app.dependency_overrides[Stub(SessionProcessor)] = (
+        lambda: session_processor
+    )  # type: ignore

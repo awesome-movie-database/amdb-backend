@@ -11,11 +11,20 @@ from amdb.domain.services.access_concern import AccessConcern
 from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.rating_gateway import RatingGateway
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
-from amdb.application.queries.get_movie_ratings import GetMovieRatingsQuery, GetMovieRatingsResult
-from amdb.application.query_handlers.get_movie_ratings import GetMovieRatingsHandler
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
+from amdb.application.queries.get_movie_ratings import (
+    GetMovieRatingsQuery,
+    GetMovieRatingsResult,
+)
+from amdb.application.query_handlers.get_movie_ratings import (
+    GetMovieRatingsHandler,
+)
 from amdb.application.common.constants.exceptions import (
     GET_MOVIE_RATINGS_ACCESS_DENIED,
     MOVIE_DOES_NOT_EXIST,
@@ -86,7 +95,9 @@ def test_get_movie_ratings(
         identity_provider=identity_provider_with_correct_permissions,
     )
 
-    get_movie_ratings_result = get_movie_ratings_handler.execute(get_movie_ratings_query)
+    get_movie_ratings_result = get_movie_ratings_handler.execute(
+        get_movie_ratings_query
+    )
     expected_get_movie_ratings_result = GetMovieRatingsResult(
         ratings=[rating],
         rating_count=1,

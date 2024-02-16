@@ -6,8 +6,12 @@ from sqlalchemy.orm.session import Session
 from amdb.domain.entities.user import UserId
 from amdb.domain.entities.movie import MovieId
 from amdb.domain.entities.review import ReviewId, Review as ReviewEntity
-from amdb.infrastructure.persistence.sqlalchemy.models.review import Review as ReviewModel
-from amdb.infrastructure.persistence.sqlalchemy.mappers.review import ReviewMapper
+from amdb.infrastructure.persistence.sqlalchemy.models.review import (
+    Review as ReviewModel,
+)
+from amdb.infrastructure.persistence.sqlalchemy.mappers.review import (
+    ReviewMapper,
+)
 
 
 class SQLAlchemyReviewGateway:
@@ -48,7 +52,10 @@ class SQLAlchemyReviewGateway:
         offset: int,
     ) -> list[ReviewEntity]:
         statement = (
-            select(ReviewModel).where(ReviewModel.movie_id == movie_id).limit(limit).offset(offset)
+            select(ReviewModel)
+            .where(ReviewModel.movie_id == movie_id)
+            .limit(limit)
+            .offset(offset)
         )
         review_models = self._session.scalars(statement)
 
@@ -66,7 +73,10 @@ class SQLAlchemyReviewGateway:
         offset: int,
     ) -> list[ReviewEntity]:
         statement = (
-            select(ReviewModel).where(ReviewModel.user_id == user_id).limit(limit).offset(offset)
+            select(ReviewModel)
+            .where(ReviewModel.user_id == user_id)
+            .limit(limit)
+            .offset(offset)
         )
         review_models = self._session.scalars(statement)
 

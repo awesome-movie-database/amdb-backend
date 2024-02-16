@@ -8,7 +8,9 @@ import rich.box
 import rich.table
 
 from amdb.domain.entities.movie import MovieId
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
 from amdb.application.commands.create_movie import CreateMovieCommand
 from amdb.application.commands.delete_movie import DeleteMovieCommand
 from amdb.application.queries.get_movies import GetMoviesQuery

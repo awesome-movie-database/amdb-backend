@@ -1,7 +1,11 @@
 from amdb.domain.services.access_concern import AccessConcern
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.rating_gateway import RatingGateway
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
 from amdb.application.queries.get_rating import GetRatingQuery, GetRatingResult
 from amdb.application.common.constants.exceptions import (
     GET_RATING_ACCESS_DENIED,

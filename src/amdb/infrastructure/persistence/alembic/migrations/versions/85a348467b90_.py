@@ -35,7 +35,9 @@ def upgrade() -> None:
         sa.Column("type", sa.SmallInteger(), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
-        sa.ForeignKeyConstraint(["movie_id"], ["movies.id"], ondelete="CASCADE"),
+        sa.ForeignKeyConstraint(
+            ["movie_id"], ["movies.id"], ondelete="CASCADE"
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
 

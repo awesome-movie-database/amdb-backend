@@ -2,6 +2,13 @@
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["amdb*"]
+
+[tool.setuptools.package-data]
+amdb = ["infrastructure/persistence/alembic/alembic.ini"]
+
 [project]
 name = "amdb"
 description = "Awesome Movie Database Backend"
@@ -32,10 +39,10 @@ web_api = [
 cli = [
     "typer[all]==0.9.*",
 ]
-style = [
-    "mypy==1.8.0",
-    "ruff==0.1.9",
-    "types-redis",
+dev = [
+    "mypy==1.8.*",
+    "ruff==0.1.*",
+    "pre-commit==3.5.*",
 ]
 test = [
     "pytest",
@@ -43,48 +50,7 @@ test = [
 coverage = [
     "pytest-cov",
 ]
-dev = [
-    "amdb[web_api,cli,style,test,coverage]",
-    "pre-commit==3.5.0",
-]
 
 [project.scripts]
 amdb-cli = "amdb.main.cli.__main__:main"
 amdb-web_api = "amdb.main.web_api.__main__:main"
-
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["amdb*"]
-
-[tool.setuptools.package-data]
-amdb = ["infrastructure/persistence/alembic/alembic.ini"]
-
-[tool.pytest.ini_options]
-pythonpath = "src/"
-
-[tool.ruff.lint]
-extend-select = [
-    "N",        # https://docs.astral.sh/ruff/settings/#pep8-naming
-    "EM",       # https://docs.astral.sh/ruff/settings/#flake8-errmsg
-    "ISC",      # https://docs.astral.sh/ruff/settings/#flake8-implicit-str-concat
-    "G",        # https://docs.astral.sh/ruff/rules/#flake8-logging-format-g
-    "Q",        # https://docs.astral.sh/ruff/rules/#flake8-pytest-style-pt
-]
-select = [
-    "F401",     # unused-import
-    "F406",     # undefined-local-with-nested-import-star-usage
-    "COM812",   # missing-trailing-comma
-    "DTZ003",   # call-datetime-utcnow
-    "EM102",    # f-string-in-exception
-    "INP001",   # implicit-namespace-package
-    "PIE794",   # duplicate-class-field-definition
-    "PIE796",   # non-unique-enums
-    "T201",     # print
-    "SLF001",   # private-member-access
-]
-
-[tool.ruff]
-line-length = 99
-
-[tool.ruff.format]
-quote-style = "double"

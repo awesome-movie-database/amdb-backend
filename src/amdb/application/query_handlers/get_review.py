@@ -1,7 +1,11 @@
 from amdb.domain.services.access_concern import AccessConcern
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.review_gateway import ReviewGateway
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
 from amdb.application.common.constants.exceptions import (
     GET_REVIEW_ACCESS_DENIED,
     REVIEW_DOES_NOT_EXIST,

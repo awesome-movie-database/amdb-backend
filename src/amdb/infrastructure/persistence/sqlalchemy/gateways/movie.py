@@ -4,8 +4,12 @@ from sqlalchemy import select
 from sqlalchemy.orm.session import Session
 
 from amdb.domain.entities.movie import MovieId, Movie as MovieEntity
-from amdb.infrastructure.persistence.sqlalchemy.models.movie import Movie as MovieModel
-from amdb.infrastructure.persistence.sqlalchemy.mappers.movie import MovieMapper
+from amdb.infrastructure.persistence.sqlalchemy.models.movie import (
+    Movie as MovieModel,
+)
+from amdb.infrastructure.persistence.sqlalchemy.mappers.movie import (
+    MovieMapper,
+)
 
 
 class SQLAlchemyMovieGateway:

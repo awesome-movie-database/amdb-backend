@@ -5,10 +5,14 @@ from pydantic import BaseModel
 
 from amdb.domain.entities.movie import MovieId
 from amdb.domain.entities.review import ReviewId, ReviewType
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
 from amdb.application.commands.review_movie import ReviewMovieCommand
 from amdb.presentation.handler_factory import HandlerFactory
-from amdb.presentation.web_api.dependencies.identity_provider import get_identity_provider
+from amdb.presentation.web_api.dependencies.identity_provider import (
+    get_identity_provider,
+)
 
 
 class ReviewMovie(BaseModel):
@@ -19,7 +23,9 @@ class ReviewMovie(BaseModel):
 
 async def review_movie(
     ioc: Annotated[HandlerFactory, Depends()],
-    identity_provider: Annotated[IdentityProvider, Depends(get_identity_provider)],
+    identity_provider: Annotated[
+        IdentityProvider, Depends(get_identity_provider)
+    ],
     movie_id: MovieId,
     data: ReviewMovie,
 ) -> ReviewId:

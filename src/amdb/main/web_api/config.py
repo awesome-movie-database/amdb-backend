@@ -22,7 +22,9 @@ def build_web_api_config() -> "WebAPIConfig":
         port=int(_get_env(UVICORN_PORT_ENV)),
     )
     session_config = SessionConfig(
-        session_lifetime=timedelta(minutes=int(_get_env(SESSION_LIFETIME_ENV))),
+        session_lifetime=timedelta(
+            minutes=int(_get_env(SESSION_LIFETIME_ENV))
+        ),
     )
     return WebAPIConfig(
         fastapi=fastapi_config,

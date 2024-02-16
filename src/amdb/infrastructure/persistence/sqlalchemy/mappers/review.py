@@ -1,7 +1,13 @@
 from amdb.domain.entities.user import UserId
 from amdb.domain.entities.movie import MovieId
-from amdb.domain.entities.review import ReviewId, ReviewType, Review as ReviewEntity
-from amdb.infrastructure.persistence.sqlalchemy.models.review import Review as ReviewModel
+from amdb.domain.entities.review import (
+    ReviewId,
+    ReviewType,
+    Review as ReviewEntity,
+)
+from amdb.infrastructure.persistence.sqlalchemy.models.review import (
+    Review as ReviewModel,
+)
 
 
 class ReviewMapper:

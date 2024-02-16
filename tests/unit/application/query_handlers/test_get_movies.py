@@ -6,13 +6,19 @@ from uuid_extensions import uuid7
 
 from amdb.domain.entities.movie import MovieId, Movie
 from amdb.domain.services.access_concern import AccessConcern
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
 from amdb.application.queries.get_movies import GetMoviesQuery, GetMoviesResult
 from amdb.application.query_handlers.get_movies import GetMoviesHandler
-from amdb.application.common.constants.exceptions import GET_MOVIES_ACCESS_DENIED
+from amdb.application.common.constants.exceptions import (
+    GET_MOVIES_ACCESS_DENIED,
+)
 from amdb.application.common.exception import ApplicationError
 
 

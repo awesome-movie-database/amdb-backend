@@ -11,12 +11,21 @@ from amdb.domain.services.access_concern import AccessConcern
 from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.rating_gateway import RatingGateway
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
-from amdb.application.queries.get_my_ratings import GetMyRatingsQuery, GetMyRatingsResult
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
+from amdb.application.queries.get_my_ratings import (
+    GetMyRatingsQuery,
+    GetMyRatingsResult,
+)
 from amdb.application.query_handlers.get_my_ratings import GetMyRatingsHandler
-from amdb.application.common.constants.exceptions import GET_MY_RATINGS_ACCESS_DENIED
+from amdb.application.common.constants.exceptions import (
+    GET_MY_RATINGS_ACCESS_DENIED,
+)
 from amdb.application.common.exception import ApplicationError
 
 
@@ -81,7 +90,9 @@ def test_get_my_ratings(
         identity_provider=identity_provider_with_correct_permissions,
     )
 
-    get_my_ratings_result = get_my_ratings_handler.execute(get_my_ratings_query)
+    get_my_ratings_result = get_my_ratings_handler.execute(
+        get_my_ratings_query
+    )
     expected_get_my_ratings_result = GetMyRatingsResult(
         ratings=[rating],
         rating_count=1,

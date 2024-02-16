@@ -5,13 +5,19 @@ import pytest
 
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.create_movie import CreateMovie
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
 from amdb.application.commands.create_movie import CreateMovieCommand
 from amdb.application.command_handlers.create_movie import CreateMovieHandler
-from amdb.application.common.constants.exceptions import CREATE_MOVIE_ACCESS_DENIED
+from amdb.application.common.constants.exceptions import (
+    CREATE_MOVIE_ACCESS_DENIED,
+)
 from amdb.application.common.exception import ApplicationError
 
 

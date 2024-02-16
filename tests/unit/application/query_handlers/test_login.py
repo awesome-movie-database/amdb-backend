@@ -4,7 +4,9 @@ from uuid_extensions import uuid7
 from amdb.domain.entities.user import UserId, User
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.application.common.interfaces.user_gateway import UserGateway
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
 from amdb.application.common.interfaces.password_manager import PasswordManager
 from amdb.application.queries.login import LoginQuery

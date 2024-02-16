@@ -7,23 +7,41 @@ from sqlalchemy.orm import Session
 from redis.client import Redis
 
 from amdb.infrastructure.persistence.sqlalchemy.models.base import Model
-from amdb.infrastructure.persistence.sqlalchemy.gateways.user import SQLAlchemyUserGateway
-from amdb.infrastructure.persistence.sqlalchemy.gateways.movie import SQLAlchemyMovieGateway
-from amdb.infrastructure.persistence.sqlalchemy.gateways.rating import SQLAlchemyRatingGateway
+from amdb.infrastructure.persistence.sqlalchemy.gateways.user import (
+    SQLAlchemyUserGateway,
+)
+from amdb.infrastructure.persistence.sqlalchemy.gateways.movie import (
+    SQLAlchemyMovieGateway,
+)
+from amdb.infrastructure.persistence.sqlalchemy.gateways.rating import (
+    SQLAlchemyRatingGateway,
+)
 from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password_hash import (
     SQLAlchemyUserPasswordHashGateway,
 )
-from amdb.infrastructure.persistence.sqlalchemy.gateways.review import SQLAlchemyReviewGateway
-from amdb.infrastructure.persistence.redis.gateways.permissions import RedisPermissionsGateway
+from amdb.infrastructure.persistence.sqlalchemy.gateways.review import (
+    SQLAlchemyReviewGateway,
+)
+from amdb.infrastructure.persistence.redis.gateways.permissions import (
+    RedisPermissionsGateway,
+)
 from amdb.infrastructure.persistence.sqlalchemy.mappers.user import UserMapper
-from amdb.infrastructure.persistence.sqlalchemy.mappers.movie import MovieMapper
-from amdb.infrastructure.persistence.sqlalchemy.mappers.rating import RatingMapper
+from amdb.infrastructure.persistence.sqlalchemy.mappers.movie import (
+    MovieMapper,
+)
+from amdb.infrastructure.persistence.sqlalchemy.mappers.rating import (
+    RatingMapper,
+)
 from amdb.infrastructure.persistence.sqlalchemy.mappers.user_password_hash import (
     UserPasswordHashMapper,
 )
-from amdb.infrastructure.persistence.sqlalchemy.mappers.review import ReviewMapper
+from amdb.infrastructure.persistence.sqlalchemy.mappers.review import (
+    ReviewMapper,
+)
 from amdb.infrastructure.security.hasher import Hasher
-from amdb.infrastructure.password_manager.password_manager import HashingPasswordManager
+from amdb.infrastructure.password_manager.password_manager import (
+    HashingPasswordManager,
+)
 
 
 @pytest.fixture(scope="package")

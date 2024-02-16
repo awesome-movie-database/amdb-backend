@@ -3,11 +3,15 @@ from typing import cast
 from amdb.domain.entities.movie import Movie
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.unrate_movie import UnrateMovie
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.rating_gateway import RatingGateway
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
 from amdb.application.common.constants.exceptions import (
     UNRATE_MOVIE_ACCESS_DENIED,
     USER_IS_NOT_OWNER,

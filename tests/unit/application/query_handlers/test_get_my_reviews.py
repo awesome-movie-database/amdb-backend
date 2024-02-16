@@ -8,15 +8,24 @@ from amdb.domain.entities.user import UserId, User
 from amdb.domain.entities.movie import MovieId, Movie
 from amdb.domain.entities.review import ReviewId, ReviewType, Review
 from amdb.domain.services.access_concern import AccessConcern
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.review_gateway import ReviewGateway
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
-from amdb.application.queries.get_my_reviews import GetMyReviewsQuery, GetMyReviewsResult
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
+from amdb.application.queries.get_my_reviews import (
+    GetMyReviewsQuery,
+    GetMyReviewsResult,
+)
 from amdb.application.query_handlers.get_my_reviews import GetMyReviewsHandler
-from amdb.application.common.constants.exceptions import GET_MY_REVIEWS_ACCESS_DENIED
+from amdb.application.common.constants.exceptions import (
+    GET_MY_REVIEWS_ACCESS_DENIED,
+)
 from amdb.application.common.exception import ApplicationError
 
 
@@ -83,7 +92,9 @@ def test_get_my_reviews(
         identity_provider=identity_provider_with_correct_permissions,
     )
 
-    get_my_reviews_result = get_my_reviews_handler.execute(get_my_reviews_query)
+    get_my_reviews_result = get_my_reviews_handler.execute(
+        get_my_reviews_query
+    )
     expected_get_my_reviews_result = GetMyReviewsResult(
         reviews=[review],
         review_count=1,

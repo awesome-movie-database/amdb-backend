@@ -38,7 +38,9 @@ class SQLAlchemyGatewayFactory:
         return SQLAlchemyRatingGateway(self._session, RatingMapper())
 
     def user_password_hash(self) -> SQLAlchemyUserPasswordHashGateway:
-        return SQLAlchemyUserPasswordHashGateway(self._session, UserPasswordHashMapper())
+        return SQLAlchemyUserPasswordHashGateway(
+            self._session, UserPasswordHashMapper()
+        )
 
     def review(self) -> SQLAlchemyReviewGateway:
         return SQLAlchemyReviewGateway(self._session, ReviewMapper())

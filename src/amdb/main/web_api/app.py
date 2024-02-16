@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 
 from amdb.infrastructure.auth.session.config import SessionConfig
-from amdb.presentation.web_api.exception_handlers import setup_exception_handlers
+from amdb.presentation.web_api.exception_handlers import (
+    setup_exception_handlers,
+)
 from amdb.presentation.web_api.routers.setup import setup_routers
 from amdb.main.config import GenericConfig
 from .config import FastAPIConfig

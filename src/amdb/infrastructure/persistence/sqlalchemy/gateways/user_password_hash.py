@@ -22,9 +22,13 @@ class SQLAlchemyUserPasswordHashGateway:
         self._mapper = mapper
 
     def get(self, user_id: UserId) -> Optional[UserPasswordHash]:
-        user_password_hash_model = self._session.get(UserPasswordHashModel, user_id)
+        user_password_hash_model = self._session.get(
+            UserPasswordHashModel, user_id
+        )
         if user_password_hash_model:
-            return self._mapper.to_password_manager_model(user_password_hash_model)
+            return self._mapper.to_password_manager_model(
+                user_password_hash_model
+            )
         return None
 
     def save(self, user_password_hash: UserPasswordHash) -> None:

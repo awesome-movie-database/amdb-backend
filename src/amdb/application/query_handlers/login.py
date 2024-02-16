@@ -3,7 +3,9 @@ from typing import cast
 from amdb.domain.entities.user import UserId
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.application.common.interfaces.user_gateway import UserGateway
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.password_manager import PasswordManager
 from amdb.application.common.constants.exceptions import (
     LOGIN_ACCESS_DENIED,

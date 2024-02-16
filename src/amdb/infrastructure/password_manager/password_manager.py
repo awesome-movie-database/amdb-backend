@@ -25,4 +25,6 @@ class HashingPasswordManager:
     def verify(self, user_id: UserId, password: str) -> bool:
         user_password_hash = self._user_password_hash_gateway.get(user_id)
         user_password_hash = cast(UserPasswordHash, user_password_hash)
-        return self._hasher.verify(password.encode(), user_password_hash.password_hash)
+        return self._hasher.verify(
+            password.encode(), user_password_hash.password_hash
+        )

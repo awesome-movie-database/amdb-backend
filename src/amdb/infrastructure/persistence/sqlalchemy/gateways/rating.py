@@ -6,8 +6,12 @@ from sqlalchemy.orm.session import Session
 from amdb.domain.entities.user import UserId
 from amdb.domain.entities.movie import MovieId
 from amdb.domain.entities.rating import RatingId, Rating as RatingEntity
-from amdb.infrastructure.persistence.sqlalchemy.models.rating import Rating as RatingModel
-from amdb.infrastructure.persistence.sqlalchemy.mappers.rating import RatingMapper
+from amdb.infrastructure.persistence.sqlalchemy.models.rating import (
+    Rating as RatingModel,
+)
+from amdb.infrastructure.persistence.sqlalchemy.mappers.rating import (
+    RatingMapper,
+)
 
 
 class SQLAlchemyRatingGateway:
@@ -48,7 +52,10 @@ class SQLAlchemyRatingGateway:
         offset: int,
     ) -> list[RatingEntity]:
         statement = (
-            select(RatingModel).where(RatingModel.movie_id == movie_id).limit(limit).offset(offset)
+            select(RatingModel)
+            .where(RatingModel.movie_id == movie_id)
+            .limit(limit)
+            .offset(offset)
         )
         rating_models = self._session.scalars(statement)
 
@@ -66,7 +73,10 @@ class SQLAlchemyRatingGateway:
         offset: int,
     ) -> list[RatingEntity]:
         statement = (
-            select(RatingModel).where(RatingModel.user_id == user_id).limit(limit).offset(offset)
+            select(RatingModel)
+            .where(RatingModel.user_id == user_id)
+            .limit(limit)
+            .offset(offset)
         )
         rating_models = self._session.scalars(statement)
 

@@ -7,12 +7,16 @@ from amdb.domain.entities.user import User
 from amdb.domain.entities.rating import RatingId
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.rate_movie import RateMovie
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
+from amdb.application.common.interfaces.permissions_gateway import (
+    PermissionsGateway,
+)
 from amdb.application.common.interfaces.user_gateway import UserGateway
 from amdb.application.common.interfaces.movie_gateway import MovieGateway
 from amdb.application.common.interfaces.rating_gateway import RatingGateway
 from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
 from amdb.application.common.constants.exceptions import (
     RATE_MOVIE_ACCESS_DENIED,
     MOVIE_DOES_NOT_EXIST,

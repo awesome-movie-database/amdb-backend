@@ -3,15 +3,21 @@ from typing import Annotated
 from fastapi import Depends
 
 from amdb.domain.entities.review import ReviewId
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.interfaces.identity_provider import (
+    IdentityProvider,
+)
 from amdb.application.queries.get_review import GetReviewQuery, GetReviewResult
 from amdb.presentation.handler_factory import HandlerFactory
-from amdb.presentation.web_api.dependencies.identity_provider import get_identity_provider
+from amdb.presentation.web_api.dependencies.identity_provider import (
+    get_identity_provider,
+)
 
 
 async def get_review(
     ioc: Annotated[HandlerFactory, Depends()],
-    identity_provider: Annotated[IdentityProvider, Depends(get_identity_provider)],
+    identity_provider: Annotated[
+        IdentityProvider, Depends(get_identity_provider)
+    ],
     review_id: ReviewId,
 ) -> GetReviewResult:
     """
