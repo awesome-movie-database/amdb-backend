@@ -28,28 +28,13 @@ class PermissionsGateway(Protocol):
     def for_delete_movie(self) -> int:
         raise NotImplementedError
 
-    def for_get_movie_ratings(self) -> int:
-        raise NotImplementedError
-
-    def for_get_my_ratings(self) -> int:
-        raise NotImplementedError
-
-    def for_get_rating(self) -> int:
-        raise NotImplementedError
-
     def for_rate_movie(self) -> int:
         raise NotImplementedError
 
     def for_unrate_movie(self) -> int:
         raise NotImplementedError
 
-    def for_get_movie_reviews(self) -> int:
-        raise NotImplementedError
-
-    def for_get_my_reviews(self) -> int:
-        raise NotImplementedError
-
-    def for_get_review(self) -> int:
+    def for_get_reviews(self) -> int:
         raise NotImplementedError
 
     def for_review_movie(self) -> int:

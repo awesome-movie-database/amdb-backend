@@ -3,14 +3,10 @@ from uuid_extensions import uuid7
 from amdb.domain.entities.movie import MovieId
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.create_movie import CreateMovie
-from amdb.application.common.interfaces.permissions_gateway import (
-    PermissionsGateway,
-)
-from amdb.application.common.interfaces.movie_gateway import MovieGateway
-from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import (
-    IdentityProvider,
-)
+from amdb.application.common.gateways.permissions import PermissionsGateway
+from amdb.application.common.gateways.movie import MovieGateway
+from amdb.application.common.unit_of_work import UnitOfWork
+from amdb.application.common.identity_provider import IdentityProvider
 from amdb.application.common.constants.exceptions import (
     CREATE_MOVIE_ACCESS_DENIED,
 )

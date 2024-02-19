@@ -9,16 +9,12 @@ from amdb.domain.entities.movie import MovieId, Movie
 from amdb.domain.entities.review import ReviewId, ReviewType, Review
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.review_movie import ReviewMovie
-from amdb.application.common.interfaces.permissions_gateway import (
-    PermissionsGateway,
-)
-from amdb.application.common.interfaces.user_gateway import UserGateway
-from amdb.application.common.interfaces.movie_gateway import MovieGateway
-from amdb.application.common.interfaces.review_gateway import ReviewGateway
-from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import (
-    IdentityProvider,
-)
+from amdb.application.common.gateways.permissions import PermissionsGateway
+from amdb.application.common.gateways.user import UserGateway
+from amdb.application.common.gateways.movie import MovieGateway
+from amdb.application.common.gateways.review import ReviewGateway
+from amdb.application.common.unit_of_work import UnitOfWork
+from amdb.application.common.identity_provider import IdentityProvider
 from amdb.application.commands.review_movie import ReviewMovieCommand
 from amdb.application.command_handlers.review_movie import ReviewMovieHandler
 from amdb.application.common.constants.exceptions import (
