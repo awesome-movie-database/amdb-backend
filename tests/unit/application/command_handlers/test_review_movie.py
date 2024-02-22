@@ -32,7 +32,7 @@ def identity_provider_with_correct_permissions(
     identity_provider = Mock()
 
     correct_permissions = permissions_gateway.for_review_movie()
-    identity_provider.get_permissions = Mock(return_value=correct_permissions)
+    identity_provider.permissions = Mock(return_value=correct_permissions)
 
     return identity_provider
 
@@ -62,7 +62,7 @@ def test_review_movie(
 
     unit_of_work.commit()
 
-    identity_provider_with_correct_permissions.get_user_id = Mock(
+    identity_provider_with_correct_permissions.user_id = Mock(
         return_value=user.id,
     )
 
@@ -184,7 +184,7 @@ def test_review_movie_should_raise_error_when_movie_already_reviewed(
 
     unit_of_work.commit()
 
-    identity_provider_with_correct_permissions.get_user_id = Mock(
+    identity_provider_with_correct_permissions.user_id = Mock(
         return_value=user.id,
     )
 

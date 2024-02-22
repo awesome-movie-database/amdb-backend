@@ -16,12 +16,6 @@ class PermissionsGateway(Protocol):
     def for_login(self) -> int:
         raise NotImplementedError
 
-    def for_get_movies(self) -> int:
-        raise NotImplementedError
-
-    def for_get_movie(self) -> int:
-        raise NotImplementedError
-
     def for_create_movie(self) -> int:
         raise NotImplementedError
 
@@ -32,9 +26,6 @@ class PermissionsGateway(Protocol):
         raise NotImplementedError
 
     def for_unrate_movie(self) -> int:
-        raise NotImplementedError
-
-    def for_get_reviews(self) -> int:
         raise NotImplementedError
 
     def for_review_movie(self) -> int:

@@ -8,14 +8,14 @@ from amdb.domain.entities.user import UserId, User
 from amdb.domain.entities.movie import MovieId, Movie
 from amdb.domain.entities.rating import RatingId, Rating
 from amdb.domain.entities.review import ReviewId, ReviewType, Review
-from amdb.domain.services.access_concern import AccessConcern
-from amdb.application.common.gateways.permissions import PermissionsGateway
 from amdb.application.common.gateways.user import UserGateway
 from amdb.application.common.gateways.movie import MovieGateway
 from amdb.application.common.gateways.rating import RatingGateway
 from amdb.application.common.gateways.review import ReviewGateway
 from amdb.application.common.unit_of_work import UnitOfWork
-from amdb.application.common.readers.movie import MovieViewModelReader
+from amdb.application.common.readers.detailed_movie import (
+    DetailedMovieViewModelReader,
+)
 from amdb.application.common.identity_provider import IdentityProvider
 from amdb.application.common.view_models.detailed_movie import (
     UserRating,
@@ -23,25 +23,11 @@ from amdb.application.common.view_models.detailed_movie import (
     DetailedMovieViewModel,
 )
 from amdb.application.queries.detailed_movie import GetDetailedMovieQuery
-from amdb.application.query_handlers.detailed_movie import GetDetailedMovieHandler
-from amdb.application.common.constants.exceptions import (
-    GET_MOVIE_ACCESS_DENIED,
-    MOVIE_DOES_NOT_EXIST,
+from amdb.application.query_handlers.detailed_movie import (
+    GetDetailedMovieHandler,
 )
+from amdb.application.common.constants.exceptions import MOVIE_DOES_NOT_EXIST
 from amdb.application.common.exception import ApplicationError
-
-
-@pytest.fixture
-def identity_provider_with_correct_permissions(
-    permissions_gateway: PermissionsGateway,
-) -> IdentityProvider:
-    identity_provider = Mock()
-
-    correct_permissions = permissions_gateway.for_get_movie()
-    identity_provider.get_permissions = Mock(return_value=correct_permissions)
-
-    return identity_provider
-
 
 
 def test_get_detailed_movie(
@@ -50,9 +36,7 @@ def test_get_detailed_movie(
     rating_gateway: RatingGateway,
     review_gateway: ReviewGateway,
     unit_of_work: UnitOfWork,
-    permissions_gateway: PermissionsGateway,
-    movie_view_model_reader: MovieViewModelReader,
-    identity_provider_with_correct_permissions: IdentityProvider,
+    detailed_movie_reader: DetailedMovieViewModelReader,
 ):
     user = User(
         id=UserId(uuid7()),
@@ -91,7 +75,8 @@ def test_get_detailed_movie(
 
     unit_of_work.commit()
 
-    identity_provider_with_correct_permissions.get_user_id = Mock(
+    identity_provider: IdentityProvider = Mock()
+    identity_provider.user_id_or_none = Mock(
         return_value=user.id,
     )
 
@@ -99,16 +84,15 @@ def test_get_detailed_movie(
         movie_id=movie.id,
     )
     get_detailed_movie_handler = GetDetailedMovieHandler(
-        access_concern=AccessConcern(),
-        permissions_gateway=permissions_gateway,
-        movie_view_model_reader=movie_view_model_reader,
-        identity_provider=identity_provider_with_correct_permissions,
+        detailed_movie_reader=detailed_movie_reader,
+        identity_provider=identity_provider,
     )
 
     expected_result = DetailedMovieViewModel(
         id=movie.id,
         title=movie.title,
         release_date=movie.release_date,
+        rating=movie.rating,
         rating_count=movie.rating_count,
         user_rating=UserRating(
             id=rating.id,
@@ -120,52 +104,28 @@ def test_get_detailed_movie(
             title=review.title,
             content=review.content,
             type=review.type,
-            created_at=review.type,
-        )
+            created_at=review.created_at,
+        ),
     )
     result = get_detailed_movie_handler.execute(get_detailed_movie_query)
 
     assert expected_result == result
 
 
-def test_get_detailed_movie_should_raise_error_when_access_is_denied(
-    permissions_gateway: PermissionsGateway,
-    movie_view_model_reader: MovieViewModelReader,
-    identity_provider_with_incorrect_permissions: IdentityProvider,
-):
-    get_detailed_movie_query = GetDetailedMovieQuery(
-        movie_id=MovieId(uuid7()),
-    )
-    get_detailed_movie_handler = GetDetailedMovieHandler(
-        access_concern=AccessConcern(),
-        permissions_gateway=permissions_gateway,
-        movie_view_model_reader=movie_view_model_reader,
-        identity_provider=identity_provider_with_incorrect_permissions,
-    )
-
-    with pytest.raises(ApplicationError) as error:
-        get_detailed_movie_handler.execute(get_detailed_movie_query)
-
-    assert error.value.message == GET_MOVIE_ACCESS_DENIED
-
-
 def test_get_detailed_movie_should_raise_error_when_movie_does_not_exist(
-    permissions_gateway: PermissionsGateway,
-    movie_view_model_reader: MovieViewModelReader,
-    identity_provider_with_correct_permissions: IdentityProvider,
+    detailed_movie_reader: DetailedMovieViewModelReader,
 ):
-    identity_provider_with_correct_permissions.get_user_id = Mock(
-        return_value=UserId(uuid7()),
+    identity_provider: IdentityProvider = Mock()
+    identity_provider.user_id_or_none = Mock(
+        return_value=None,
     )
 
     get_detailed_movie_query = GetDetailedMovieQuery(
         movie_id=MovieId(uuid7()),
     )
     get_detailed_movie_handler = GetDetailedMovieHandler(
-        access_concern=AccessConcern(),
-        permissions_gateway=permissions_gateway,
-        movie_view_model_reader=movie_view_model_reader,
-        identity_provider=identity_provider_with_correct_permissions,
+        detailed_movie_reader=detailed_movie_reader,
+        identity_provider=identity_provider,
     )
 
     with pytest.raises(ApplicationError) as error:

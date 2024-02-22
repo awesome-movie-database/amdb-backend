@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from .base import Model
 
 
-class Movie(Model):
+class MovieModel(Model):
     __tablename__ = "movies"
 
     id: Mapped[UUID] = mapped_column(

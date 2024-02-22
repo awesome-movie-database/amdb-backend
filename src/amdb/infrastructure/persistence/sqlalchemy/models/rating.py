@@ -5,11 +5,11 @@ from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Model
-from .user import User
-from .movie import Movie
+from .user import UserModel
+from .movie import MovieModel
 
 
-class Rating(Model):
+class RatingModel(Model):
     __tablename__ = "ratings"
 
     id: Mapped[UUID] = mapped_column(
@@ -24,7 +24,7 @@ class Rating(Model):
     value: Mapped[float]
     created_at: Mapped[datetime]
 
-    movie: Mapped[Movie] = relationship()
-    user: Mapped[User] = relationship()
+    movie: Mapped[MovieModel] = relationship()
+    user: Mapped[UserModel] = relationship()
 
     __table_args__ = (UniqueConstraint("user_id", "movie_id"),)

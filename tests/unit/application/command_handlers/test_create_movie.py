@@ -24,7 +24,7 @@ def identity_provider_with_correct_permissions(
     identity_provider = Mock()
 
     correct_permissions = permissions_gateway.for_create_movie()
-    identity_provider.get_permissions = Mock(return_value=correct_permissions)
+    identity_provider.permissions = Mock(return_value=correct_permissions)
 
     return identity_provider
 

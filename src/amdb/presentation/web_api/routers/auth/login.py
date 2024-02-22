@@ -5,9 +5,7 @@ from fastapi import Response, Depends
 from amdb.domain.entities.user import UserId
 from amdb.application.queries.login import LoginQuery
 from amdb.infrastructure.auth.session.session_processor import SessionProcessor
-from amdb.infrastructure.persistence.redis.gateways.session import (
-    RedisSessionGateway,
-)
+from amdb.infrastructure.persistence.redis.mappers.session import SessionMapper
 from amdb.presentation.handler_factory import HandlerFactory
 from amdb.presentation.web_api.dependencies.depends_stub import Stub
 from amdb.presentation.web_api.constants import SESSION_ID_COOKIE
@@ -16,11 +14,10 @@ from amdb.presentation.web_api.constants import SESSION_ID_COOKIE
 async def login(
     ioc: Annotated[HandlerFactory, Depends()],
     session_processor: Annotated[
-        SessionProcessor, Depends(Stub(SessionProcessor))
+        SessionProcessor,
+        Depends(Stub(SessionProcessor)),
     ],
-    session_gateway: Annotated[
-        RedisSessionGateway, Depends(Stub(RedisSessionGateway))
-    ],
+    session_mapper: Annotated[SessionMapper, Depends(Stub(SessionMapper))],
     login_query: LoginQuery,
     response: Response,
 ) -> UserId:
@@ -38,7 +35,7 @@ async def login(
         user_id = login_handler.execute(login_query)
 
     session = session_processor.create(user_id=user_id)
-    session_gateway.save(session)
+    session_mapper.save(session)
 
     response.set_cookie(
         key=SESSION_ID_COOKIE,

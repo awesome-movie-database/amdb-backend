@@ -1,14 +1,14 @@
 from datetime import timedelta
-from typing import Optional
+from typing import Optional, cast
 from uuid import UUID
 
 from redis import Redis
 
 from amdb.domain.entities.user import UserId
-from amdb.infrastructure.auth.session.model import SessionId, Session
+from amdb.infrastructure.auth.session.session import SessionId, Session
 
 
-class RedisSessionGateway:
+class SessionMapper:
     def __init__(
         self,
         *,
@@ -34,6 +34,6 @@ class RedisSessionGateway:
         if user_id:
             return Session(
                 id=session_id,
-                user_id=UserId(UUID(user_id)),
+                user_id=UserId(UUID(cast(str, user_id))),
             )
         return None

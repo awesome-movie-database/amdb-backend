@@ -10,7 +10,8 @@ def setup_exception_handlers(app: FastAPI) -> None:
     app.add_exception_handler(DomainError, _domain_error_handler)
     app.add_exception_handler(ApplicationError, _application_error_handler)
     app.add_exception_handler(
-        InfrastructureError, _infrastructure_error_handler
+        InfrastructureError,
+        _infrastructure_error_handler,
     )
 
 
@@ -23,6 +24,7 @@ def _application_error_handler(_, error: ApplicationError) -> JSONResponse:
 
 
 def _infrastructure_error_handler(
-    _, error: InfrastructureError
+    _,
+    error: InfrastructureError,
 ) -> JSONResponse:
     return JSONResponse(content=None, status_code=500)

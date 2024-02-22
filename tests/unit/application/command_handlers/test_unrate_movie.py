@@ -32,7 +32,7 @@ def identity_provider_with_correct_permissions(
     identity_provider = Mock()
 
     correct_permissions = permissions_gateway.for_unrate_movie()
-    identity_provider.get_permissions = Mock(return_value=correct_permissions)
+    identity_provider.permissions = Mock(return_value=correct_permissions)
 
     return identity_provider
 
@@ -71,7 +71,7 @@ def test_unrate_movie(
 
     unit_of_work.commit()
 
-    identity_provider_with_correct_permissions.get_user_id = Mock(
+    identity_provider_with_correct_permissions.user_id = Mock(
         return_value=user.id,
     )
 
@@ -177,7 +177,7 @@ def test_unrate_movie_should_raise_error_when_user_is_not_rating_owner(
 
     unit_of_work.commit()
 
-    identity_provider_with_correct_permissions.get_user_id = Mock(
+    identity_provider_with_correct_permissions.user_id = Mock(
         return_value=UserId(uuid7()),
     )
 

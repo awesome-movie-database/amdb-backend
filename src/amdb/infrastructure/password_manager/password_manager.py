@@ -1,30 +1,47 @@
-from typing import cast
+import os
 
 from amdb.domain.entities.user import UserId
-from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password_hash import (
-    SQLAlchemyUserPasswordHashGateway,
-)
-from amdb.infrastructure.security.hasher import Hasher
-from .model import UserPasswordHash
+from amdb.infrastructure.exception import InfrastructureError
+from .password_hash import PasswordHash
+from .password_hash_gateway import PasswordHashGateway
+from .hash_computer import HashComputer
+
+
+PASSWORD_HASH_DOES_NOT_EXIST = "Password hash doesn't exist"
 
 
 class HashingPasswordManager:
     def __init__(
         self,
-        hasher: Hasher,
-        user_password_hash_gateway: SQLAlchemyUserPasswordHashGateway,
+        hash_computer: HashComputer,
+        password_hash_gateway: PasswordHashGateway,
     ) -> None:
-        self._hasher = hasher
-        self._user_password_hash_gateway = user_password_hash_gateway
+        self._hash_computer = hash_computer
+        self._password_hash_gateway = password_hash_gateway
 
     def set(self, user_id: UserId, password: str) -> None:
-        password_hash = self._hasher.hash(password.encode())
-        user_password_hash = UserPasswordHash(user_id, password_hash)
-        self._user_password_hash_gateway.save(user_password_hash)
+        salt = self._gen_random_bytes()
+        hash = self._hash_computer.hash(
+            value=password.encode(),
+            salt=salt,
+        )
+        password_hash = PasswordHash(
+            user_id=user_id,
+            hash=hash,
+            salt=salt,
+        )
+        self._password_hash_gateway.save(password_hash)
 
     def verify(self, user_id: UserId, password: str) -> bool:
-        user_password_hash = self._user_password_hash_gateway.get(user_id)
-        user_password_hash = cast(UserPasswordHash, user_password_hash)
-        return self._hasher.verify(
-            password.encode(), user_password_hash.password_hash
+        password_hash = self._password_hash_gateway.with_user_id(user_id)
+        if not password_hash:
+            raise InfrastructureError(PASSWORD_HASH_DOES_NOT_EXIST)
+
+        return self._hash_computer.verify(
+            value=password.encode(),
+            hashed_value=password_hash.hash,
+            salt=password_hash.salt,
         )
+
+    def _gen_random_bytes(self) -> bytes:
+        return os.urandom(32)

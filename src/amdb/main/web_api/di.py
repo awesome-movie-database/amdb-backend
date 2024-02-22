@@ -1,53 +1,46 @@
+from typing import cast
+
 from fastapi import FastAPI
 from sqlalchemy import create_engine
-from sqlalchemy.orm.session import sessionmaker
 from redis.client import Redis
 
-from amdb.infrastructure.security.hasher import Hasher
-from amdb.infrastructure.auth.session.config import SessionConfig
-from amdb.infrastructure.persistence.redis.gateways.session import (
-    RedisSessionGateway,
-)
-from amdb.infrastructure.persistence.redis.gateways.permissions import (
-    RedisPermissionsGateway,
-)
 from amdb.infrastructure.auth.session.session_processor import SessionProcessor
+from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
+from amdb.infrastructure.persistence.redis.config import RedisConfig
+from amdb.infrastructure.auth.session.config import SessionConfig
+from amdb.infrastructure.persistence.redis.mappers.session import SessionMapper
+from amdb.infrastructure.persistence.redis.mappers.permissions import (
+    PermissionsMapper,
+)
+from amdb.infrastructure.password_manager.hash_computer import HashComputer
 from amdb.presentation.handler_factory import HandlerFactory
 from amdb.presentation.web_api.dependencies.depends_stub import Stub
-from amdb.main.config import GenericConfig
 from amdb.main.ioc import IoC
 
 
 def setup_dependecies(
     app: FastAPI,
     session_config: SessionConfig,
-    generic_config: GenericConfig,
+    postgres_config: PostgresConfig,
+    redis_config: RedisConfig,
 ) -> None:
-    redis = Redis(
-        host=generic_config.redis.host,
-        port=generic_config.redis.port,
-        db=generic_config.redis.db,
-        password=generic_config.redis.password,
-        decode_responses=True,
+    redis = Redis.from_url(redis_config.url, decode_responses=True)
+    session_mapper = SessionMapper(
+        redis=cast(Redis, redis),
+        session_lifetime=session_config.lifetime,
     )
-    redis_session_gateway = RedisSessionGateway(
-        redis=redis,
-        session_lifetime=session_config.session_lifetime,
-    )
-    app.dependency_overrides[Stub(RedisSessionGateway)] = (
-        lambda: redis_session_gateway
+    app.dependency_overrides[Stub(SessionMapper)] = lambda: session_mapper  # type: ignore
+
+    permissions_mapper = PermissionsMapper(cast(Redis, redis))
+    app.dependency_overrides[Stub(PermissionsMapper)] = (
+        lambda: permissions_mapper
     )  # type: ignore
 
-    redis_permissions_gateway = RedisPermissionsGateway(redis)
-    app.dependency_overrides[Stub(RedisPermissionsGateway)] = (
-        lambda: redis_permissions_gateway
-    )  # type: ignore
-
-    engine = create_engine(generic_config.postgres.dsn)
+    sqlalchemy_engine = create_engine(postgres_config.url)
     ioc = IoC(
-        sessionmaker=sessionmaker(engine),
-        permissions_gateway=redis_permissions_gateway,
-        hasher=Hasher(),
+        sqlalchemy_engine=sqlalchemy_engine,
+        permissions_mapper=permissions_mapper,
+        hash_computer=HashComputer(),
     )
     app.dependency_overrides[HandlerFactory] = lambda: ioc  # type: ignore
 

@@ -45,7 +45,7 @@ class RateMovieHandler:
         self._identity_provider = identity_provider
 
     def execute(self, command: RateMovieCommand) -> RatingId:
-        current_permissions = self._identity_provider.get_permissions()
+        current_permissions = self._identity_provider.permissions()
         required_permissions = self._permissions_gateway.for_rate_movie()
         access = self._access_concern.authorize(
             current_permissions=current_permissions,
@@ -58,7 +58,7 @@ class RateMovieHandler:
         if not movie:
             raise ApplicationError(MOVIE_DOES_NOT_EXIST)
 
-        current_user_id = self._identity_provider.get_user_id()
+        current_user_id = self._identity_provider.user_id()
 
         rating = self._rating_gateway.with_user_id_and_movie_id(
             user_id=current_user_id,

@@ -25,10 +25,11 @@ maintainers = [
 ]
 dependencies = [
     "uuid7",
-    "sqlalchemy==2.0.23",
-    "psycopg2-binary==2.9.9",
-    "alembic==1.13.0",
-    "redis>=5.0.0",
+    "toml==0.10.*",
+    "sqlalchemy==2.0.*",
+    "psycopg2-binary==2.9.*",
+    "alembic==1.13.*",
+    "redis==5.0.*",
 ]
 
 [project.optional-dependencies]

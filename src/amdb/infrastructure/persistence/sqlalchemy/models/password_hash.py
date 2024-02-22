@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from .base import Model
 
 
-class UserPasswordHash(Model):
+class PasswordHashModel(Model):
     __tablename__ = "user_password_hashes"
 
     user_id: Mapped[UUID] = mapped_column(

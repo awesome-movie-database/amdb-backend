@@ -3,9 +3,7 @@ from typing import Annotated
 from fastapi import Depends
 
 from amdb.domain.entities.rating import RatingId
-from amdb.application.common.interfaces.identity_provider import (
-    IdentityProvider,
-)
+from amdb.application.common.identity_provider import IdentityProvider
 from amdb.application.commands.unrate_movie import UnrateMovieCommand
 from amdb.presentation.handler_factory import HandlerFactory
 from amdb.presentation.web_api.dependencies.identity_provider import (
@@ -16,7 +14,8 @@ from amdb.presentation.web_api.dependencies.identity_provider import (
 async def unrate_movie(
     ioc: Annotated[HandlerFactory, Depends(HandlerFactory)],
     identity_provider: Annotated[
-        IdentityProvider, Depends(get_identity_provider)
+        IdentityProvider,
+        Depends(get_identity_provider),
     ],
     rating_id: RatingId,
 ) -> None:

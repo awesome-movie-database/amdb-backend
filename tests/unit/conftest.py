@@ -1,49 +1,24 @@
 import os
+from typing import cast
 
 import pytest
 from redis.client import Redis
 
 from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
+from amdb.infrastructure.persistence.redis.config import RedisConfig
 
 
-TEST_POSTGRES_HOST_ENV = "TEST_POSTGRES_HOST"
-TEST_POSTGRES_PORT_ENV = "TEST_POSTGRES_PORT"
-TEST_POSTGRES_NAME_ENV = "TEST_POSTGRES_DB"
-TEST_POSTGRES_USER_ENV = "TEST_POSTGRES_USER"
-TEST_POSTGRES_PASSWORD_ENV = "TEST_POSTGRES_PASSWORD"
-
-TEST_REDIS_HOST_ENV = "TEST_REDIS_HOST"
-TEST_REDIS_PORT_ENV = "TEST_REDIS_PORT"
-TEST_REDIS_DB_ENV = "TEST_REDIS_DB"
-TEST_REDIS_PASSWORD_ENV = "TEST_REDIS_PASSWORD"
-
-
-def _get_env(key: str) -> str:
-    value = os.getenv(key)
-    if value is None:
-        message = f"Env variable {key} is not set"
-        raise ValueError(message)
-    return value
+CONFIG_PATH = os.getenv("TEST_CONFIG_PATH")
 
 
 @pytest.fixture(scope="session")
 def postgres_url() -> str:
-    postgres_config = PostgresConfig(
-        host=_get_env(TEST_POSTGRES_HOST_ENV),
-        port=_get_env(TEST_POSTGRES_PORT_ENV),
-        name=_get_env(TEST_POSTGRES_NAME_ENV),
-        user=_get_env(TEST_POSTGRES_USER_ENV),
-        password=_get_env(TEST_POSTGRES_PASSWORD_ENV),
-    )
-    return postgres_config.dsn
+    postgres_config = PostgresConfig.from_toml(CONFIG_PATH)
+    return postgres_config.url
 
 
 @pytest.fixture(scope="session")
 def redis() -> Redis:
-    redis = Redis(
-        host=_get_env(TEST_REDIS_HOST_ENV),
-        port=int(_get_env(TEST_REDIS_PORT_ENV)),
-        db=int(_get_env(TEST_REDIS_DB_ENV)),
-        password=_get_env(TEST_REDIS_PASSWORD_ENV),
-    )
-    return redis
+    redis_config = RedisConfig.from_toml(CONFIG_PATH)
+    redis = Redis.from_url(redis_config.url, decode_responses=True)
+    return cast(Redis, redis)

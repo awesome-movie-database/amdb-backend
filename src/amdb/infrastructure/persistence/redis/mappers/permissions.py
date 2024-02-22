@@ -1,18 +1,18 @@
-from typing import Optional
+from typing import Optional, cast
 
 from redis.client import Redis
 
 from amdb.domain.entities.user import UserId
 
 
-class RedisPermissionsGateway:
+class PermissionsMapper:
     def __init__(self, redis: Redis) -> None:
         self._redis = redis
 
     def with_user_id(self, user_id: UserId) -> Optional[int]:
         permissions = self._redis.get(f"permissions:user_id:{user_id.hex}")
         if permissions:
-            return int(permissions)
+            return int(cast(str, permissions))
         return None
 
     def set(self, user_id: UserId, permissions: int) -> None:
@@ -54,7 +54,7 @@ class RedisPermissionsGateway:
     def for_unrate_movie(self) -> int:
         return 4
 
-    def for_get_movie_reviews(self) -> int:
+    def for_get_reviews(self) -> int:
         return 4
 
     def for_get_my_reviews(self) -> int:

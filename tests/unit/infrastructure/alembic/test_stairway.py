@@ -7,6 +7,8 @@ and mistakes in migrations forever.
 
 https://github.com/alvassin/alembic-quickstart
 """
+from typing import cast
+
 import alembic.config
 import alembic.command
 import alembic.script
@@ -20,7 +22,7 @@ def get_revisions(
 
     # Get & sort migrations, from first to last
     revisions: list[alembic.script.Script] = list(
-        revisions_dir.walk_revisions("base", "heads")
+        revisions_dir.walk_revisions("base", "heads"),
     )
     revisions.reverse()
 
@@ -33,6 +35,7 @@ def test_migrations_stairway(alembic_config: alembic.config.Config):
 
         # We need -1 for downgrading first migration (its down_revision is None)
         alembic.command.downgrade(
-            alembic_config, revision.down_revision or "-1"
+            alembic_config,
+            cast(str, revision.down_revision) or "-1",
         )  # type: ignore
         alembic.command.upgrade(alembic_config, revision.revision)

@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
 from amdb.domain.entities.user import UserId
-from amdb.infrastructure.security.hasher import HashData
 
 
 @dataclass(frozen=True, slots=True)
-class UserPasswordHash:
+class PasswordHash:
     user_id: UserId
-    password_hash: HashData
+    hash: bytes
+    salt: bytes

@@ -40,7 +40,7 @@ class UnrateMovieHandler:
         self._identity_provider = identity_provider
 
     def execute(self, command: UnrateMovieCommand) -> None:
-        current_permissions = self._identity_provider.get_permissions()
+        current_permissions = self._identity_provider.permissions()
         required_permissions = self._permissions_gateway.for_unrate_movie()
         access = self._access_concern.authorize(
             current_permissions=current_permissions,
@@ -53,7 +53,7 @@ class UnrateMovieHandler:
         if not rating:
             raise ApplicationError(RATING_DOES_NOT_EXIST)
 
-        current_user_id = self._identity_provider.get_user_id()
+        current_user_id = self._identity_provider.user_id()
         if current_user_id != rating.user_id:
             raise ApplicationError(USER_IS_NOT_OWNER)
 

@@ -16,22 +16,6 @@ class ReviewGateway(Protocol):
     ) -> Optional[Review]:
         raise NotImplementedError
 
-    def list_with_movie_id(
-        self,
-        movie_id: MovieId,
-        limit: int,
-        offset: int,
-    ) -> list[Review]:
-        raise NotImplementedError
-
-    def list_with_user_id(
-        self,
-        user_id: UserId,
-        limit: int,
-        offset: int,
-    ) -> list[Review]:
-        raise NotImplementedError
-
     def save(self, review: Review) -> None:
         raise NotImplementedError
 

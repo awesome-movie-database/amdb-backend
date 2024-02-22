@@ -1,11 +1,14 @@
-from typing import Protocol
+from typing import Protocol, Optional
 
 from amdb.domain.entities.user import UserId
 
 
 class IdentityProvider(Protocol):
-    def get_user_id(self) -> UserId:
+    def user_id(self) -> UserId:
         raise NotImplementedError
 
-    def get_permissions(self) -> int:
+    def user_id_or_none(self) -> Optional[UserId]:
+        raise NotImplementedError
+
+    def permissions(self) -> int:
         raise NotImplementedError

@@ -13,23 +13,7 @@ services:
             dockerfile: ./Dockerfile
             target: web_api
         environment:
-            - POSTGRES_USER
-            - POSTGRES_PASSWORD
-            - POSTGRES_DB
-            - POSTGRES_HOST=postgres
-            - POSTGRES_PORT
-
-            - FASTAPI_VERSION
-
-            - UVICORN_HOST=0.0.0.0
-            - UVICORN_PORT
-
-            - REDIS_HOST=redis
-            - REDIS_PORT
-            - REDIS_DB
-            - REDIS_PASSWORD
-
-            - SESSION_LIFETIME
+            - CONFIG_PATH
 
     postgres:
         profiles: [web_api]

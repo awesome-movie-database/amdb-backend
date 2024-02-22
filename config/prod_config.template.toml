@@ -1,0 +1,13 @@
+[postgres]
+url = "postgresql://postgres:1234@127.0.0.1:5432/amdb"
+
+[redis]
+url = "redis://:1234@127.0.0.1:6379/0"
+
+[auth-session]
+lifetime = 3600  # Minutes
+
+[web-api]
+version = "0.5.0"
+host = "127.0.0.1"
+port = 8000

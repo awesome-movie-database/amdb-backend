@@ -36,7 +36,7 @@ class DeleteMovieHandler:
         self._identity_provider = identity_provider
 
     def execute(self, command: DeleteMovieCommand) -> None:
-        current_permissions = self._identity_provider.get_permissions()
+        current_permissions = self._identity_provider.permissions()
         required_permissions = self._permissions_gateway.for_delete_movie()
         access = self._access_concern.authorize(
             current_permissions=current_permissions,

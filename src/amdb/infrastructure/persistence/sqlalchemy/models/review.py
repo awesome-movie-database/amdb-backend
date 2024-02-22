@@ -5,11 +5,11 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Model
-from .user import User
-from .movie import Movie
+from .user import UserModel
+from .movie import MovieModel
 
 
-class Review(Model):
+class ReviewModel(Model):
     __tablename__ = "reviews"
 
     id: Mapped[UUID] = mapped_column(
@@ -26,5 +26,5 @@ class Review(Model):
     type: Mapped[int]
     created_at: Mapped[datetime]
 
-    user: Mapped[User] = relationship()
-    movie: Mapped[Movie] = relationship()
+    user: Mapped[UserModel] = relationship()
+    movie: Mapped[MovieModel] = relationship()
