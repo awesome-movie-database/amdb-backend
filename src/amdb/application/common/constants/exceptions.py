@@ -1,6 +1,4 @@
 LOGIN_ACCESS_DENIED = "Access to login in denied"
-CREATE_MOVIE_ACCESS_DENIED = "Access to movie creation is denied"
-DELETE_MOVIE_ACCESS_DENIED = "Access to movie deletion is denied"
 RATE_MOVIE_ACCESS_DENIED = "Access to movie rating is denied"
 UNRATE_MOVIE_ACCESS_DENIED = "Access to movie unrating is denied"
 REVIEW_MOVIE_ACCESS_DENIED = "Access to movie reviewing is denied"
