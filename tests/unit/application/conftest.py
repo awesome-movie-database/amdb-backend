@@ -21,17 +21,23 @@ from amdb.infrastructure.persistence.sqlalchemy.mappers.entities.review import (
 from amdb.infrastructure.persistence.sqlalchemy.mappers.password_hash import (
     PasswordHashMapper,
 )
+from amdb.infrastructure.persistence.sqlalchemy.mappers.permissions import (
+    PermissionsMapper,
+)
 from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.non_detailed_movie import (
     NonDetailedMovieViewModelMapper,
 )
 from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.detailed_movie import (
     DetailedMovieViewModelMapper,
 )
-from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.review import (
-    ReviewViewModelMapper,
+from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.detailed_review import (
+    DetailedReviewViewModelMapper,
 )
-from amdb.infrastructure.persistence.redis.mappers.permissions import (
-    PermissionsMapper,
+from amdb.infrastructure.persistence.redis.cache.permissions_mapper import (
+    PermissionsMapperCacheProvider,
+)
+from amdb.infrastructure.persistence.caching.permissions_mapper import (
+    CachingPermissionsMapper,
 )
 from amdb.infrastructure.password_manager.hash_computer import HashComputer
 from amdb.infrastructure.password_manager.password_manager import (
@@ -59,8 +65,14 @@ def sqlalchemy_connection(sqlalchemy_engine: Engine) -> Iterator[Connection]:
 
 
 @pytest.fixture
-def permissions_gateway(redis: Redis) -> PermissionsMapper:
-    return PermissionsMapper(redis)
+def permissions_gateway(
+    redis: Redis,
+    sqlalchemy_connection: Connection,
+) -> CachingPermissionsMapper:
+    return CachingPermissionsMapper(
+        permissions_mapper=PermissionsMapper(sqlalchemy_connection),
+        cache_provider=PermissionsMapperCacheProvider(redis),
+    )
 
 
 @pytest.fixture
@@ -98,8 +110,10 @@ def non_detailed_movie_reader(
 
 
 @pytest.fixture
-def review_reader(sqlalchemy_connection: Connection) -> ReviewViewModelMapper:
-    return ReviewViewModelMapper(sqlalchemy_connection)
+def detailed_review_reader(
+    sqlalchemy_connection: Connection,
+) -> DetailedMovieViewModelMapper:
+    return DetailedReviewViewModelMapper(sqlalchemy_connection)
 
 
 @pytest.fixture

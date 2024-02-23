@@ -1,6 +1,4 @@
 from dataclasses import dataclass
-from typing import Union
-from os import PathLike
 
 import toml
 
@@ -12,7 +10,7 @@ class WebAPIConfig:
     port: int
 
     @classmethod
-    def from_toml(cls, path: Union[PathLike, str]) -> "WebAPIConfig":
+    def from_toml(cls, path: str) -> "WebAPIConfig":
         toml_as_dict = toml.load(path)
         web_api_section_as_dict = toml_as_dict["web-api"]
         return WebAPIConfig(

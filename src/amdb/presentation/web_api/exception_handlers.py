@@ -23,8 +23,5 @@ def _application_error_handler(_, error: ApplicationError) -> JSONResponse:
     return JSONResponse(content={"message": error.message}, status_code=400)
 
 
-def _infrastructure_error_handler(
-    _,
-    error: InfrastructureError,
-) -> JSONResponse:
+def _infrastructure_error_handler(_, _2: InfrastructureError) -> JSONResponse:
     return JSONResponse(content=None, status_code=500)

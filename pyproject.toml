@@ -24,8 +24,9 @@ maintainers = [
     { name = "madnoberson", email = "baseddepartmentzx77@gmail.com" },
 ]
 dependencies = [
-    "uuid7",
+    "uuid7==0.1.*",
     "toml==0.10.*",
+    "dishka==0.4.*",
     "sqlalchemy==2.0.*",
     "psycopg2-binary==2.9.*",
     "alembic==1.13.*",
@@ -36,9 +37,6 @@ dependencies = [
 web_api = [
     "fastapi==0.103.*",
     "uvicorn==0.22.*",
-]
-cli = [
-    "typer[all]==0.9.*",
 ]
 dev = [
     "mypy==1.8.*",
@@ -53,5 +51,4 @@ coverage = [
 ]
 
 [project.scripts]
-amdb-cli = "amdb.main.cli.__main__:main"
 amdb-web_api = "amdb.main.web_api.__main__:main"
