@@ -3,7 +3,7 @@ RATE_MOVIE_ACCESS_DENIED = "Access to movie rating is denied"
 UNRATE_MOVIE_ACCESS_DENIED = "Access to movie unrating is denied"
 REVIEW_MOVIE_ACCESS_DENIED = "Access to movie reviewing is denied"
 
-USER_IS_NOT_OWNER = "User is not owner"
+USER_IS_NOT_OWNER = "User is not an owner"
 
 USER_NAME_ALREADY_EXISTS = "User name already exists"
 USER_DOES_NOT_EXIST = "User doesn't exist"
