@@ -80,10 +80,10 @@ def test_get_detailed_movie(
         return_value=user.id,
     )
 
-    get_detailed_movie_query = GetDetailedMovieQuery(
+    query = GetDetailedMovieQuery(
         movie_id=movie.id,
     )
-    get_detailed_movie_handler = GetDetailedMovieHandler(
+    handler = GetDetailedMovieHandler(
         detailed_movie_reader=detailed_movie_reader,
         identity_provider=identity_provider,
     )
@@ -107,7 +107,7 @@ def test_get_detailed_movie(
             created_at=review.created_at,
         ),
     )
-    result = get_detailed_movie_handler.execute(get_detailed_movie_query)
+    result = handler.execute(query)
 
     assert expected_result == result
 
@@ -120,15 +120,15 @@ def test_get_detailed_movie_should_raise_error_when_movie_does_not_exist(
         return_value=None,
     )
 
-    get_detailed_movie_query = GetDetailedMovieQuery(
+    query = GetDetailedMovieQuery(
         movie_id=MovieId(uuid7()),
     )
-    get_detailed_movie_handler = GetDetailedMovieHandler(
+    handler = GetDetailedMovieHandler(
         detailed_movie_reader=detailed_movie_reader,
         identity_provider=identity_provider,
     )
 
     with pytest.raises(ApplicationError) as error:
-        get_detailed_movie_handler.execute(get_detailed_movie_query)
+        handler.execute(query)
 
     assert error.value.message == MOVIE_DOES_NOT_EXIST

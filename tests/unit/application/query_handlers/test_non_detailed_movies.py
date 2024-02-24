@@ -64,11 +64,11 @@ def test_get_non_detailed_movies(
         return_value=user.id,
     )
 
-    get_non_detailed_movies_query = GetNonDetailedMoviesQuery(
+    query = GetNonDetailedMoviesQuery(
         limit=10,
         offset=0,
     )
-    get_non_detailed_movies_handler = GetNonDetailedMoviesHandler(
+    handler = GetNonDetailedMoviesHandler(
         non_detailed_movie_reader=non_detailed_movie_reader,
         identity_provider=identity_provider,
     )
@@ -85,8 +85,6 @@ def test_get_non_detailed_movies(
             ),
         ),
     ]
-    result = get_non_detailed_movies_handler.execute(
-        get_non_detailed_movies_query,
-    )
+    result = handler.execute(query)
 
     assert expected_result == result

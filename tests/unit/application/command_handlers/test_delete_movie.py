@@ -50,10 +50,10 @@ def test_delete_movie_should_raise_error_when_movie_does_not_exist(
     review_gateway: ReviewGateway,
     unit_of_work: UnitOfWork,
 ):
-    delete_movie_command = DeleteMovieCommand(
+    command = DeleteMovieCommand(
         movie_id=MovieId(uuid7()),
     )
-    delete_movie_handler = DeleteMovieHandler(
+    handler = DeleteMovieHandler(
         movie_gateway=movie_gateway,
         rating_gateway=rating_gateway,
         review_gateway=review_gateway,
@@ -61,6 +61,6 @@ def test_delete_movie_should_raise_error_when_movie_does_not_exist(
     )
 
     with pytest.raises(ApplicationError) as error:
-        delete_movie_handler.execute(delete_movie_command)
+        handler.execute(command)
 
     assert error.value.message == MOVIE_DOES_NOT_EXIST

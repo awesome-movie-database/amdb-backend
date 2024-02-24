@@ -21,11 +21,11 @@ def test_register_user(
     unit_of_work: UnitOfWork,
     password_manager: PasswordManager,
 ):
-    register_user_command = RegisterUserCommand(
+    command = RegisterUserCommand(
         name="John Doe",
         password="Secret",
     )
-    register_user_handler = RegisterUserHandler(
+    handler = RegisterUserHandler(
         create_user=CreateUser(),
         user_gateway=user_gateway,
         permissions_gateway=permissions_gateway,
@@ -33,7 +33,7 @@ def test_register_user(
         password_manager=password_manager,
     )
 
-    register_user_handler.execute(register_user_command)
+    handler.execute(command)
 
 
 def test_create_user_should_raise_error_when_user_name_already_exists(
@@ -51,11 +51,11 @@ def test_create_user_should_raise_error_when_user_name_already_exists(
     user_gateway.save(user)
     unit_of_work.commit()
 
-    register_user_command = RegisterUserCommand(
+    command = RegisterUserCommand(
         name=user_name,
         password="Secret",
     )
-    register_user_handler = RegisterUserHandler(
+    handler = RegisterUserHandler(
         create_user=CreateUser(),
         user_gateway=user_gateway,
         permissions_gateway=permissions_gateway,
@@ -64,6 +64,6 @@ def test_create_user_should_raise_error_when_user_name_already_exists(
     )
 
     with pytest.raises(ApplicationError) as error:
-        register_user_handler.execute(register_user_command)
+        handler.execute(command)
 
     assert error.value.message == USER_NAME_ALREADY_EXISTS

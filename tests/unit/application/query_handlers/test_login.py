@@ -101,11 +101,11 @@ def test_login_should_raise_error_when_password_is_incorrect(
 
     unit_of_work.commit()
 
-    login_query = LoginQuery(
+    query = LoginQuery(
         name=user.name,
         password="invalid_password",
     )
-    login_handler = LoginHandler(
+    handler = LoginHandler(
         access_concern=AccessConcern(),
         user_gateway=user_gateway,
         permissions_gateway=permissions_gateway,
@@ -113,7 +113,7 @@ def test_login_should_raise_error_when_password_is_incorrect(
     )
 
     with pytest.raises(ApplicationError) as error:
-        login_handler.execute(login_query)
+        handler.execute(query)
 
     assert error.value.message == INCORRECT_PASSWORD
 
@@ -145,11 +145,11 @@ def test_login_should_raise_error_when_access_is_denied(
 
     unit_of_work.commit()
 
-    login_query = LoginQuery(
+    query = LoginQuery(
         name=user.name,
         password=user_password,
     )
-    login_handler = LoginHandler(
+    handler = LoginHandler(
         access_concern=AccessConcern(),
         user_gateway=user_gateway,
         permissions_gateway=permissions_gateway,
@@ -157,6 +157,6 @@ def test_login_should_raise_error_when_access_is_denied(
     )
 
     with pytest.raises(ApplicationError) as error:
-        login_handler.execute(login_query)
+        handler.execute(query)
 
     assert error.value.message == LOGIN_ACCESS_DENIED

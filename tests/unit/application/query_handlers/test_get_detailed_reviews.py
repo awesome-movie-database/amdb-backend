@@ -73,12 +73,12 @@ def test_get_detailed_reviews(
 
     unit_of_work.commit()
 
-    get_detailed_reviews_query = GetDetailedReviewsQuery(
+    query = GetDetailedReviewsQuery(
         movie_id=movie.id,
         limit=10,
         offset=0,
     )
-    get_detailed_reviews_handler = GetDetailedReviewsHandler(
+    handler = GetDetailedReviewsHandler(
         movie_gateway=movie_gateway,
         detailed_review_reader=detailed_review_reader,
     )
@@ -100,7 +100,7 @@ def test_get_detailed_reviews(
             ),
         ),
     ]
-    result = get_detailed_reviews_handler.execute(get_detailed_reviews_query)
+    result = handler.execute(query)
 
     assert expected_result == result
 
@@ -109,17 +109,17 @@ def test_get_detailed_reviews_should_raise_error_when_movie_does_not_exist(
     movie_gateway: MovieGateway,
     detailed_review_reader: DetailedReviewViewModelReader,
 ):
-    get_detailed_reviews_query = GetDetailedReviewsQuery(
+    query = GetDetailedReviewsQuery(
         movie_id=MovieId(uuid7()),
         limit=10,
         offset=0,
     )
-    get_detailed_reviews_handler = GetDetailedReviewsHandler(
+    handler = GetDetailedReviewsHandler(
         movie_gateway=movie_gateway,
         detailed_review_reader=detailed_review_reader,
     )
 
     with pytest.raises(ApplicationError) as error:
-        get_detailed_reviews_handler.execute(get_detailed_reviews_query)
+        handler.execute(query)
 
     assert error.value.message == MOVIE_DOES_NOT_EXIST

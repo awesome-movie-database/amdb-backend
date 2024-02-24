@@ -66,13 +66,13 @@ def test_review_movie(
         return_value=user.id,
     )
 
-    review_movie_command = ReviewMovieCommand(
+    command = ReviewMovieCommand(
         movie_id=movie.id,
         title="Not bad",
         content="Great soundtrack",
         type=ReviewType.POSITIVE,
     )
-    review_movie_handler = ReviewMovieHandler(
+    handler = ReviewMovieHandler(
         access_concern=AccessConcern(),
         review_movie=ReviewMovie(),
         permissions_gateway=permissions_gateway,
@@ -83,7 +83,7 @@ def test_review_movie(
         identity_provider=identity_provider_with_correct_permissions,
     )
 
-    review_movie_handler.execute(review_movie_command)
+    handler.execute(command)
 
 
 def test_review_movie_should_raise_error_when_access_is_denied(
@@ -94,13 +94,13 @@ def test_review_movie_should_raise_error_when_access_is_denied(
     unit_of_work: UnitOfWork,
     identity_provider_with_incorrect_permissions: IdentityProvider,
 ):
-    review_movie_command = ReviewMovieCommand(
+    command = ReviewMovieCommand(
         movie_id=MovieId(uuid7()),
         title="Mid",
         content="So-so",
         type=ReviewType.NEUTRAL,
     )
-    review_movie_handler = ReviewMovieHandler(
+    handler = ReviewMovieHandler(
         access_concern=AccessConcern(),
         review_movie=ReviewMovie(),
         permissions_gateway=permissions_gateway,
@@ -112,7 +112,7 @@ def test_review_movie_should_raise_error_when_access_is_denied(
     )
 
     with pytest.raises(ApplicationError) as error:
-        review_movie_handler.execute(review_movie_command)
+        handler.execute(command)
 
     assert error.value.message == REVIEW_MOVIE_ACCESS_DENIED
 
@@ -125,13 +125,13 @@ def test_review_movie_should_raise_error_when_movie_does_not_exist(
     unit_of_work: UnitOfWork,
     identity_provider_with_correct_permissions: IdentityProvider,
 ):
-    review_movie_command = ReviewMovieCommand(
+    command = ReviewMovieCommand(
         movie_id=MovieId(uuid7()),
         title="Fantastic",
         content="Awesome!!",
         type=ReviewType.POSITIVE,
     )
-    review_movie_handler = ReviewMovieHandler(
+    handler = ReviewMovieHandler(
         access_concern=AccessConcern(),
         review_movie=ReviewMovie(),
         permissions_gateway=permissions_gateway,
@@ -143,7 +143,7 @@ def test_review_movie_should_raise_error_when_movie_does_not_exist(
     )
 
     with pytest.raises(ApplicationError) as error:
-        review_movie_handler.execute(review_movie_command)
+        handler.execute(command)
 
     assert error.value.message == MOVIE_DOES_NOT_EXIST
 
@@ -188,13 +188,13 @@ def test_review_movie_should_raise_error_when_movie_already_reviewed(
         return_value=user.id,
     )
 
-    review_movie_command = ReviewMovieCommand(
+    command = ReviewMovieCommand(
         movie_id=movie.id,
         title="Masterpice",
         content="Extremely underrated",
         type=ReviewType.POSITIVE,
     )
-    review_movie_handler = ReviewMovieHandler(
+    handler = ReviewMovieHandler(
         access_concern=AccessConcern(),
         review_movie=ReviewMovie(),
         permissions_gateway=permissions_gateway,
@@ -206,6 +206,6 @@ def test_review_movie_should_raise_error_when_movie_already_reviewed(
     )
 
     with pytest.raises(ApplicationError) as error:
-        review_movie_handler.execute(review_movie_command)
+        handler.execute(command)
 
     assert error.value.message == MOVIE_ALREADY_REVIEWED

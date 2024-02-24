@@ -11,14 +11,14 @@ def test_create_movie(
     movie_gateway: MovieGateway,
     unit_of_work: UnitOfWork,
 ):
-    create_movie_command = CreateMovieCommand(
+    command = CreateMovieCommand(
         title="Matrix",
         release_date=date(1999, 3, 31),
     )
-    create_movie_handler = CreateMovieHandler(
+    handler = CreateMovieHandler(
         create_movie=CreateMovie(),
         movie_gateway=movie_gateway,
         unit_of_work=unit_of_work,
     )
 
-    create_movie_handler.execute(create_movie_command)
+    handler.execute(command)

@@ -75,10 +75,10 @@ def test_unrate_movie(
         return_value=user.id,
     )
 
-    unrate_movie_command = UnrateMovieCommand(
+    command = UnrateMovieCommand(
         rating_id=rating.id,
     )
-    unrate_movie_handler = UnrateMovieHandler(
+    handler = UnrateMovieHandler(
         access_concern=AccessConcern(),
         unrate_movie=UnrateMovie(),
         permissions_gateway=permissions_gateway,
@@ -88,7 +88,7 @@ def test_unrate_movie(
         identity_provider=identity_provider_with_correct_permissions,
     )
 
-    unrate_movie_handler.execute(unrate_movie_command)
+    handler.execute(command)
 
 
 def test_unrate_movie_should_raise_error_when_access_is_denied(
@@ -98,10 +98,10 @@ def test_unrate_movie_should_raise_error_when_access_is_denied(
     unit_of_work: UnitOfWork,
     identity_provider_with_incorrect_permissions: IdentityProvider,
 ):
-    unrate_movie_command = UnrateMovieCommand(
+    command = UnrateMovieCommand(
         rating_id=RatingId(uuid7()),
     )
-    unrate_movie_handler = UnrateMovieHandler(
+    handler = UnrateMovieHandler(
         access_concern=AccessConcern(),
         unrate_movie=UnrateMovie(),
         permissions_gateway=permissions_gateway,
@@ -112,7 +112,7 @@ def test_unrate_movie_should_raise_error_when_access_is_denied(
     )
 
     with pytest.raises(ApplicationError) as error:
-        unrate_movie_handler.execute(unrate_movie_command)
+        handler.execute(command)
 
     assert error.value.message == UNRATE_MOVIE_ACCESS_DENIED
 
@@ -124,10 +124,10 @@ def test_unrate_movie_should_raise_error_when_rating_does_not_exist(
     unit_of_work: UnitOfWork,
     identity_provider_with_correct_permissions: IdentityProvider,
 ):
-    unrate_movie_command = UnrateMovieCommand(
+    command = UnrateMovieCommand(
         rating_id=RatingId(uuid7()),
     )
-    unrate_movie_handler = UnrateMovieHandler(
+    handler = UnrateMovieHandler(
         access_concern=AccessConcern(),
         unrate_movie=UnrateMovie(),
         permissions_gateway=permissions_gateway,
@@ -138,7 +138,7 @@ def test_unrate_movie_should_raise_error_when_rating_does_not_exist(
     )
 
     with pytest.raises(ApplicationError) as error:
-        unrate_movie_handler.execute(unrate_movie_command)
+        handler.execute(command)
 
     assert error.value.message == RATING_DOES_NOT_EXIST
 
@@ -181,10 +181,10 @@ def test_unrate_movie_should_raise_error_when_user_is_not_rating_owner(
         return_value=UserId(uuid7()),
     )
 
-    unrate_movie_command = UnrateMovieCommand(
+    command = UnrateMovieCommand(
         rating_id=rating.id,
     )
-    unrate_movie_handler = UnrateMovieHandler(
+    handler = UnrateMovieHandler(
         access_concern=AccessConcern(),
         unrate_movie=UnrateMovie(),
         permissions_gateway=permissions_gateway,
@@ -195,6 +195,6 @@ def test_unrate_movie_should_raise_error_when_user_is_not_rating_owner(
     )
 
     with pytest.raises(ApplicationError) as error:
-        unrate_movie_handler.execute(unrate_movie_command)
+        handler.execute(command)
 
     assert error.value.message == USER_IS_NOT_OWNER
