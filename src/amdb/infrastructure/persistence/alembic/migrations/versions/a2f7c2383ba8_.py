@@ -1,5 +1,6 @@
 """
-Add permissions table
+Add permissions table,
+Make type column string in review table
 
 Revision ID: a2f7c2383ba8
 Revises: 65f8840f4494
@@ -31,7 +32,65 @@ def upgrade() -> None:
             ondelete="CASCADE",
         ),
     )
+    with op.batch_alter_table("reviews") as batch_op:
+        batch_op.alter_column(
+            "type",
+            new_column_name="old_type",
+        )
+        batch_op.add_column(
+            sa.Column("type", sa.String(), nullable=True),
+        )
+    op.execute(
+        """
+        UPDATE reviews
+        SET type =
+        (
+            SELECT
+                CASE
+                    WHEN r.old_type = 0 THEN 'neutral'
+                    WHEN r.old_type = 1 THEN 'positive'
+                    WHEN r.old_type = 2 THEN 'negative'
+                END
+            FROM reviews r
+        )
+        """,
+    )
+    with op.batch_alter_table("reviews") as batch_op:
+        batch_op.drop_column("old_type")
+        batch_op.alter_column(
+            "type",
+            nullable=False,
+        )
 
 
 def downgrade() -> None:
     op.drop_table("permissions")
+    with op.batch_alter_table("reviews") as batch_op:
+        batch_op.alter_column(
+            "type",
+            new_column_name="old_type",
+        )
+        batch_op.add_column(
+            sa.Column("type", sa.Integer(), nullable=True),
+        )
+    op.execute(
+        """
+        UPDATE reviews
+        SET type =
+        (
+            SELECT
+                CASE
+                    WHEN r.old_type = 'neutral' THEN 0
+                    WHEN r.old_type = 'positive' THEN 1
+                    WHEN r.old_type = 'negative' THEN 2
+                END
+            FROM reviews r
+        )
+        """,
+    )
+    with op.batch_alter_table("reviews") as batch_op:
+        batch_op.drop_column("old_type")
+        batch_op.alter_column(
+            "type",
+            nullable=False,
+        )

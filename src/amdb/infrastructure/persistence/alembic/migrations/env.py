@@ -6,6 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from amdb.infrastructure.persistence.sqlalchemy.models.base import Model
+from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -27,33 +28,20 @@ target_metadata = Model.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-POSTGRES_HOST_ENV = "POSTGRES_HOST"
-POSTGRES_PORT_ENV = "POSTGRES_PORT"
-POSTGRES_NAME_ENV = "POSTGRES_DB"
-POSTGRES_USER_ENV = "POSTGRES_USER"
-POSTGRES_PASSWORD_ENV = "POSTGRES_PASSWORD"
-
-
-def get_env(key: str) -> str:
-    value = os.getenv(key)
-    if value is None:
-        message = f"Env variable {key} is not set"
-        raise ValueError(message)
-    return value
-
 
 def get_sqlalchemy_url() -> str:
     sqlalchemy_url = config.get_main_option("sqlalchemy.url")
     if sqlalchemy_url is not None:
         return sqlalchemy_url
     else:
-        host = get_env(POSTGRES_HOST_ENV)
-        port = get_env(POSTGRES_PORT_ENV)
-        name = get_env(POSTGRES_NAME_ENV)
-        user = get_env(POSTGRES_USER_ENV)
-        password = get_env(POSTGRES_PASSWORD_ENV)
+        path_to_config = os.getenv("CONFIG_PATH")
+        if not path_to_config:
+            message = "Path to config env var is not set"
+            raise ValueError(message)
 
-        return f"postgresql://{user}:{password}@{host}:{port}/{name}"
+        postgres_config = PostgresConfig.from_toml(path_to_config)
+
+        return postgres_config.url
 
 
 def run_migrations_offline() -> None:

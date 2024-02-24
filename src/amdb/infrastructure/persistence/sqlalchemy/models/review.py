@@ -23,7 +23,7 @@ class ReviewModel(Model):
     )
     title: Mapped[str]
     content: Mapped[str]
-    type: Mapped[int]
+    type: Mapped[str]
     created_at: Mapped[datetime]
 
     user: Mapped[UserModel] = relationship()

@@ -23,6 +23,13 @@ class SessionAdaptersProvider(Provider):
         return SessionProcessor()
 
     @provide
+    def session_mapper(self, redis: Redis) -> SessionMapper:
+        return SessionMapper(
+            redis=redis,
+            session_lifetime=self._session_config.lifetime,
+        )
+
+    @provide
     def session_gateway(self, redis: Redis) -> SessionGateway:
         return SessionMapper(
             redis=redis,
