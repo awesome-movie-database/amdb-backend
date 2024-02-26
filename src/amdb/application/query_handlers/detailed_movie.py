@@ -23,11 +23,11 @@ class GetDetailedMovieHandler:
     def execute(self, query: GetDetailedMovieQuery) -> DetailedMovieViewModel:
         current_user_id = self._identity_provider.user_id_or_none()
 
-        detailed_movie_view_model = self._detailed_movie_reader.one(
+        view_model = self._detailed_movie_reader.get(
             movie_id=query.movie_id,
             current_user_id=current_user_id,
         )
-        if not detailed_movie_view_model:
+        if not view_model:
             raise ApplicationError(MOVIE_DOES_NOT_EXIST)
 
-        return detailed_movie_view_model
+        return view_model

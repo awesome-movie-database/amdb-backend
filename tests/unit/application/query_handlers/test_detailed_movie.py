@@ -18,8 +18,9 @@ from amdb.application.common.readers.detailed_movie import (
 )
 from amdb.application.common.identity_provider import IdentityProvider
 from amdb.application.common.view_models.detailed_movie import (
-    UserRating,
-    UserReview,
+    MovieViewModel,
+    UserRatingViewModel,
+    UserReviewViewModel,
     DetailedMovieViewModel,
 )
 from amdb.application.queries.detailed_movie import GetDetailedMovieQuery
@@ -89,17 +90,19 @@ def test_get_detailed_movie(
     )
 
     expected_result = DetailedMovieViewModel(
-        id=movie.id,
-        title=movie.title,
-        release_date=movie.release_date,
-        rating=movie.rating,
-        rating_count=movie.rating_count,
-        user_rating=UserRating(
+        movie=MovieViewModel(
+            id=movie.id,
+            title=movie.title,
+            release_date=movie.release_date,
+            rating=movie.rating,
+            rating_count=movie.rating_count,
+        ),
+        user_rating=UserRatingViewModel(
             id=rating.id,
             value=rating.value,
             created_at=rating.created_at,
         ),
-        user_review=UserReview(
+        user_review=UserReviewViewModel(
             id=review.id,
             title=review.title,
             content=review.content,

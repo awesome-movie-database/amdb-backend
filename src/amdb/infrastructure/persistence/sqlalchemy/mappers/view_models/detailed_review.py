@@ -1,43 +1,21 @@
-__all__ = ("DetailedReviewViewModelMapper",)
-
-from typing import Optional, TypedDict
-from datetime import datetime
-from uuid import UUID
-
-from sqlalchemy import Connection, Row, text
+from sqlalchemy import Connection, text
 
 from amdb.domain.entities.user import UserId
 from amdb.domain.entities.movie import MovieId
 from amdb.domain.entities.rating import RatingId
 from amdb.domain.entities.review import ReviewId, ReviewType
 from amdb.application.common.view_models.detailed_review import (
-    UserRating,
-    UserReview,
+    RatingViewModel,
+    ReviewViewModel,
     DetailedReviewViewModel,
 )
 
 
-class RowAsDict(TypedDict):
-    user_id: UUID
-    user_review_id: UUID
-    user_review_title: str
-    user_review_content: str
-    user_review_type: int
-    user_review_created_at: datetime
-    user_rating_id: Optional[UUID]
-    user_rating_value: Optional[float]
-    user_rating_created_at: Optional[datetime]
-
-    @classmethod  # type: ignore
-    def from_row(cls, row: Row) -> "RowAsDict":
-        return RowAsDict(row._mapping)  # noqa: SLF001
-
-
-class DetailedReviewViewModelMapper:
+class DetailedReviewViewModelsMapper:
     def __init__(self, connection: Connection) -> None:
         self._connection = connection
 
-    def list(
+    def get(
         self,
         movie_id: MovieId,
         limit: int,
@@ -72,38 +50,33 @@ class DetailedReviewViewModelMapper:
         }
         rows = self._connection.execute(statement, parameters).fetchall()
 
-        review_view_models = []
+        view_models = []
         for row in rows:
-            row_as_dict = RowAsDict.from_row(row)  # type: ignore
-            review_view_model = self._to_view_model(row_as_dict)
-            review_view_models.append(review_view_model)
+            row_as_dict = row._mapping  # noqa: SLF001
 
-        return review_view_models
-
-    def _to_view_model(
-        self,
-        row_as_dict: RowAsDict,
-    ) -> DetailedReviewViewModel:
-        user_review = UserReview(
-            id=ReviewId(row_as_dict["user_review_id"]),
-            title=row_as_dict["user_review_title"],
-            content=row_as_dict["user_review_content"],
-            type=ReviewType(row_as_dict["user_review_type"]),
-            created_at=row_as_dict["user_review_created_at"],
-        )
-
-        if row_as_dict["user_rating_id"]:
-            user_rating = UserRating(
-                id=RatingId(row_as_dict["user_rating_id"]),  # type: ignore
-                value=row_as_dict["user_rating_value"],  # type: ignore
-                created_at=row_as_dict["user_rating_created_at"],  # type: ignore
+            review = ReviewViewModel(
+                id=ReviewId(row_as_dict["user_review_id"]),
+                title=row_as_dict["user_review_title"],
+                content=row_as_dict["user_review_content"],
+                type=ReviewType(row_as_dict["user_review_type"]),
+                created_at=row_as_dict["user_review_created_at"],
             )
-        else:
-            user_rating = None
 
-        detailed_review_view_model = DetailedReviewViewModel(
-            user_id=UserId(row_as_dict["user_id"]),
-            user_review=user_review,
-            user_rating=user_rating,
-        )
-        return detailed_review_view_model
+            rating_exists = row_as_dict["user_rating_id"] is not None
+            if rating_exists:
+                rating = RatingViewModel(
+                    id=RatingId(row_as_dict["user_rating_id"]),
+                    value=row_as_dict["user_rating_value"],
+                    created_at=row_as_dict["user_rating_created_at"],
+                )
+            else:
+                rating = None
+
+            view_model = DetailedReviewViewModel(
+                user_id=UserId(row_as_dict["user_id"]),
+                review=review,
+                rating=rating,
+            )
+            view_models.append(view_model)
+
+        return view_models

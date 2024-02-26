@@ -6,8 +6,8 @@ from amdb.application.common.view_models.detailed_review import (
 )
 
 
-class DetailedReviewViewModelReader(Protocol):
-    def list(
+class DetailedReviewViewModelsReader(Protocol):
+    def get(
         self,
         movie_id: MovieId,
         limit: int,

@@ -7,14 +7,18 @@ from amdb.domain.entities.movie import MovieId
 from amdb.domain.entities.rating import RatingId
 
 
-class UserRating(TypedDict):
+class UserRatingViewModel(TypedDict):
     id: RatingId
     value: float
 
 
-class NonDetailedMovieViewModel(TypedDict):
+class MovieViewModel(TypedDict):
     id: MovieId
     title: str
     release_date: date
     rating: float
-    user_rating: Optional[UserRating]
+
+
+class NonDetailedMovieViewModel(TypedDict):
+    movie: MovieViewModel
+    user_rating: Optional[UserRatingViewModel]

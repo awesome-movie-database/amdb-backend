@@ -25,13 +25,16 @@ from amdb.infrastructure.persistence.sqlalchemy.mappers.permissions import (
     PermissionsMapper,
 )
 from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.non_detailed_movie import (
-    NonDetailedMovieViewModelMapper,
+    NonDetailedMovieViewModelsMapper,
 )
 from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.detailed_movie import (
     DetailedMovieViewModelMapper,
 )
 from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.detailed_review import (
-    DetailedReviewViewModelMapper,
+    DetailedReviewViewModelsMapper,
+)
+from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.my_detailed_ratings import (
+    MyDetailedRatingsViewModelMapper,
 )
 from amdb.infrastructure.persistence.redis.cache.permissions_mapper import (
     PermissionsMapperCacheProvider,
@@ -103,17 +106,24 @@ def detailed_movie_reader(
 
 
 @pytest.fixture
-def non_detailed_movie_reader(
+def non_detailed_movies_reader(
     sqlalchemy_connection: Connection,
-) -> NonDetailedMovieViewModelMapper:
-    return NonDetailedMovieViewModelMapper(sqlalchemy_connection)
+) -> NonDetailedMovieViewModelsMapper:
+    return NonDetailedMovieViewModelsMapper(sqlalchemy_connection)
 
 
 @pytest.fixture
-def detailed_review_reader(
+def detailed_reviews_reader(
     sqlalchemy_connection: Connection,
 ) -> DetailedMovieViewModelMapper:
-    return DetailedReviewViewModelMapper(sqlalchemy_connection)
+    return DetailedReviewViewModelsMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def my_detailed_ratings_reader(
+    sqlalchemy_connection: Connection,
+) -> MyDetailedRatingsViewModelMapper:
+    return MyDetailedRatingsViewModelMapper(sqlalchemy_connection)
 
 
 @pytest.fixture

@@ -8,13 +8,13 @@ from amdb.domain.entities.rating import RatingId
 from amdb.domain.entities.review import ReviewId, ReviewType
 
 
-class UserRating(TypedDict):
+class RatingViewModel(TypedDict):
     id: RatingId
     value: float
     created_at: datetime
 
 
-class UserReview(TypedDict):
+class ReviewViewModel(TypedDict):
     id: ReviewId
     title: str
     content: str
@@ -24,5 +24,5 @@ class UserReview(TypedDict):
 
 class DetailedReviewViewModel(TypedDict):
     user_id: UserId
-    user_review: UserReview
-    user_rating: Optional[UserRating]
+    review: ReviewViewModel
+    rating: Optional[RatingViewModel]

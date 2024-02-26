@@ -13,11 +13,11 @@ from amdb.application.common.gateways.rating import RatingGateway
 from amdb.application.common.gateways.review import ReviewGateway
 from amdb.application.common.unit_of_work import UnitOfWork
 from amdb.application.common.readers.detailed_review import (
-    DetailedReviewViewModelReader,
+    DetailedReviewViewModelsReader,
 )
 from amdb.application.common.view_models.detailed_review import (
-    UserRating,
-    UserReview,
+    RatingViewModel,
+    ReviewViewModel,
     DetailedReviewViewModel,
 )
 from amdb.application.queries.detailed_reviews import GetDetailedReviewsQuery
@@ -34,7 +34,7 @@ def test_get_detailed_reviews(
     rating_gateway: RatingGateway,
     review_gateway: ReviewGateway,
     unit_of_work: UnitOfWork,
-    detailed_review_reader: DetailedReviewViewModelReader,
+    detailed_reviews_reader: DetailedReviewViewModelsReader,
 ):
     user = User(
         id=UserId(uuid7()),
@@ -80,20 +80,20 @@ def test_get_detailed_reviews(
     )
     handler = GetDetailedReviewsHandler(
         movie_gateway=movie_gateway,
-        detailed_review_reader=detailed_review_reader,
+        detailed_reviews_reader=detailed_reviews_reader,
     )
 
     expected_result = [
         DetailedReviewViewModel(
             user_id=user.id,
-            user_review=UserReview(
+            review=ReviewViewModel(
                 id=review.id,
                 title=review.title,
                 content=review.content,
                 type=review.type,
                 created_at=review.created_at,
             ),
-            user_rating=UserRating(
+            rating=RatingViewModel(
                 id=rating.id,
                 value=rating.value,
                 created_at=rating.created_at,
@@ -107,7 +107,7 @@ def test_get_detailed_reviews(
 
 def test_get_detailed_reviews_should_raise_error_when_movie_does_not_exist(
     movie_gateway: MovieGateway,
-    detailed_review_reader: DetailedReviewViewModelReader,
+    detailed_reviews_reader: DetailedReviewViewModelsReader,
 ):
     query = GetDetailedReviewsQuery(
         movie_id=MovieId(uuid7()),
@@ -116,7 +116,7 @@ def test_get_detailed_reviews_should_raise_error_when_movie_does_not_exist(
     )
     handler = GetDetailedReviewsHandler(
         movie_gateway=movie_gateway,
-        detailed_review_reader=detailed_review_reader,
+        detailed_reviews_reader=detailed_reviews_reader,
     )
 
     with pytest.raises(ApplicationError) as error:

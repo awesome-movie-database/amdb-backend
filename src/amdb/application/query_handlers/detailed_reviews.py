@@ -1,6 +1,6 @@
 from amdb.application.common.gateways.movie import MovieGateway
 from amdb.application.common.readers.detailed_review import (
-    DetailedReviewViewModelReader,
+    DetailedReviewViewModelsReader,
 )
 from amdb.application.common.view_models.detailed_review import (
     DetailedReviewViewModel,
@@ -15,10 +15,10 @@ class GetDetailedReviewsHandler:
         self,
         *,
         movie_gateway: MovieGateway,
-        detailed_review_reader: DetailedReviewViewModelReader,
+        detailed_reviews_reader: DetailedReviewViewModelsReader,
     ) -> None:
         self._movie_gateway = movie_gateway
-        self._detailed_review_reader = detailed_review_reader
+        self._detailed_reviews_reader = detailed_reviews_reader
 
     def execute(
         self,
@@ -28,10 +28,10 @@ class GetDetailedReviewsHandler:
         if not movie:
             raise ApplicationError(MOVIE_DOES_NOT_EXIST)
 
-        review_view_models = self._detailed_review_reader.list(
+        view_models = self._detailed_reviews_reader.get(
             movie_id=query.movie_id,
             limit=query.limit,
             offset=query.offset,
         )
 
-        return review_view_models
+        return view_models

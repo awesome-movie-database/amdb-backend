@@ -6,8 +6,8 @@ from amdb.application.common.view_models.non_detailed_movie import (
 )
 
 
-class NonDetailedMovieViewModelReader(Protocol):
-    def list(
+class NonDetailedMovieViewModelsReader(Protocol):
+    def get(
         self,
         current_user_id: Optional[UserId],
         limit: int,

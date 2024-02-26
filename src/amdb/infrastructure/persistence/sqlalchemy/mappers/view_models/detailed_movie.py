@@ -1,47 +1,24 @@
-__all__ = ("DetailedMovieViewModelMapper",)
+from typing import Optional
 
-from typing import Optional, TypedDict
-from datetime import date, datetime
-from uuid import UUID
-
-from sqlalchemy import Connection, Row, text
+from sqlalchemy import Connection, text
 
 from amdb.domain.entities.user import UserId
 from amdb.domain.entities.movie import MovieId
 from amdb.domain.entities.rating import RatingId
 from amdb.domain.entities.review import ReviewId, ReviewType
 from amdb.application.common.view_models.detailed_movie import (
-    UserRating,
-    UserReview,
+    MovieViewModel,
+    UserRatingViewModel,
+    UserReviewViewModel,
     DetailedMovieViewModel,
 )
-
-
-class RowAsDict(TypedDict):
-    movie_id: UUID
-    movie_title: str
-    movie_release_date: date
-    movie_rating: float
-    movie_rating_count: int
-    user_rating_id: Optional[UUID]
-    user_rating_value: Optional[float]
-    user_rating_created_at: Optional[datetime]
-    user_review_id: Optional[UUID]
-    user_review_title: Optional[str]
-    user_review_content: Optional[str]
-    user_review_type: Optional[int]
-    user_review_created_at: Optional[datetime]
-
-    @classmethod  # type: ignore
-    def from_row(cls, row: Row) -> "RowAsDict":
-        return RowAsDict(**row._mapping)  # noqa: SLF001
 
 
 class DetailedMovieViewModelMapper:
     def __init__(self, connection: Connection) -> None:
         self._connection = connection
 
-    def one(
+    def get(
         self,
         movie_id: MovieId,
         current_user_id: Optional[UserId],
@@ -79,41 +56,42 @@ class DetailedMovieViewModelMapper:
         }
         row = self._connection.execute(statement, parameters).fetchone()
         if row:
-            row_as_dict = RowAsDict.from_row(row)  # type: ignore
-            return self._to_view_model(row_as_dict)
+            row_as_dict = row._mapping  # noqa: SLF001
+
+            movie = MovieViewModel(
+                id=MovieId(row_as_dict["movie_id"]),
+                title=row_as_dict["movie_title"],
+                release_date=row_as_dict["movie_release_date"],
+                rating=row_as_dict["movie_rating"],
+                rating_count=row_as_dict["movie_rating_count"],
+            )
+
+            rating_exists = row_as_dict["user_rating_id"] is not None
+            if rating_exists:
+                user_rating = UserRatingViewModel(
+                    id=RatingId(row_as_dict["user_rating_id"]),
+                    value=row_as_dict["user_rating_value"],
+                    created_at=row_as_dict["user_rating_created_at"],
+                )
+            else:
+                user_rating = None
+
+            review_exists = row_as_dict["user_review_id"] is not None
+            if review_exists:
+                user_review = UserReviewViewModel(
+                    id=ReviewId(row_as_dict["user_review_id"]),
+                    title=row_as_dict["user_review_title"],
+                    content=row_as_dict["user_review_content"],
+                    type=ReviewType(row_as_dict["user_review_type"]),
+                    created_at=row_as_dict["user_review_created_at"],
+                )
+            else:
+                user_review = None
+
+            view_model = DetailedMovieViewModel(
+                movie=movie,
+                user_rating=user_rating,
+                user_review=user_review,
+            )
+            return view_model
         return None
-
-    def _to_view_model(
-        self,
-        row_as_dict: RowAsDict,
-    ) -> DetailedMovieViewModel:
-        if row_as_dict["user_rating_id"]:
-            user_rating = UserRating(
-                id=RatingId(row_as_dict["user_rating_id"]),  # type: ignore
-                value=row_as_dict["user_rating_value"],  # type: ignore
-                created_at=row_as_dict["user_rating_created_at"],  # type: ignore
-            )
-        else:
-            user_rating = None
-
-        if row_as_dict["user_review_id"]:
-            user_review = UserReview(
-                id=ReviewId(row_as_dict["user_review_id"]),  # type: ignore
-                title=row_as_dict["user_review_title"],  # type: ignore
-                content=row_as_dict["user_review_content"],  # type: ignore
-                type=ReviewType(row_as_dict["user_review_type"]),  # type: ignore
-                created_at=row_as_dict["user_review_created_at"],  # type: ignore
-            )
-        else:
-            user_review = None
-
-        detailed_movie_view_model = DetailedMovieViewModel(
-            id=MovieId(row_as_dict["movie_id"]),
-            title=row_as_dict["movie_title"],
-            release_date=row_as_dict["movie_release_date"],
-            rating=row_as_dict["movie_rating"],
-            rating_count=row_as_dict["movie_rating_count"],
-            user_rating=user_rating,
-            user_review=user_review,
-        )
-        return detailed_movie_view_model

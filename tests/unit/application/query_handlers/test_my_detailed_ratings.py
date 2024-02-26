@@ -1,5 +1,5 @@
-from unittest.mock import Mock
 from datetime import date, datetime, timezone
+from unittest.mock import Mock
 
 from uuid_extensions import uuid7
 
@@ -10,29 +10,30 @@ from amdb.application.common.gateways.user import UserGateway
 from amdb.application.common.gateways.movie import MovieGateway
 from amdb.application.common.gateways.rating import RatingGateway
 from amdb.application.common.unit_of_work import UnitOfWork
-from amdb.application.common.readers.non_detailed_movie import (
-    NonDetailedMovieViewModelsReader,
+from amdb.application.common.readers.my_detailed_ratings import (
+    MyDetailedRatingsViewModelReader,
 )
 from amdb.application.common.identity_provider import IdentityProvider
-from amdb.application.common.view_models.non_detailed_movie import (
+from amdb.application.common.view_models.my_detailed_ratings import (
     MovieViewModel,
-    UserRatingViewModel,
-    NonDetailedMovieViewModel,
+    RatingViewModel,
+    DetailedRatingViewModel,
+    MyDetailedRatingsViewModel,
 )
-from amdb.application.queries.non_detailed_movies import (
-    GetNonDetailedMoviesQuery,
+from amdb.application.queries.my_detailed_ratings import (
+    GetMyDetailedRatingsQuery,
 )
-from amdb.application.query_handlers.non_detailed_movies import (
-    GetNonDetailedMoviesHandler,
+from amdb.application.query_handlers.my_detailed_ratings import (
+    GetMyDetailedRatingsQueryHandler,
 )
 
 
-def test_get_non_detailed_movies(
+def test_get_my_detailed_ratings(
     user_gateway: UserGateway,
     movie_gateway: MovieGateway,
     rating_gateway: RatingGateway,
     unit_of_work: UnitOfWork,
-    non_detailed_movies_reader: NonDetailedMovieViewModelsReader,
+    my_detailed_ratings_reader: MyDetailedRatingsViewModelReader,
 ):
     user = User(
         id=UserId(uuid7()),
@@ -61,33 +62,38 @@ def test_get_non_detailed_movies(
     unit_of_work.commit()
 
     identity_provider: IdentityProvider = Mock()
-    identity_provider.user_id_or_none = Mock(
+    identity_provider.user_id = Mock(
         return_value=user.id,
     )
 
-    query = GetNonDetailedMoviesQuery(
+    query = GetMyDetailedRatingsQuery(
         limit=10,
         offset=0,
     )
-    handler = GetNonDetailedMoviesHandler(
-        non_detailed_movies_reader=non_detailed_movies_reader,
+    handler = GetMyDetailedRatingsQueryHandler(
+        my_detailed_ratings_reader=my_detailed_ratings_reader,
         identity_provider=identity_provider,
     )
 
-    expected_result = [
-        NonDetailedMovieViewModel(
-            movie=MovieViewModel(
-                id=movie.id,
-                title=movie.title,
-                release_date=movie.release_date,
-                rating=movie.rating,
+    expected_result = MyDetailedRatingsViewModel(
+        detailed_ratings=[
+            DetailedRatingViewModel(
+                movie=MovieViewModel(
+                    id=movie.id,
+                    title=movie.title,
+                    release_date=movie.release_date,
+                    rating=movie.rating,
+                    rating_count=movie.rating_count,
+                ),
+                rating=RatingViewModel(
+                    id=rating.id,
+                    value=rating.value,
+                    created_at=rating.created_at,
+                ),
             ),
-            user_rating=UserRatingViewModel(
-                id=rating.id,
-                value=rating.value,
-            ),
-        ),
-    ]
+        ],
+        rating_count=1,
+    )
     result = handler.execute(query)
 
     assert expected_result == result

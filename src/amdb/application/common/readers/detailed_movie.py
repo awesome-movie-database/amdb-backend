@@ -8,7 +8,7 @@ from amdb.application.common.view_models.detailed_movie import (
 
 
 class DetailedMovieViewModelReader(Protocol):
-    def one(
+    def get(
         self,
         movie_id: MovieId,
         current_user_id: Optional[UserId],

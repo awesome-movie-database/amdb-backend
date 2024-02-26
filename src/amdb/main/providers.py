@@ -20,10 +20,13 @@ from amdb.application.common.readers.detailed_movie import (
     DetailedMovieViewModelReader,
 )
 from amdb.application.common.readers.non_detailed_movie import (
-    NonDetailedMovieViewModelReader,
+    NonDetailedMovieViewModelsReader,
 )
 from amdb.application.common.readers.detailed_review import (
-    DetailedReviewViewModelReader,
+    DetailedReviewViewModelsReader,
+)
+from amdb.application.common.readers.my_detailed_ratings import (
+    MyDetailedRatingsViewModelReader,
 )
 from amdb.application.common.password_manager import PasswordManager
 from amdb.application.common.identity_provider import IdentityProvider
@@ -42,6 +45,9 @@ from amdb.application.query_handlers.non_detailed_movies import (
 )
 from amdb.application.query_handlers.detailed_reviews import (
     GetDetailedReviewsHandler,
+)
+from amdb.application.query_handlers.my_detailed_ratings import (
+    GetMyDetailedRatingsQueryHandler,
 )
 from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
 from amdb.infrastructure.persistence.redis.config import RedisConfig
@@ -67,10 +73,13 @@ from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.detailed_mov
     DetailedMovieViewModelMapper,
 )
 from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.non_detailed_movie import (
-    NonDetailedMovieViewModelMapper,
+    NonDetailedMovieViewModelsMapper,
 )
 from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.detailed_review import (
-    DetailedReviewViewModelMapper,
+    DetailedReviewViewModelsMapper,
+)
+from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.my_detailed_ratings import (
+    MyDetailedRatingsViewModelMapper,
 )
 from amdb.infrastructure.persistence.redis.cache.permissions_mapper import (
     PermissionsMapperCacheProvider,
@@ -131,12 +140,16 @@ class AdaptersProvider(Provider):
         provides=DetailedMovieViewModelReader,
     )
     non_detailed_movie_reader = provide(
-        source=NonDetailedMovieViewModelMapper,
-        provides=NonDetailedMovieViewModelReader,
+        source=NonDetailedMovieViewModelsMapper,
+        provides=NonDetailedMovieViewModelsReader,
     )
     detailed_review_reader = provide(
-        source=DetailedReviewViewModelMapper,
-        provides=DetailedReviewViewModelReader,
+        source=DetailedReviewViewModelsMapper,
+        provides=DetailedReviewViewModelsReader,
+    )
+    my_detailed_ratings_reader = provide(
+        source=MyDetailedRatingsViewModelMapper,
+        provides=MyDetailedRatingsViewModelReader,
     )
 
     unit_of_work = alias(source=Connection, provides=UnitOfWork)
@@ -243,11 +256,11 @@ class HandlersProvider(Provider):
     def get_detailed_reviews_handler(
         self,
         movie_gateway: MovieGateway,
-        detailed_review_reader: DetailedReviewViewModelReader,
+        detailed_reviews_reader: DetailedReviewViewModelsReader,
     ) -> GetDetailedReviewsHandler:
         return GetDetailedReviewsHandler(
             movie_gateway=movie_gateway,
-            detailed_review_reader=detailed_review_reader,
+            detailed_reviews_reader=detailed_reviews_reader,
         )
 
 
@@ -272,13 +285,28 @@ class HandlerCreatorsProvider(Provider):
     @provide
     def get_non_detailed_movies_handler(
         self,
-        non_detailed_movie_reader: NonDetailedMovieViewModelReader,
+        non_detailed_movies_reader: NonDetailedMovieViewModelsReader,
     ) -> CreateHandler[GetNonDetailedMoviesHandler]:
         def create_handler(
             identity_provider: IdentityProvider,
         ) -> GetNonDetailedMoviesHandler:
             return GetNonDetailedMoviesHandler(
-                non_detailed_movie_reader=non_detailed_movie_reader,
+                non_detailed_movies_reader=non_detailed_movies_reader,
+                identity_provider=identity_provider,
+            )
+
+        return create_handler
+
+    @provide
+    def get_my_detailed_ratings_handler(
+        self,
+        my_detailed_ratings_reader: MyDetailedRatingsViewModelReader,
+    ) -> CreateHandler[GetMyDetailedRatingsQueryHandler]:
+        def create_handler(
+            identity_provider: IdentityProvider,
+        ) -> GetMyDetailedRatingsQueryHandler:
+            return GetMyDetailedRatingsQueryHandler(
+                my_detailed_ratings_reader=my_detailed_ratings_reader,
                 identity_provider=identity_provider,
             )
 
