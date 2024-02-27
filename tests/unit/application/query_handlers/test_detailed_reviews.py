@@ -39,6 +39,7 @@ def test_get_detailed_reviews(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 

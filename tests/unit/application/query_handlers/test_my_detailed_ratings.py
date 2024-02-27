@@ -24,7 +24,7 @@ from amdb.application.queries.my_detailed_ratings import (
     GetMyDetailedRatingsQuery,
 )
 from amdb.application.query_handlers.my_detailed_ratings import (
-    GetMyDetailedRatingsQueryHandler,
+    GetMyDetailedRatingsHandler,
 )
 
 
@@ -38,6 +38,7 @@ def test_get_my_detailed_ratings(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -70,7 +71,7 @@ def test_get_my_detailed_ratings(
         limit=10,
         offset=0,
     )
-    handler = GetMyDetailedRatingsQueryHandler(
+    handler = GetMyDetailedRatingsHandler(
         my_detailed_ratings_reader=my_detailed_ratings_reader,
         identity_provider=identity_provider,
     )

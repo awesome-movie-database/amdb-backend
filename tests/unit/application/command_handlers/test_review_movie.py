@@ -48,6 +48,7 @@ def test_review_movie(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -159,6 +160,7 @@ def test_review_movie_should_raise_error_when_movie_already_reviewed(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 

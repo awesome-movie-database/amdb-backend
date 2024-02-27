@@ -50,6 +50,7 @@ def test_rate_movie(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -155,6 +156,7 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -228,6 +230,7 @@ def test_rate_movie_should_raise_error_when_rating_is_invalid(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
