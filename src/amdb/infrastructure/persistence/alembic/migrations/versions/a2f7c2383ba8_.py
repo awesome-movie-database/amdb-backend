@@ -1,6 +1,7 @@
 """
 Add permissions table,
-Make type column string in review table
+Make type column string to reviews table
+Add email column to users table
 
 Revision ID: a2f7c2383ba8
 Revises: 65f8840f4494
@@ -61,6 +62,10 @@ def upgrade() -> None:
             "type",
             nullable=False,
         )
+    op.add_column(
+        "users",
+        sa.Column("email", sa.String(), nullable=True, unique=True),
+    )
 
 
 def downgrade() -> None:
@@ -94,3 +99,4 @@ def downgrade() -> None:
             "type",
             nullable=False,
         )
+    op.drop_column("users", "email")

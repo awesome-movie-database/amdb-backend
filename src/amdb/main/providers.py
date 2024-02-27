@@ -10,6 +10,7 @@ from amdb.domain.services.create_movie import CreateMovie
 from amdb.domain.services.rate_movie import RateMovie
 from amdb.domain.services.unrate_movie import UnrateMovie
 from amdb.domain.services.review_movie import ReviewMovie
+from amdb.domain.validators.email import ValidateEmail
 from amdb.application.common.gateways.user import UserGateway
 from amdb.application.common.gateways.movie import MovieGateway
 from amdb.application.common.gateways.rating import RatingGateway
@@ -47,7 +48,7 @@ from amdb.application.query_handlers.detailed_reviews import (
     GetDetailedReviewsHandler,
 )
 from amdb.application.query_handlers.my_detailed_ratings import (
-    GetMyDetailedRatingsQueryHandler,
+    GetMyDetailedRatingsHandler,
 )
 from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
 from amdb.infrastructure.persistence.redis.config import RedisConfig
@@ -204,7 +205,7 @@ class HandlersProvider(Provider):
         password_manager: PasswordManager,
     ) -> RegisterUserHandler:
         return RegisterUserHandler(
-            create_user=CreateUser(),
+            create_user=CreateUser(validate_email=ValidateEmail()),
             user_gateway=user_gateway,
             permissions_gateway=permissions_gateway,
             unit_of_work=unit_of_work,
@@ -301,11 +302,11 @@ class HandlerCreatorsProvider(Provider):
     def get_my_detailed_ratings_handler(
         self,
         my_detailed_ratings_reader: MyDetailedRatingsViewModelReader,
-    ) -> CreateHandler[GetMyDetailedRatingsQueryHandler]:
+    ) -> CreateHandler[GetMyDetailedRatingsHandler]:
         def create_handler(
             identity_provider: IdentityProvider,
-        ) -> GetMyDetailedRatingsQueryHandler:
-            return GetMyDetailedRatingsQueryHandler(
+        ) -> GetMyDetailedRatingsHandler:
+            return GetMyDetailedRatingsHandler(
                 my_detailed_ratings_reader=my_detailed_ratings_reader,
                 identity_provider=identity_provider,
             )

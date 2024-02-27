@@ -10,5 +10,8 @@ class UserGateway(Protocol):
     def with_name(self, user_name: str) -> Optional[User]:
         raise NotImplementedError
 
+    def with_email(self, user_email: str) -> Optional[User]:
+        raise NotImplementedError
+
     def save(self, user: User) -> None:
         raise NotImplementedError

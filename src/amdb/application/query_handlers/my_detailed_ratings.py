@@ -10,7 +10,7 @@ from amdb.application.queries.my_detailed_ratings import (
 )
 
 
-class GetMyDetailedRatingsQueryHandler:
+class GetMyDetailedRatingsHandler:
     def __init__(
         self,
         *,

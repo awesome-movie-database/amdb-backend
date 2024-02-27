@@ -24,10 +24,18 @@ class UserMapper:
             return self._to_entity(row)  # type: ignore
         return None
 
+    def with_email(self, user_email: str) -> Optional[User]:
+        statement = select(UserModel).where(UserModel.email == user_email)
+        row = self._connection.execute(statement).one_or_none()
+        if row:
+            return self._to_entity(row)  # type: ignore
+        return None
+
     def save(self, user: User) -> None:
         statement = insert(UserModel).values(
             id=UserId(user.id),
             name=user.name,
+            email=user.email,
         )
         self._connection.execute(statement)
 
@@ -38,4 +46,5 @@ class UserMapper:
         return User(
             id=UserId(row.id),
             name=row.name,
+            email=row.email,
         )
