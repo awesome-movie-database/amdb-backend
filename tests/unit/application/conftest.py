@@ -36,6 +36,9 @@ from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.detailed_rev
 from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.my_detailed_ratings import (
     MyDetailedRatingsViewModelMapper,
 )
+from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.rating_for_export import (
+    RatingForExportViewModelMapper,
+)
 from amdb.infrastructure.persistence.redis.cache.permissions_mapper import (
     PermissionsMapperCacheProvider,
 )
@@ -124,6 +127,13 @@ def my_detailed_ratings_reader(
     sqlalchemy_connection: Connection,
 ) -> MyDetailedRatingsViewModelMapper:
     return MyDetailedRatingsViewModelMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def ratings_for_export_reader(
+    sqlalchemy_connection: Connection,
+) -> RatingForExportViewModelMapper:
+    return RatingForExportViewModelMapper(sqlalchemy_connection)
 
 
 @pytest.fixture

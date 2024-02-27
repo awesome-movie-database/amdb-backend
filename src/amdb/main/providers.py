@@ -50,6 +50,9 @@ from amdb.application.query_handlers.detailed_reviews import (
 from amdb.application.query_handlers.my_detailed_ratings import (
     GetMyDetailedRatingsHandler,
 )
+from amdb.application.query_handlers.export_my_ratings import (
+    ExportMyRatingsHandler,
+)
 from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
 from amdb.infrastructure.persistence.redis.config import RedisConfig
 from amdb.infrastructure.persistence.sqlalchemy.mappers.entities.user import (
@@ -82,6 +85,9 @@ from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.detailed_rev
 from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.my_detailed_ratings import (
     MyDetailedRatingsViewModelMapper,
 )
+from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.rating_for_export import (
+    RatingForExportViewModelMapper,
+)
 from amdb.infrastructure.persistence.redis.cache.permissions_mapper import (
     PermissionsMapperCacheProvider,
 )
@@ -91,6 +97,9 @@ from amdb.infrastructure.persistence.caching.permissions_mapper import (
 from amdb.infrastructure.password_manager.hash_computer import HashComputer
 from amdb.infrastructure.password_manager.password_manager import (
     HashingPasswordManager,
+)
+from amdb.infrastructure.converters.ratings_for_export import (
+    RealRatingsForExportConverter,
 )
 from amdb.presentation.create_handler import CreateHandler
 
@@ -381,6 +390,24 @@ class HandlerCreatorsProvider(Provider):
                 movie_gateway=movie_gateway,
                 review_gateway=review_gateway,
                 unit_of_work=unit_of_work,
+                identity_provider=identity_provider,
+            )
+
+        return create_handler
+
+    @provide
+    def export_my_ratings(
+        self,
+        sqlaclhemy_connection: Connection,
+    ) -> CreateHandler[ExportMyRatingsHandler]:
+        def create_handler(
+            identity_provider: IdentityProvider,
+        ) -> ExportMyRatingsHandler:
+            return ExportMyRatingsHandler(
+                ratings_for_export_reader=RatingForExportViewModelMapper(
+                    connection=sqlaclhemy_connection,
+                ),
+                ratings_for_export_converter=RealRatingsForExportConverter(),
                 identity_provider=identity_provider,
             )
 
