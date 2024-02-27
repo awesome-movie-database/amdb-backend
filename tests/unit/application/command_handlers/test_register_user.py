@@ -12,6 +12,7 @@ from amdb.application.commands.register_user import RegisterUserCommand
 from amdb.application.command_handlers.register_user import RegisterUserHandler
 from amdb.application.common.constants.exceptions import (
     USER_NAME_ALREADY_EXISTS,
+    USER_EMAIL_ALREADY_EXISTS,
 )
 from amdb.application.common.exception import ApplicationError
 
@@ -52,6 +53,7 @@ def test_create_user_should_raise_error_when_user_name_already_exists(
         email="John@doe.com",
     )
     user_gateway.save(user)
+
     unit_of_work.commit()
 
     command = RegisterUserCommand(
@@ -71,3 +73,39 @@ def test_create_user_should_raise_error_when_user_name_already_exists(
         handler.execute(command)
 
     assert error.value.message == USER_NAME_ALREADY_EXISTS
+
+
+def test_create_user_should_raise_error_when_user_email_already_exists(
+    user_gateway: UserGateway,
+    permissions_gateway: PermissionsGateway,
+    unit_of_work: UnitOfWork,
+    password_manager: PasswordManager,
+):
+    user_email = "John@doe.com"
+
+    user = User(
+        id=UserId(uuid7()),
+        name="John Doe",
+        email=user_email,
+    )
+    user_gateway.save(user)
+
+    unit_of_work.commit()
+
+    command = RegisterUserCommand(
+        name="Johny Doe",
+        email=user_email,
+        password="Secret",
+    )
+    handler = RegisterUserHandler(
+        create_user=CreateUser(validate_email=ValidateEmail()),
+        user_gateway=user_gateway,
+        permissions_gateway=permissions_gateway,
+        unit_of_work=unit_of_work,
+        password_manager=password_manager,
+    )
+
+    with pytest.raises(ApplicationError) as error:
+        handler.execute(command)
+
+    assert error.value.message == USER_EMAIL_ALREADY_EXISTS
