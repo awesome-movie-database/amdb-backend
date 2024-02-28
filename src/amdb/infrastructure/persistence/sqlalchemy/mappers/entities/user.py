@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from sqlalchemy import Connection, Row, select, insert
+from sqlalchemy import Connection, Row, select, insert, update
 
 from amdb.domain.entities.user import UserId, User
 from amdb.infrastructure.persistence.sqlalchemy.models.user import UserModel
@@ -37,6 +37,10 @@ class UserMapper:
             name=user.name,
             email=user.email,
         )
+        self._connection.execute(statement)
+
+    def update(self, user: User) -> None:
+        statement = update(UserModel).values(email=user.email)
         self._connection.execute(statement)
 
     def _to_entity(

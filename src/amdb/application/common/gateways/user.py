@@ -15,3 +15,6 @@ class UserGateway(Protocol):
 
     def save(self, user: User) -> None:
         raise NotImplementedError
+
+    def update(self, user: User) -> None:
+        raise NotImplementedError

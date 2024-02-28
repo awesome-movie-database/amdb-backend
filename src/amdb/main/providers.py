@@ -6,6 +6,7 @@ from redis import Redis
 
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.create_user import CreateUser
+from amdb.domain.services.update_profile import UpdateProfile
 from amdb.domain.services.create_movie import CreateMovie
 from amdb.domain.services.rate_movie import RateMovie
 from amdb.domain.services.unrate_movie import UnrateMovie
@@ -32,6 +33,9 @@ from amdb.application.common.readers.my_detailed_ratings import (
 from amdb.application.common.password_manager import PasswordManager
 from amdb.application.common.identity_provider import IdentityProvider
 from amdb.application.command_handlers.register_user import RegisterUserHandler
+from amdb.application.command_handlers.update_my_profile import (
+    UpdateMyProfileHandler,
+)
 from amdb.application.command_handlers.create_movie import CreateMovieHandler
 from amdb.application.command_handlers.delete_movie import DeleteMovieHandler
 from amdb.application.command_handlers.rate_movie import RateMovieHandler
@@ -278,6 +282,24 @@ class HandlerCreatorsProvider(Provider):
     scope = Scope.REQUEST
 
     @provide
+    def update_my_profile_handler(
+        self,
+        user_gateway: UserGateway,
+        unit_of_work: UnitOfWork,
+    ) -> CreateHandler[UpdateMyProfileHandler]:
+        def create_handler(
+            identity_provider: IdentityProvider,
+        ) -> UpdateMyProfileHandler:
+            return UpdateMyProfileHandler(
+                update_profile=UpdateProfile(),
+                user_gateway=user_gateway,
+                unit_of_work=unit_of_work,
+                identity_provider=identity_provider,
+            )
+
+        return create_handler
+
+    @provide
     def get_detailed_movie_handler(
         self,
         detailed_movie_reader: DetailedMovieViewModelReader,
@@ -396,7 +418,7 @@ class HandlerCreatorsProvider(Provider):
         return create_handler
 
     @provide
-    def export_my_ratings(
+    def export_my_ratings_handler(
         self,
         sqlaclhemy_connection: Connection,
     ) -> CreateHandler[ExportMyRatingsHandler]:
