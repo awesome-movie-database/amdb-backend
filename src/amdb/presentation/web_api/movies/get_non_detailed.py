@@ -40,7 +40,7 @@ async def get_non_detailed_movies(
 ) -> list[NonDetailedMovieViewModel]:
     """
     Returns list of non detailed movies and non detailed current
-    user rating. \n\n
+    user rating.
     """
     identity_provider = SessionIdentityProvider(
         session_id=SessionId(session_id) if session_id else None,

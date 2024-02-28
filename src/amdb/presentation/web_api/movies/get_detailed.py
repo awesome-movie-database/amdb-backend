@@ -40,7 +40,7 @@ async def get_detailed_movie(
     Returns detailed movie information, detailed current user rating
     and review on it. \n\n
 
-    #### Returns 400: \n
+    #### Returns 400:
         * When movie doesn't exist
     """
     identity_provider = SessionIdentityProvider(

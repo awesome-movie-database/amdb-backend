@@ -27,7 +27,7 @@ async def register(
     Registers user, returns his id, creates new
     authentication session and sets cookie with its id. \n\n
 
-    #### Returns 400: \n
+    #### Returns 400:
         * When name is already taken
     """
     user_id = handler.execute(command)

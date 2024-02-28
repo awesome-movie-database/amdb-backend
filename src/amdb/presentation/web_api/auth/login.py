@@ -27,10 +27,10 @@ async def login(
     Logins, returns user id, creates new authentication session
     and sets cookie with its id. \n\n
 
-    #### Returns 400: \n
-        * When user doesn't exist \n
-        * When password is incorrect \n
-        * When access is denied \n
+    #### Returns 400:
+        * When user doesn't exist
+        * When password is incorrect
+        * When access is denied
     """
     user_id = handler.execute(query)
 

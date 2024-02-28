@@ -6,7 +6,7 @@ from .unrate_movie import unrate_movie
 
 
 ratings_router = APIRouter(
-    prefix="/ratings",
+    prefix="",
     tags=["ratings"],
 )
 ratings_router.add_api_route(
@@ -15,12 +15,12 @@ ratings_router.add_api_route(
     methods=["GET"],
 )
 ratings_router.add_api_route(
-    path="",
+    path="/ratings",
     endpoint=rate_movie,
     methods=["POST"],
 )
 ratings_router.add_api_route(
-    path="/{rating_id}",
+    path="/ratings/{rating_id}",
     endpoint=unrate_movie,
     methods=["DELETE"],
 )

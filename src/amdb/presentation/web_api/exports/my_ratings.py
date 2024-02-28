@@ -33,10 +33,10 @@ async def export_my_ratings(
         Cookie(alias=SESSION_ID_COOKIE),
     ] = None,
     format: ExportFormat = ExportFormat.CSV,
-) -> bytes:
+):
     """
     Creates file of specified format with current user ratings and
-    returns it.\n\n
+    returns it.
     """
     identity_provider = SessionIdentityProvider(
         session_id=SessionId(session_id) if session_id else None,
