@@ -32,7 +32,10 @@ async def update_my_profile(
     command: UpdateMyProfileCommand,
 ) -> None:
     """
-    Updates current user profile.
+    Updates current user profile.\n\n
+
+    ####Returns 400:
+        * When email is invalid
     """
     identity_provider = SessionIdentityProvider(
         session_id=SessionId(session_id) if session_id else None,
