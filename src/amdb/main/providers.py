@@ -291,7 +291,7 @@ class HandlerCreatorsProvider(Provider):
             identity_provider: IdentityProvider,
         ) -> UpdateMyProfileHandler:
             return UpdateMyProfileHandler(
-                update_profile=UpdateProfile(),
+                update_profile=UpdateProfile(validate_email=ValidateEmail()),
                 user_gateway=user_gateway,
                 unit_of_work=unit_of_work,
                 identity_provider=identity_provider,

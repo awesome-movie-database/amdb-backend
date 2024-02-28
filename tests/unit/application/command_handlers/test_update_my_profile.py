@@ -4,6 +4,7 @@ from uuid_extensions import uuid7
 
 from amdb.domain.entities.user import User, UserId
 from amdb.domain.services.update_profile import UpdateProfile
+from amdb.domain.validators.email import ValidateEmail
 from amdb.application.common.gateways.user import UserGateway
 from amdb.application.common.unit_of_work import UnitOfWork
 from amdb.application.common.identity_provider import IdentityProvider
@@ -35,7 +36,7 @@ def test_update_my_profile(
         email="Johny@doe.com",
     )
     handler = UpdateMyProfileHandler(
-        update_profile=UpdateProfile(),
+        update_profile=UpdateProfile(validate_email=ValidateEmail()),
         user_gateway=user_gateway,
         unit_of_work=unit_of_work,
         identity_provider=identity_provider,
