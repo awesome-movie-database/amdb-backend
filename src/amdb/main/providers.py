@@ -12,6 +12,9 @@ from amdb.domain.services.rate_movie import RateMovie
 from amdb.domain.services.unrate_movie import UnrateMovie
 from amdb.domain.services.review_movie import ReviewMovie
 from amdb.domain.validators.email import ValidateEmail
+from amdb.application.common.services.ensure_can_use_sending_method import (
+    EnsureCanUseSendingMethod,
+)
 from amdb.application.common.gateways.user import UserGateway
 from amdb.application.common.gateways.movie import MovieGateway
 from amdb.application.common.gateways.rating import RatingGateway
@@ -56,6 +59,9 @@ from amdb.application.query_handlers.my_detailed_ratings import (
 )
 from amdb.application.query_handlers.export_my_ratings import (
     ExportMyRatingsHandler,
+)
+from amdb.application.query_handlers.request_my_ratings_export import (
+    RequestMyRatingsExportHandler,
 )
 from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
 from amdb.infrastructure.persistence.redis.config import RedisConfig
@@ -430,6 +436,23 @@ class HandlerCreatorsProvider(Provider):
                     connection=sqlaclhemy_connection,
                 ),
                 ratings_for_export_converter=RealRatingsForExportConverter(),
+                identity_provider=identity_provider,
+            )
+
+        return create_handler
+
+    @provide
+    def request_my_ratings_export_handler(
+        self,
+        user_gateway: UserGateway,
+    ) -> CreateHandler[RequestMyRatingsExportHandler]:
+        def create_handler(
+            identity_provider: IdentityProvider,
+        ) -> RequestMyRatingsExportHandler:
+            return RequestMyRatingsExportHandler(
+                ensure_can_use_sending_method=EnsureCanUseSendingMethod(),
+                user_gateway=user_gateway,
+                enqueue_export_and_sending=lambda **kwargs: ...,  # type: ignore
                 identity_provider=identity_provider,
             )
 
