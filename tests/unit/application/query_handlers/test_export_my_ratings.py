@@ -6,6 +6,9 @@ from uuid_extensions import uuid7
 from amdb.domain.entities.user import User, UserId
 from amdb.domain.entities.movie import Movie, MovieId
 from amdb.domain.entities.rating import Rating, RatingId
+from amdb.application.common.services.convert_to_file import (
+    ConvertMyRatingsToFile,
+)
 from amdb.application.common.constants.export import ExportFormat
 from amdb.application.common.gateways.user import UserGateway
 from amdb.application.common.gateways.movie import MovieGateway
@@ -65,8 +68,10 @@ def test_export_my_ratings_in_csv(
 
     query = ExportMyRatingsQuery(format=ExportFormat.CSV)
     handler = ExportMyRatingsHandler(
+        convert_my_ratings_to_file=ConvertMyRatingsToFile(
+            converter=RealRatingsForExportConverter(),
+        ),
         ratings_for_export_reader=ratings_for_export_reader,
-        ratings_for_export_converter=RealRatingsForExportConverter(),
         identity_provider=identity_provider,
     )
 
