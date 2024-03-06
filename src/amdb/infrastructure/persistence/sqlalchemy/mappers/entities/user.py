@@ -45,7 +45,7 @@ class UserMapper:
 
     def _to_entity(
         self,
-        row: Annotated[UserModel, Row[tuple[UserModel]]],
+        row: Annotated[UserModel, Row],
     ) -> User:
         return User(
             id=UserId(row.id),

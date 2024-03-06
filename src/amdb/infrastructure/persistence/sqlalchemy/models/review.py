@@ -2,11 +2,9 @@ from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Model
-from .user import UserModel
-from .movie import MovieModel
 
 
 class ReviewModel(Model):
@@ -25,6 +23,3 @@ class ReviewModel(Model):
     content: Mapped[str]
     type: Mapped[str]
     created_at: Mapped[datetime]
-
-    user: Mapped[UserModel] = relationship()
-    movie: Mapped[MovieModel] = relationship()

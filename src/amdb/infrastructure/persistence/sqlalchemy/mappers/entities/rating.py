@@ -57,7 +57,7 @@ class RatingMapper:
 
     def _to_entity(
         self,
-        row: Annotated[RatingModel, Row[tuple[RatingModel]]],
+        row: Annotated[RatingModel, Row],
     ) -> Rating:
         return Rating(
             id=RatingId(row.id),

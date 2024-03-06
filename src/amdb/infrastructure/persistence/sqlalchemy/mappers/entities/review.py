@@ -55,7 +55,7 @@ class ReviewMapper:
 
     def _to_entity(
         self,
-        row: Annotated[ReviewModel, Row[tuple[ReviewModel]]],
+        row: Annotated[ReviewModel, Row],
     ) -> Review:
         return Review(
             id=ReviewId(row.id),

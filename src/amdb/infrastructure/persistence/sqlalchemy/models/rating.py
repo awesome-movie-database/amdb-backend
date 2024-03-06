@@ -2,11 +2,9 @@ from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy import ForeignKey, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Model
-from .user import UserModel
-from .movie import MovieModel
 
 
 class RatingModel(Model):
@@ -23,8 +21,5 @@ class RatingModel(Model):
     )
     value: Mapped[float]
     created_at: Mapped[datetime]
-
-    movie: Mapped[MovieModel] = relationship()
-    user: Mapped[UserModel] = relationship()
 
     __table_args__ = (UniqueConstraint("user_id", "movie_id"),)

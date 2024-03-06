@@ -40,10 +40,7 @@ class MovieMapper:
         statement = delete(MovieModel).where(MovieModel.id == movie.id)
         self._connection.execute(statement)
 
-    def _to_entity(
-        self,
-        row: Annotated[MovieModel, Row[tuple[MovieModel]]],
-    ) -> Movie:
+    def _to_entity(self, row: Annotated[MovieModel, Row]) -> Movie:
         return Movie(
             id=MovieId(row.id),
             title=row.title,
