@@ -38,7 +38,7 @@ async def request_my_ratings_export(
     Sends file of specified format with current user ratings using
     specified sending method.\n\n
 
-    ####Returns 400:
+    #### Returns 400:
         * When email sending method was passed and user has no email
     """
     identity_provider = SessionIdentityProvider(
