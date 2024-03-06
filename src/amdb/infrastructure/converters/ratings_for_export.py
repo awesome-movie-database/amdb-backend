@@ -1,6 +1,7 @@
 import csv
 from io import StringIO
 
+from amdb.application.common.entities.file import File
 from amdb.application.common.view_models.rating_for_export import (
     RatingForExportViewModel,
 )
@@ -10,7 +11,7 @@ class RealRatingsForExportConverter:
     def to_csv(
         self,
         view_models: list[RatingForExportViewModel],
-    ) -> str:
+    ) -> File:
         with StringIO() as file:
             csv_writer = csv.writer(file)
             csv_writer.writerow(
@@ -37,4 +38,4 @@ class RealRatingsForExportConverter:
                     ],
                 )
             csv_file = file.getvalue()
-        return csv_file
+        return File(csv_file)
