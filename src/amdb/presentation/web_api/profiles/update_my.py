@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from fastapi import Cookie
-from dishka.integrations.fastapi import Depends, inject
+from dishka.integrations.fastapi import FromDishka, inject
 from amdb.application.commands.update_my_profile import UpdateMyProfileCommand
 from amdb.application.command_handlers.update_my_profile import (
     UpdateMyProfileHandler,
@@ -22,9 +22,9 @@ HandlerCreator = CreateHandler[UpdateMyProfileHandler]
 @inject
 async def update_my_profile(
     *,
-    create_handler: Annotated[HandlerCreator, Depends()],
-    session_gateway: Annotated[SessionGateway, Depends()],
-    permissions_gateway: Annotated[PermissionsGateway, Depends()],
+    create_handler: Annotated[HandlerCreator, FromDishka()],
+    session_gateway: Annotated[SessionGateway, FromDishka()],
+    permissions_gateway: Annotated[PermissionsGateway, FromDishka()],
     session_id: Annotated[
         Optional[str],
         Cookie(alias=SESSION_ID_COOKIE),
@@ -34,7 +34,7 @@ async def update_my_profile(
     """
     Updates current user profile.\n\n
 
-    ####Returns 400:
+    #### Returns 400:
         * When email is invalid
     """
     identity_provider = SessionIdentityProvider(

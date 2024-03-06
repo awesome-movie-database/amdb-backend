@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from fastapi import Cookie
-from dishka.integrations.fastapi import Depends, inject
+from dishka.integrations.fastapi import FromDishka, inject
 
 from amdb.application.common.view_models.non_detailed_movie import (
     NonDetailedMovieViewModel,
@@ -28,9 +28,9 @@ HandlerCreator = CreateHandler[GetNonDetailedMoviesHandler]
 @inject
 async def get_non_detailed_movies(
     *,
-    create_handler: Annotated[HandlerCreator, Depends()],
-    session_gateway: Annotated[SessionGateway, Depends()],
-    permissions_gateway: Annotated[PermissionsGateway, Depends()],
+    create_handler: Annotated[HandlerCreator, FromDishka()],
+    session_gateway: Annotated[SessionGateway, FromDishka()],
+    permissions_gateway: Annotated[PermissionsGateway, FromDishka()],
     session_id: Annotated[
         Optional[str],
         Cookie(alias=SESSION_ID_COOKIE),

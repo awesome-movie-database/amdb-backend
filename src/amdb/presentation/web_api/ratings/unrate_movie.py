@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from fastapi import Cookie
-from dishka.integrations.fastapi import Depends, inject
+from dishka.integrations.fastapi import FromDishka, inject
 
 from amdb.domain.entities.rating import RatingId
 from amdb.application.commands.unrate_movie import UnrateMovieCommand
@@ -22,9 +22,9 @@ HandlerCreator = CreateHandler[UnrateMovieHandler]
 @inject
 async def unrate_movie(
     *,
-    create_handler: Annotated[HandlerCreator, Depends()],
-    session_gateway: Annotated[SessionGateway, Depends()],
-    permissions_gateway: Annotated[PermissionsGateway, Depends()],
+    create_handler: Annotated[HandlerCreator, FromDishka()],
+    session_gateway: Annotated[SessionGateway, FromDishka()],
+    permissions_gateway: Annotated[PermissionsGateway, FromDishka()],
     session_id: Annotated[
         Optional[str],
         Cookie(alias=SESSION_ID_COOKIE),

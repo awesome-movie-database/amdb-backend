@@ -2,7 +2,7 @@ from typing import Annotated
 from datetime import datetime, timezone
 
 from fastapi import Response
-from dishka.integrations.fastapi import Depends, inject
+from dishka.integrations.fastapi import FromDishka, inject
 
 from amdb.domain.entities.user import UserId
 from amdb.application.queries.login import LoginQuery
@@ -16,10 +16,10 @@ from amdb.presentation.web_api.constants import SESSION_ID_COOKIE
 @inject
 async def login(
     *,
-    handler: Annotated[LoginHandler, Depends()],
-    session_processor: Annotated[SessionProcessor, Depends()],
-    session_mapper: Annotated[SessionMapper, Depends()],
-    session_config: Annotated[SessionConfig, Depends()],
+    handler: Annotated[LoginHandler, FromDishka()],
+    session_processor: Annotated[SessionProcessor, FromDishka()],
+    session_mapper: Annotated[SessionMapper, FromDishka()],
+    session_config: Annotated[SessionConfig, FromDishka()],
     query: LoginQuery,
     response: Response,
 ) -> UserId:

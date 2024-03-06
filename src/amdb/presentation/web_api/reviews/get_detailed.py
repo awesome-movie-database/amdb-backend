@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from dishka.integrations.fastapi import Depends, inject
+from dishka.integrations.fastapi import FromDishka, inject
 
 from amdb.domain.entities.movie import MovieId
 from amdb.application.common.view_models.detailed_review import (
@@ -15,7 +15,7 @@ from amdb.application.query_handlers.detailed_reviews import (
 @inject
 async def get_detailed_reviews(
     *,
-    handler: Annotated[GetDetailedReviewsHandler, Depends()],
+    handler: Annotated[GetDetailedReviewsHandler, FromDishka()],
     movie_id: MovieId,
     limit: int = 100,
     offset: int = 0,

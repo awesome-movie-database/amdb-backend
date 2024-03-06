@@ -2,7 +2,7 @@ from typing import Annotated, Optional
 
 from fastapi import Cookie
 from fastapi.responses import StreamingResponse
-from dishka.integrations.fastapi import Depends, inject
+from dishka.integrations.fastapi import FromDishka, inject
 
 from amdb.application.common.constants.export import ExportFormat
 from amdb.application.queries.export_my_ratings import ExportMyRatingsQuery
@@ -25,9 +25,9 @@ HandlerCreator = CreateHandler[ExportMyRatingsHandler]
 @inject
 async def export_my_ratings(
     *,
-    create_handler: Annotated[HandlerCreator, Depends()],
-    session_gateway: Annotated[SessionGateway, Depends()],
-    permissions_gateway: Annotated[PermissionsGateway, Depends()],
+    create_handler: Annotated[HandlerCreator, FromDishka()],
+    session_gateway: Annotated[SessionGateway, FromDishka()],
+    permissions_gateway: Annotated[PermissionsGateway, FromDishka()],
     session_id: Annotated[
         Optional[str],
         Cookie(alias=SESSION_ID_COOKIE),

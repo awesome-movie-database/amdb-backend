@@ -26,7 +26,7 @@ maintainers = [
 dependencies = [
     "uuid7==0.1.*",
     "toml==0.10.*",
-    "dishka==0.4.*",
+    "dishka==0.6.*",
     "sqlalchemy==2.0.*",
     "psycopg2-binary==2.9.*",
     "alembic==1.13.*",
