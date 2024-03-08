@@ -1,6 +1,7 @@
 """
 Add permissions table,
-Make type column string to reviews table
+Fill permission table with default data,
+Make type column string to reviews table,
 Add email column to users table
 
 Revision ID: a2f7c2383ba8
@@ -25,13 +26,19 @@ def upgrade() -> None:
     op.create_table(
         "permissions",
         sa.Column("user_id", sa.Uuid(), nullable=False),
-        sa.Column("value", sa.Integer(), nullable=False),
+        sa.Column("value", sa.Integer(), nullable=False, default=30),
         sa.PrimaryKeyConstraint("user_id"),
         sa.ForeignKeyConstraint(
             ["user_id"],
             ["users.id"],
             ondelete="CASCADE",
         ),
+    )
+    op.execute(
+        """
+        INSERT INTO permissions (user_id)
+        (SELECT u.id FROM users u)
+        """,
     )
     with op.batch_alter_table("reviews") as batch_op:
         batch_op.alter_column(
