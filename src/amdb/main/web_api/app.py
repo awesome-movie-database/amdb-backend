@@ -13,10 +13,22 @@ from amdb.presentation.web_api.exception_handlers import (
     setup_exception_handlers,
 )
 from amdb.main.providers import (
+    ConfigsProvider,
+    DomainValidatorsProvider,
+    DomainServicesProvider,
     ConnectionsProvider,
-    AdaptersProvider,
-    HandlersProvider,
-    HandlerCreatorsProvider,
+    EntityMappersProvider,
+    ViewModelMappersProvider,
+    ApplicationModelMappersProvider,
+    SendingAdaptersProvider,
+    TaskQueueAdaptersProvider,
+    ConvertingAdaptersProvider,
+    PasswordManagerProvider,
+    ApllicationServicesProvider,
+    CommandHandlersProvider,
+    CommandHandlerMakersProvider,
+    QueryHandlersProvider,
+    QueryHandlerMakersProvider,
 )
 from .providers import SessionAdaptersProvider
 from .config import WebAPIConfig
@@ -42,16 +54,28 @@ def run_web_api() -> None:
     setup_exception_handlers(app)
 
     container = make_async_container(
-        ConnectionsProvider(
+        ConfigsProvider(
             postgres_config=postgres_config,
             redis_config=redis_config,
         ),
-        AdaptersProvider(),
+        DomainValidatorsProvider(),
+        ConnectionsProvider(),
+        DomainServicesProvider(),
+        EntityMappersProvider(),
+        ViewModelMappersProvider(),
+        ApplicationModelMappersProvider(),
+        SendingAdaptersProvider(),
+        TaskQueueAdaptersProvider(),
+        PasswordManagerProvider(),
+        ConvertingAdaptersProvider(),
+        ApllicationServicesProvider(),
+        CommandHandlersProvider(),
+        CommandHandlerMakersProvider(),
+        QueryHandlersProvider(),
+        QueryHandlerMakersProvider(),
         SessionAdaptersProvider(
             session_config=session_config,
         ),
-        HandlersProvider(),
-        HandlerCreatorsProvider(),
     )
     setup_dishka(container, app)
 

@@ -1,7 +1,7 @@
 from typing import cast
 
 from amdb.domain.entities.user import User
-from amdb.application.common.services.ensure_can_use_sending_method import (
+from amdb.application.common.services.ensure_can_use import (
     EnsureCanUseSendingMethod,
 )
 from amdb.application.common.gateways.user import UserGateway

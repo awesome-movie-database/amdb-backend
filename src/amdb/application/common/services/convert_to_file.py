@@ -1,6 +1,6 @@
 from amdb.application.common.constants.export import ExportFormat
 from amdb.application.common.entities.file import File
-from amdb.application.common.converters.rating_for_export import (
+from amdb.application.common.converting.rating_for_export import (
     RatingsForExportConverter,
 )
 from amdb.application.common.view_models.rating_for_export import (

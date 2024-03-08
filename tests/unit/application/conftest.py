@@ -6,38 +6,18 @@ from sqlalchemy import Connection, Engine, create_engine
 from redis.client import Redis
 
 from amdb.infrastructure.persistence.sqlalchemy.models.base import Model
-from amdb.infrastructure.persistence.sqlalchemy.mappers.entities.user import (
+from amdb.infrastructure.persistence.sqlalchemy.mappers import (
     UserMapper,
-)
-from amdb.infrastructure.persistence.sqlalchemy.mappers.entities.movie import (
     MovieMapper,
-)
-from amdb.infrastructure.persistence.sqlalchemy.mappers.entities.rating import (
     RatingMapper,
-)
-from amdb.infrastructure.persistence.sqlalchemy.mappers.entities.review import (
     ReviewMapper,
-)
-from amdb.infrastructure.persistence.sqlalchemy.mappers.password_hash import (
-    PasswordHashMapper,
-)
-from amdb.infrastructure.persistence.sqlalchemy.mappers.permissions import (
-    PermissionsMapper,
-)
-from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.non_detailed_movie import (
-    NonDetailedMovieViewModelsMapper,
-)
-from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.detailed_movie import (
     DetailedMovieViewModelMapper,
-)
-from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.detailed_review import (
     DetailedReviewViewModelsMapper,
-)
-from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.my_detailed_ratings import (
-    MyDetailedRatingsViewModelMapper,
-)
-from amdb.infrastructure.persistence.sqlalchemy.mappers.view_models.rating_for_export import (
     RatingForExportViewModelMapper,
+    MyDetailedRatingsViewModelMapper,
+    NonDetailedMovieViewModelsMapper,
+    PasswordHashMapper,
+    PermissionsMapper,
 )
 from amdb.infrastructure.persistence.redis.cache.permissions_mapper import (
     PermissionsMapperCacheProvider,

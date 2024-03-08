@@ -7,7 +7,7 @@ from uuid_extensions import uuid7
 from amdb.domain.entities.user import User, UserId
 from amdb.application.common.constants.export import ExportFormat
 from amdb.application.common.constants.sending import SendingMethod
-from amdb.application.common.services.ensure_can_use_sending_method import (
+from amdb.application.common.services.ensure_can_use import (
     EnsureCanUseSendingMethod,
 )
 from amdb.application.common.gateways.user import UserGateway

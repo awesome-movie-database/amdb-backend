@@ -18,7 +18,7 @@ from amdb.application.common.identity_provider import IdentityProvider
 from amdb.application.common.readers.rating_for_export import (
     RatingForExportViewModelsReader,
 )
-from amdb.infrastructure.converters.ratings_for_export import (
+from amdb.infrastructure.converting.ratings_for_export import (
     RealRatingsForExportConverter,
 )
 from amdb.application.queries.export_my_ratings import ExportMyRatingsQuery

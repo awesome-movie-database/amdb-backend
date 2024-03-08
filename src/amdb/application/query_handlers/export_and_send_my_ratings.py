@@ -1,7 +1,7 @@
 from amdb.domain.entities.user import User
 from amdb.application.common.constants.sending import SendingMethod
 from amdb.application.common.entities.file import File
-from amdb.application.common.services.ensure_can_use_sending_method import (
+from amdb.application.common.services.ensure_can_use import (
     EnsureCanUseSendingMethod,
 )
 from amdb.application.common.services.convert_to_file import (
@@ -11,7 +11,7 @@ from amdb.application.common.gateways.user import UserGateway
 from amdb.application.common.readers.rating_for_export import (
     RatingForExportViewModelsReader,
 )
-from amdb.application.common.senders.email import SendEmail
+from amdb.application.common.sending.email import SendEmail
 from amdb.application.common.constants.exceptions import USER_DOES_NOT_EXIST
 from amdb.application.common.exception import ApplicationError
 from amdb.application.queries.export_and_send_my_ratings import (

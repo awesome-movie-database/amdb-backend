@@ -7,7 +7,6 @@ from amdb.domain.validators.email import ValidateEmail
 class UpdateProfile:
     def __init__(
         self,
-        *,
         validate_email: ValidateEmail,
     ) -> None:
         self._validate_email = validate_email
