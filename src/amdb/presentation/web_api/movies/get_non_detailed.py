@@ -22,13 +22,13 @@ from amdb.presentation.create_handler import CreateHandler
 from amdb.presentation.web_api.constants import SESSION_ID_COOKIE
 
 
-HandlerCreator = CreateHandler[GetNonDetailedMoviesHandler]
+HandlerMaker = CreateHandler[GetNonDetailedMoviesHandler]
 
 
 @inject
 async def get_non_detailed_movies(
     *,
-    create_handler: Annotated[HandlerCreator, FromDishka()],
+    create_handler: Annotated[HandlerMaker, FromDishka()],
     session_gateway: Annotated[SessionGateway, FromDishka()],
     permissions_gateway: Annotated[PermissionsGateway, FromDishka()],
     session_id: Annotated[
