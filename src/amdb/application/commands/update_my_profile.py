@@ -4,4 +4,4 @@ from typing import Optional
 
 @dataclass(frozen=True, slots=True)
 class UpdateMyProfileCommand:
-    email: Optional[str]
+    email: Optional[str] = None
