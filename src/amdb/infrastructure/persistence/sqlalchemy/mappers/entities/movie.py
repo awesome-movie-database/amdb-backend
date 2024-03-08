@@ -11,7 +11,11 @@ class MovieMapper:
         self._connection = connection
 
     def with_id(self, movie_id: MovieId) -> Optional[Movie]:
-        statement = select(MovieModel).where(MovieModel.id == movie_id)
+        statement = (
+            select(MovieModel)
+            .where(MovieModel.id == movie_id)
+            .with_for_update()
+        )
         row = self._connection.execute(statement).one_or_none()
         if row:
             return self._to_entity(row)  # type: ignore
