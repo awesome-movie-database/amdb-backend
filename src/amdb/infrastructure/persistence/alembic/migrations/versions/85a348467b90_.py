@@ -1,5 +1,5 @@
 """
-Add release_date column to movies table,
+Add release_date column in movies table,
 Add review table
 
 Revision ID: 85a348467b90

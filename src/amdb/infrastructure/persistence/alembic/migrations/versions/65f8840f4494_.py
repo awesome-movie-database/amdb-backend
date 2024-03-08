@@ -1,9 +1,9 @@
 """
 Add uuid7 function,
-Add id column to ratings table,
-Add primary key constraint on id of ratings table,
-Add unique constraint on pair of user_id and movie_id of ratings table,
-Add unique constraint on pair of user_id and movie_id of reviews table
+Add id column in ratings table,
+Add primary key constraint on id in ratings table,
+Add unique constraint on pair of user_id and movie_id in ratings table,
+Add unique constraint on pair of user_id and movie_id in reviews table
 
 Revision ID: 65f8840f4494
 Revises: 85a348467b90

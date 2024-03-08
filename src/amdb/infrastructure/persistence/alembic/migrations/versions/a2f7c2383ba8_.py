@@ -1,8 +1,8 @@
 """
 Add permissions table,
 Fill permission table with default data,
-Make type column string to reviews table,
-Add email column to users table
+Make type column string in reviews table,
+Add email column in users table
 
 Revision ID: a2f7c2383ba8
 Revises: 65f8840f4494
