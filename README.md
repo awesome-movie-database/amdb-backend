@@ -19,46 +19,14 @@
     </a>
 </p>
 
-## How to run:
+## Used technologies:
 
-### Using docker-compose:
-
-1. Provide `.env` file with variables from `.env.template`
-
-2. Run docker-compose
-
-```sh
-docker-compose --env-file ./.env up web_api
-```
-
-### Manually:
-
-1. Install
-
-```sh
-pip install -e ".[web_api,cli]"
-```
-
-2. Provide env variables from `.env.template`
-
-3. Run server
-
-```sh
-amdb-web_api
-```
-
-4. Run cli
-
-```sh
-amdb-cli
-```
-
-## How to run migrations:
-
-1. Provide env variables for postgres from `.env.template`
-
-2. Run migrations:
-
-```
-amdb-cli migration alembic upgrade head
-```
+* [Python 3](https://www.python.org/downloads/)
+    * [FastAPI](https://github.com/tiangolo/fastapi) - Web framework for building APIs
+    * [FastStream](https://github.com/airtai/faststream) - framework for building message queues
+    * [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy) - Toolkit for building high level db integrations
+    * [alembic](https://github.com/sqlalchemy/alembic) - Tool for writing db migrations
+    * [redis-py](https://github.com/redis/redis-py) - Redis python client
+    * [Dishka](https://github.com/reagento/dishka) - DI framework
+* [PostgreSQL](https://www.postgresql.org/)
+* [Redis](https://redis.io/)
