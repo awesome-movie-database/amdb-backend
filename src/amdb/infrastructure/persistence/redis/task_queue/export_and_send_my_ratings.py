@@ -23,4 +23,7 @@ class EnqueueExportAndSendingMyRatingsInRedis:
             "export_format": export_format.value,
             "sending_method": sending_method.value,
         }
-        self._redis.lpush("tasks", json.dumps(data))
+        self._redis.lpush(
+            "export_and_send_my_ratings_tasks",
+            json.dumps(data),
+        )
