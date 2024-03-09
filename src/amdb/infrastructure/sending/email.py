@@ -1,9 +1,7 @@
-from typing import Protocol
-
 from amdb.application.common.entities.file import File
 
 
-class SendFakeEmail(Protocol):
+class SendFakeEmail:
     def __call__(
         self,
         *,
@@ -11,4 +9,9 @@ class SendFakeEmail(Protocol):
         subject: str,
         files: list[File],
     ) -> None:
-        ...
+        print(  # noqa
+            "Email has been sent. \n"
+            f"Address: {email} \n"
+            f"Subject: {subject} \n"
+            f"Number of file: {len(files)}",
+        )

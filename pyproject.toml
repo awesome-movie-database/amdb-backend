@@ -31,6 +31,7 @@ dependencies = [
     "psycopg2-binary==2.9.*",
     "alembic==1.13.*",
     "redis==5.0.*",
+    "faststream[redis]==0.4.*",
 ]
 
 [project.optional-dependencies]
@@ -51,4 +52,5 @@ coverage = [
 ]
 
 [project.scripts]
-amdb-web_api = "amdb.main.web_api.__main__:main"
+amdb-web_api = "amdb.main.web_api.app:run_web_api"
+amdb-worker = "amdb.main.worker.app:run_worker"

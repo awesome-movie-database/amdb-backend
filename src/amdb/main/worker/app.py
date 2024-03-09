@@ -1,17 +1,14 @@
+import asyncio
 import os
 
-import uvicorn
-from fastapi import FastAPI
+from faststream import FastStream
+from faststream.redis import RedisBroker
 from dishka import make_async_container
-from dishka.integrations.fastapi import setup_dishka
+from dishka.integrations.faststream import setup_dishka
 
 from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
 from amdb.infrastructure.persistence.redis.config import RedisConfig
-from amdb.infrastructure.auth.session.config import SessionConfig
-from amdb.presentation.web_api.router import router
-from amdb.presentation.web_api.exception_handlers import (
-    setup_exception_handlers,
-)
+from amdb.presentation.worker.router import router
 from amdb.main.providers import (
     ConfigsProvider,
     DomainValidatorsProvider,
@@ -30,29 +27,21 @@ from amdb.main.providers import (
     QueryHandlersProvider,
     QueryHandlerMakersProvider,
 )
-from .session_adapters_provider import SessionAdaptersProvider
-from .config import WebAPIConfig
 
 
-def run_web_api() -> None:
+def run_worker() -> None:
     path_to_config = os.getenv("CONFIG_PATH")
     if not path_to_config:
         message = "Path to config env var is not set"
         raise ValueError(message)
 
-    web_api_config = WebAPIConfig.from_toml(path_to_config)
     postgres_config = PostgresConfig.from_toml(path_to_config)
     redis_config = RedisConfig.from_toml(path_to_config)
-    session_config = SessionConfig.from_toml(path_to_config)
 
-    app = FastAPI(
-        title="Awesome Movie Database",
-        version=web_api_config.version,
-        swagger_ui_parameters={"defaultModelsExpandDepth": -1},
-    )
-    app.include_router(router)
-    setup_exception_handlers(app)
+    broker = RedisBroker(url=redis_config.url)
+    broker.include_router(router)
 
+    app = FastStream(broker)
     container = make_async_container(
         ConfigsProvider(
             postgres_config=postgres_config,
@@ -73,14 +62,7 @@ def run_web_api() -> None:
         CommandHandlerMakersProvider(),
         QueryHandlersProvider(),
         QueryHandlerMakersProvider(),
-        SessionAdaptersProvider(
-            session_config=session_config,
-        ),
     )
     setup_dishka(container, app)
 
-    uvicorn.run(
-        app=app,
-        host=web_api_config.host,
-        port=web_api_config.port,
-    )
+    asyncio.run(app.run())
