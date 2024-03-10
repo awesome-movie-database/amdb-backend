@@ -31,3 +31,54 @@
     * [Dishka](https://github.com/reagento/dishka) - DI framework
 * [PostgreSQL](https://www.postgresql.org/)
 * [Redis](https://redis.io/)
+
+
+## How to run:
+
+### Manually:
+
+1. Install
+
+```sh
+pip install -e ".[web_api]"
+```
+
+2. Create [config](./config/prod_config.template.toml) file
+
+3. Provide `CONFIG_PATH` env variable
+
+4. Run migrations
+
+```sh
+amdb alembic upgrade head
+```
+
+5. Run worker
+
+```sh
+amdb worker
+```
+
+6. Run server
+
+```sh
+amdb web_api
+```
+
+### Using docker-compose:
+
+1. Create [config](./config/prod_config.template.toml) file
+
+2. Provide `CONFIG_PATH`, `REDIS_PASSWORD`, `REDIS_PORT_NUMBER`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `SERVER_HOST`, `SERVER_PORT` env variables
+
+3. Run worker and server
+
+```sh
+docker-compose up web_api
+```
+
+4. Run migrations
+
+```sh
+docker exec amdb_backend.web_api amdb alembic upgrade head
+```
