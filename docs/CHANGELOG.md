@@ -1,5 +1,35 @@
 # Changelog
 
+## [v1.0.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v1.0.0) (2024-03-10)
+
+### Added
+
+- `User` now can list `detailed reviews`
+- `User` now can get `detailed movie`
+- `User` now can list his `detailed ratings`
+- `User` now can get `non detailed movie`
+- `User` now can export his `ratings` in CSV format
+- `User` now can request export his `ratings` in CSV format
+
+### Changed
+
+- Now `Create movie` and `Delete movie` don't require permissions
+- [*Breaking change*] Now `Review` type is a string
+- [*Breaking change*] Removed ability to list `Movies`
+- [*Breaking change*] Removed ability to list `Ratings`
+- [*Breaking change*] Removed ability to get `Movie`
+- [*Breaking change*] Removed ability to get `Review`
+
+### Fixed
+
+- Race condition during rating `Movie` by many `Users` at the same time
+
+### Echancements
+
+- Added permissions table
+- Now you can run server and worker using CLI
+
+
 ## [v0.5.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v0.5.0) (2024-01-29)
 
 ### Added
