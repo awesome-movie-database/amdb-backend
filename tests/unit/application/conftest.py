@@ -2,31 +2,36 @@ from typing import Iterator
 from unittest.mock import Mock
 
 import pytest
-from sqlalchemy import Engine, create_engine
-from sqlalchemy.orm import Session
+from sqlalchemy import Connection, Engine, create_engine
 from redis.client import Redis
 
 from amdb.infrastructure.persistence.sqlalchemy.models.base import Model
-from amdb.infrastructure.persistence.sqlalchemy.gateways.user import SQLAlchemyUserGateway
-from amdb.infrastructure.persistence.sqlalchemy.gateways.movie import SQLAlchemyMovieGateway
-from amdb.infrastructure.persistence.sqlalchemy.gateways.rating import SQLAlchemyRatingGateway
-from amdb.infrastructure.persistence.sqlalchemy.gateways.user_password_hash import (
-    SQLAlchemyUserPasswordHashGateway,
+from amdb.infrastructure.persistence.sqlalchemy.mappers import (
+    UserMapper,
+    MovieMapper,
+    RatingMapper,
+    ReviewMapper,
+    DetailedMovieViewModelMapper,
+    DetailedReviewViewModelsMapper,
+    RatingForExportViewModelMapper,
+    MyDetailedRatingsViewModelMapper,
+    NonDetailedMovieViewModelsMapper,
+    PasswordHashMapper,
+    PermissionsMapper,
 )
-from amdb.infrastructure.persistence.sqlalchemy.gateways.review import SQLAlchemyReviewGateway
-from amdb.infrastructure.persistence.redis.gateways.permissions import RedisPermissionsGateway
-from amdb.infrastructure.persistence.sqlalchemy.mappers.user import UserMapper
-from amdb.infrastructure.persistence.sqlalchemy.mappers.movie import MovieMapper
-from amdb.infrastructure.persistence.sqlalchemy.mappers.rating import RatingMapper
-from amdb.infrastructure.persistence.sqlalchemy.mappers.user_password_hash import (
-    UserPasswordHashMapper,
+from amdb.infrastructure.persistence.redis.cache.permissions_mapper import (
+    PermissionsMapperCacheProvider,
 )
-from amdb.infrastructure.persistence.sqlalchemy.mappers.review import ReviewMapper
-from amdb.infrastructure.security.hasher import Hasher
-from amdb.infrastructure.password_manager.password_manager import HashingPasswordManager
+from amdb.infrastructure.persistence.caching.permissions_mapper import (
+    CachingPermissionsMapper,
+)
+from amdb.infrastructure.password_manager.hash_computer import HashComputer
+from amdb.infrastructure.password_manager.password_manager import (
+    HashingPasswordManager,
+)
 
 
-@pytest.fixture(scope="package")
+@pytest.fixture(scope="session")
 def sqlalchemy_engine(postgres_url: str) -> Engine:
     return create_engine(url=postgres_url)
 
@@ -39,61 +44,96 @@ def clear_database(sqlalchemy_engine: Engine) -> Iterator[None]:
 
 
 @pytest.fixture
-def sqlalchemy_session(sqlalchemy_engine: Engine) -> Iterator[Session]:
+def sqlalchemy_connection(sqlalchemy_engine: Engine) -> Iterator[Connection]:
     connection = sqlalchemy_engine.connect()
-    session = Session(connection, expire_on_commit=False)
-
-    yield session
-
-    session.close()
+    yield connection
     connection.close()
 
 
 @pytest.fixture
-def permissions_gateway(redis: Redis) -> RedisPermissionsGateway:
-    return RedisPermissionsGateway(redis)
-
-
-@pytest.fixture
-def user_gateway(sqlalchemy_session: Session) -> SQLAlchemyUserGateway:
-    return SQLAlchemyUserGateway(sqlalchemy_session, UserMapper())
-
-
-@pytest.fixture
-def movie_gateway(sqlalchemy_session: Session) -> SQLAlchemyMovieGateway:
-    return SQLAlchemyMovieGateway(sqlalchemy_session, MovieMapper())
-
-
-@pytest.fixture
-def rating_gateway(sqlalchemy_session: Session) -> SQLAlchemyRatingGateway:
-    return SQLAlchemyRatingGateway(sqlalchemy_session, RatingMapper())
-
-
-@pytest.fixture
-def review_gateway(sqlalchemy_session: Session) -> SQLAlchemyReviewGateway:
-    return SQLAlchemyReviewGateway(sqlalchemy_session, ReviewMapper())
-
-
-@pytest.fixture
-def password_manager(sqlalchemy_session: Session) -> HashingPasswordManager:
-    user_password_hash_gateway = SQLAlchemyUserPasswordHashGateway(
-        session=sqlalchemy_session,
-        mapper=UserPasswordHashMapper(),
+def permissions_gateway(
+    redis: Redis,
+    sqlalchemy_connection: Connection,
+) -> CachingPermissionsMapper:
+    return CachingPermissionsMapper(
+        permissions_mapper=PermissionsMapper(sqlalchemy_connection),
+        cache_provider=PermissionsMapperCacheProvider(redis),
     )
+
+
+@pytest.fixture
+def user_gateway(sqlalchemy_connection: Connection) -> UserMapper:
+    return UserMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def movie_gateway(sqlalchemy_connection: Connection) -> MovieMapper:
+    return MovieMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def rating_gateway(sqlalchemy_connection: Connection) -> RatingMapper:
+    return RatingMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def review_gateway(sqlalchemy_connection: Connection) -> ReviewMapper:
+    return ReviewMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def detailed_movie_reader(
+    sqlalchemy_connection: Connection,
+) -> DetailedMovieViewModelMapper:
+    return DetailedMovieViewModelMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def non_detailed_movies_reader(
+    sqlalchemy_connection: Connection,
+) -> NonDetailedMovieViewModelsMapper:
+    return NonDetailedMovieViewModelsMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def detailed_reviews_reader(
+    sqlalchemy_connection: Connection,
+) -> DetailedMovieViewModelMapper:
+    return DetailedReviewViewModelsMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def my_detailed_ratings_reader(
+    sqlalchemy_connection: Connection,
+) -> MyDetailedRatingsViewModelMapper:
+    return MyDetailedRatingsViewModelMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def ratings_for_export_reader(
+    sqlalchemy_connection: Connection,
+) -> RatingForExportViewModelMapper:
+    return RatingForExportViewModelMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def password_manager(
+    sqlalchemy_connection: Connection,
+) -> HashingPasswordManager:
     return HashingPasswordManager(
-        hasher=Hasher(),
-        user_password_hash_gateway=user_password_hash_gateway,
+        hash_computer=HashComputer(),
+        password_hash_gateway=PasswordHashMapper(sqlalchemy_connection),
     )
 
 
 @pytest.fixture
-def unit_of_work(sqlalchemy_session: Session) -> Session:
-    return sqlalchemy_session
+def unit_of_work(sqlalchemy_connection: Connection) -> Connection:
+    return sqlalchemy_connection
 
 
 @pytest.fixture(scope="session")
 def identity_provider_with_incorrect_permissions() -> Mock:
     identity_provider = Mock()
-    identity_provider.get_permissions = Mock(return_value=0)
+    identity_provider.permissions = Mock(return_value=0)
 
     return identity_provider

@@ -9,12 +9,12 @@ from amdb.domain.entities.movie import MovieId, Movie
 from amdb.domain.entities.review import ReviewId, ReviewType, Review
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.review_movie import ReviewMovie
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
-from amdb.application.common.interfaces.user_gateway import UserGateway
-from amdb.application.common.interfaces.movie_gateway import MovieGateway
-from amdb.application.common.interfaces.review_gateway import ReviewGateway
-from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.gateways.permissions import PermissionsGateway
+from amdb.application.common.gateways.user import UserGateway
+from amdb.application.common.gateways.movie import MovieGateway
+from amdb.application.common.gateways.review import ReviewGateway
+from amdb.application.common.unit_of_work import UnitOfWork
+from amdb.application.common.identity_provider import IdentityProvider
 from amdb.application.commands.review_movie import ReviewMovieCommand
 from amdb.application.command_handlers.review_movie import ReviewMovieHandler
 from amdb.application.common.constants.exceptions import (
@@ -32,7 +32,7 @@ def identity_provider_with_correct_permissions(
     identity_provider = Mock()
 
     correct_permissions = permissions_gateway.for_review_movie()
-    identity_provider.get_permissions = Mock(return_value=correct_permissions)
+    identity_provider.permissions = Mock(return_value=correct_permissions)
 
     return identity_provider
 
@@ -48,6 +48,7 @@ def test_review_movie(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -62,17 +63,17 @@ def test_review_movie(
 
     unit_of_work.commit()
 
-    identity_provider_with_correct_permissions.get_user_id = Mock(
+    identity_provider_with_correct_permissions.user_id = Mock(
         return_value=user.id,
     )
 
-    review_movie_command = ReviewMovieCommand(
+    command = ReviewMovieCommand(
         movie_id=movie.id,
         title="Not bad",
         content="Great soundtrack",
         type=ReviewType.POSITIVE,
     )
-    review_movie_handler = ReviewMovieHandler(
+    handler = ReviewMovieHandler(
         access_concern=AccessConcern(),
         review_movie=ReviewMovie(),
         permissions_gateway=permissions_gateway,
@@ -83,7 +84,7 @@ def test_review_movie(
         identity_provider=identity_provider_with_correct_permissions,
     )
 
-    review_movie_handler.execute(review_movie_command)
+    handler.execute(command)
 
 
 def test_review_movie_should_raise_error_when_access_is_denied(
@@ -94,13 +95,13 @@ def test_review_movie_should_raise_error_when_access_is_denied(
     unit_of_work: UnitOfWork,
     identity_provider_with_incorrect_permissions: IdentityProvider,
 ):
-    review_movie_command = ReviewMovieCommand(
+    command = ReviewMovieCommand(
         movie_id=MovieId(uuid7()),
         title="Mid",
         content="So-so",
         type=ReviewType.NEUTRAL,
     )
-    review_movie_handler = ReviewMovieHandler(
+    handler = ReviewMovieHandler(
         access_concern=AccessConcern(),
         review_movie=ReviewMovie(),
         permissions_gateway=permissions_gateway,
@@ -112,7 +113,7 @@ def test_review_movie_should_raise_error_when_access_is_denied(
     )
 
     with pytest.raises(ApplicationError) as error:
-        review_movie_handler.execute(review_movie_command)
+        handler.execute(command)
 
     assert error.value.message == REVIEW_MOVIE_ACCESS_DENIED
 
@@ -125,13 +126,13 @@ def test_review_movie_should_raise_error_when_movie_does_not_exist(
     unit_of_work: UnitOfWork,
     identity_provider_with_correct_permissions: IdentityProvider,
 ):
-    review_movie_command = ReviewMovieCommand(
+    command = ReviewMovieCommand(
         movie_id=MovieId(uuid7()),
         title="Fantastic",
         content="Awesome!!",
         type=ReviewType.POSITIVE,
     )
-    review_movie_handler = ReviewMovieHandler(
+    handler = ReviewMovieHandler(
         access_concern=AccessConcern(),
         review_movie=ReviewMovie(),
         permissions_gateway=permissions_gateway,
@@ -143,7 +144,7 @@ def test_review_movie_should_raise_error_when_movie_does_not_exist(
     )
 
     with pytest.raises(ApplicationError) as error:
-        review_movie_handler.execute(review_movie_command)
+        handler.execute(command)
 
     assert error.value.message == MOVIE_DOES_NOT_EXIST
 
@@ -159,6 +160,7 @@ def test_review_movie_should_raise_error_when_movie_already_reviewed(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -184,17 +186,17 @@ def test_review_movie_should_raise_error_when_movie_already_reviewed(
 
     unit_of_work.commit()
 
-    identity_provider_with_correct_permissions.get_user_id = Mock(
+    identity_provider_with_correct_permissions.user_id = Mock(
         return_value=user.id,
     )
 
-    review_movie_command = ReviewMovieCommand(
+    command = ReviewMovieCommand(
         movie_id=movie.id,
         title="Masterpice",
         content="Extremely underrated",
         type=ReviewType.POSITIVE,
     )
-    review_movie_handler = ReviewMovieHandler(
+    handler = ReviewMovieHandler(
         access_concern=AccessConcern(),
         review_movie=ReviewMovie(),
         permissions_gateway=permissions_gateway,
@@ -206,6 +208,6 @@ def test_review_movie_should_raise_error_when_movie_already_reviewed(
     )
 
     with pytest.raises(ApplicationError) as error:
-        review_movie_handler.execute(review_movie_command)
+        handler.execute(command)
 
     assert error.value.message == MOVIE_ALREADY_REVIEWED

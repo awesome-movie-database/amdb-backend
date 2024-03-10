@@ -2,11 +2,16 @@ from uuid_extensions import uuid7
 
 from amdb.domain.entities.user import UserId
 from amdb.domain.services.create_user import CreateUser
-from amdb.application.common.interfaces.user_gateway import UserGateway
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
-from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.password_manager import PasswordManager
-from amdb.application.common.constants.exceptions import USER_NAME_ALREADY_EXISTS
+from amdb.application.common.gateways.user import UserGateway
+from amdb.application.common.gateways.permissions import (
+    PermissionsGateway,
+)
+from amdb.application.common.unit_of_work import UnitOfWork
+from amdb.application.common.password_manager import PasswordManager
+from amdb.application.common.constants.exceptions import (
+    USER_NAME_ALREADY_EXISTS,
+    USER_EMAIL_ALREADY_EXISTS,
+)
 from amdb.application.common.exception import ApplicationError
 from amdb.application.commands.register_user import RegisterUserCommand
 
@@ -32,9 +37,13 @@ class RegisterUserHandler:
         if user:
             raise ApplicationError(USER_NAME_ALREADY_EXISTS)
 
+        if command.email:
+            self._ensure_email_is_not_taken(command.email)
+
         new_user = self._create_user(
             id=UserId(uuid7()),
             name=command.name,
+            email=command.email,
         )
         self._user_gateway.save(new_user)
 
@@ -50,3 +59,8 @@ class RegisterUserHandler:
         self._unit_of_work.commit()
 
         return new_user.id
+
+    def _ensure_email_is_not_taken(self, email: str) -> None:
+        user = self._user_gateway.with_email(email)
+        if user:
+            raise ApplicationError(USER_EMAIL_ALREADY_EXISTS)

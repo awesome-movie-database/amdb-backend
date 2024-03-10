@@ -1,6 +1,6 @@
 """
 Add uuid7 function,
-Add id column to ratings table,
+Add id column in ratings table,
 Add primary key constraint on id in ratings table,
 Add unique constraint on pair of user_id and movie_id in ratings table,
 Add unique constraint on pair of user_id and movie_id in reviews table
@@ -101,11 +101,20 @@ def upgrade() -> None:
         """,
     )
     with op.batch_alter_table("ratings") as batch_op:
-        batch_op.add_column(sa.Column("id", sa.Uuid(), nullable=False, default="uuid7()"))
+        batch_op.add_column(
+            sa.Column("id", sa.Uuid(), nullable=False, default="uuid7()"),
+        )
         batch_op.drop_constraint("pk_ratings", type_="primary")
         batch_op.create_primary_key("pk_ratings", ["id"])
-        batch_op.create_unique_constraint("uq_ratings", ("user_id", "movie_id"))
-    op.create_unique_constraint("uq_reviews", "reviews", ("user_id", "movie_id"))
+        batch_op.create_unique_constraint(
+            "uq_ratings",
+            ("user_id", "movie_id"),
+        )
+    op.create_unique_constraint(
+        "uq_reviews",
+        "reviews",
+        ("user_id", "movie_id"),
+    )
 
 
 def downgrade() -> None:

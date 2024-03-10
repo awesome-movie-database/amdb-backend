@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import NewType
-from enum import IntEnum
+from enum import Enum
 from uuid import UUID
 
 from .user import UserId
@@ -11,10 +11,10 @@ from .movie import MovieId
 ReviewId = NewType("ReviewId", UUID)
 
 
-class ReviewType(IntEnum):
-    NEUTRAL = 0
-    POSITIVE = 1
-    NEGATIVE = 2
+class ReviewType(Enum):
+    NEUTRAL = "neutral"
+    POSITIVE = "positive"
+    NEGATIVE = "negative"
 
 
 @dataclass(frozen=True, slots=True)

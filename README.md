@@ -19,46 +19,66 @@
     </a>
 </p>
 
+## Used technologies:
+
+* [Python 3](https://www.python.org/downloads/)
+    * [FastAPI](https://github.com/tiangolo/fastapi) - Framework for building WEB APIs
+    * [FastStream](https://github.com/airtai/faststream) - Framework for building message queues
+    * [Typer](https://github.com/tiangolo/typer) - Framework for buildig CLIs
+    * [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy) - Toolkit for building high level db integrations
+    * [alembic](https://github.com/sqlalchemy/alembic) - Tool for writing db migrations
+    * [redis-py](https://github.com/redis/redis-py) - Redis python client
+    * [Dishka](https://github.com/reagento/dishka) - DI framework
+* [PostgreSQL](https://www.postgresql.org/)
+* [Redis](https://redis.io/)
+
+
 ## How to run:
-
-### Using docker-compose:
-
-1. Provide `.env` file with variables from `.env.template`
-
-2. Run docker-compose
-
-```sh
-docker-compose --env-file ./.env up web_api
-```
 
 ### Manually:
 
 1. Install
 
 ```sh
-pip install -e ".[web_api,cli]"
+pip install -e ".[web_api]"
 ```
 
-2. Provide env variables from `.env.template`
+2. Create [config](./config/prod_config.template.toml) file
 
-3. Run server
+3. Provide `CONFIG_PATH` env variable
+
+4. Run migrations
 
 ```sh
-amdb-web_api
+amdb alembic upgrade head
 ```
 
-4. Run cli
+5. Run worker
 
 ```sh
-amdb-cli
+amdb worker
 ```
 
-## How to run migrations:
+6. Run server
 
-1. Provide env variables for postgres from `.env.template`
-
-2. Run migrations:
-
+```sh
+amdb web_api
 ```
-amdb-cli migration alembic upgrade head
+
+### Using docker-compose:
+
+1. Create [config](./config/prod_config.template.toml) file
+
+2. Provide `CONFIG_PATH`, `REDIS_PASSWORD`, `REDIS_PORT_NUMBER`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `SERVER_HOST`, `SERVER_PORT` env variables
+
+3. Run worker and server
+
+```sh
+docker-compose up web_api
+```
+
+4. Run migrations
+
+```sh
+docker exec amdb_backend.web_api amdb alembic upgrade head
 ```

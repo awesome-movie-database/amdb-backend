@@ -18,6 +18,14 @@ FROM base AS web_api
 
 COPY --from=builder ./app/dist ./
 
-RUN $(printf "pip install %s[web_api,cli]" amdb*.whl)
+RUN $(printf "pip install %s[web_api]" amdb*.whl)
 
-CMD ["amdb-web_api"]
+CMD ["amdb", "web-api"]
+
+FROM base AS worker
+
+COPY --from=builder ./app/dist ./
+
+RUN pip install amdb*.whl
+
+CMD ["amdb", "worker"]

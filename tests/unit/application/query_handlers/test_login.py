@@ -3,10 +3,10 @@ from uuid_extensions import uuid7
 
 from amdb.domain.entities.user import UserId, User
 from amdb.domain.services.access_concern import AccessConcern
-from amdb.application.common.interfaces.user_gateway import UserGateway
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
-from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.password_manager import PasswordManager
+from amdb.application.common.gateways.user import UserGateway
+from amdb.application.common.gateways.permissions import PermissionsGateway
+from amdb.application.common.unit_of_work import UnitOfWork
+from amdb.application.common.password_manager import PasswordManager
 from amdb.application.queries.login import LoginQuery
 from amdb.application.query_handlers.login import LoginHandler
 from amdb.application.common.constants.exceptions import (
@@ -28,6 +28,7 @@ def test_login(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -91,6 +92,7 @@ def test_login_should_raise_error_when_password_is_incorrect(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -101,11 +103,11 @@ def test_login_should_raise_error_when_password_is_incorrect(
 
     unit_of_work.commit()
 
-    login_query = LoginQuery(
+    query = LoginQuery(
         name=user.name,
         password="invalid_password",
     )
-    login_handler = LoginHandler(
+    handler = LoginHandler(
         access_concern=AccessConcern(),
         user_gateway=user_gateway,
         permissions_gateway=permissions_gateway,
@@ -113,7 +115,7 @@ def test_login_should_raise_error_when_password_is_incorrect(
     )
 
     with pytest.raises(ApplicationError) as error:
-        login_handler.execute(login_query)
+        handler.execute(query)
 
     assert error.value.message == INCORRECT_PASSWORD
 
@@ -129,6 +131,7 @@ def test_login_should_raise_error_when_access_is_denied(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -145,11 +148,11 @@ def test_login_should_raise_error_when_access_is_denied(
 
     unit_of_work.commit()
 
-    login_query = LoginQuery(
+    query = LoginQuery(
         name=user.name,
         password=user_password,
     )
-    login_handler = LoginHandler(
+    handler = LoginHandler(
         access_concern=AccessConcern(),
         user_gateway=user_gateway,
         permissions_gateway=permissions_gateway,
@@ -157,6 +160,6 @@ def test_login_should_raise_error_when_access_is_denied(
     )
 
     with pytest.raises(ApplicationError) as error:
-        login_handler.execute(login_query)
+        handler.execute(query)
 
     assert error.value.message == LOGIN_ACCESS_DENIED

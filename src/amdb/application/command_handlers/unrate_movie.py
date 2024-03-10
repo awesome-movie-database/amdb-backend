@@ -3,11 +3,13 @@ from typing import cast
 from amdb.domain.entities.movie import Movie
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.unrate_movie import UnrateMovie
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
-from amdb.application.common.interfaces.movie_gateway import MovieGateway
-from amdb.application.common.interfaces.rating_gateway import RatingGateway
-from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.gateways.permissions import (
+    PermissionsGateway,
+)
+from amdb.application.common.gateways.movie import MovieGateway
+from amdb.application.common.gateways.rating import RatingGateway
+from amdb.application.common.unit_of_work import UnitOfWork
+from amdb.application.common.identity_provider import IdentityProvider
 from amdb.application.common.constants.exceptions import (
     UNRATE_MOVIE_ACCESS_DENIED,
     USER_IS_NOT_OWNER,
@@ -38,7 +40,7 @@ class UnrateMovieHandler:
         self._identity_provider = identity_provider
 
     def execute(self, command: UnrateMovieCommand) -> None:
-        current_permissions = self._identity_provider.get_permissions()
+        current_permissions = self._identity_provider.permissions()
         required_permissions = self._permissions_gateway.for_unrate_movie()
         access = self._access_concern.authorize(
             current_permissions=current_permissions,
@@ -51,7 +53,7 @@ class UnrateMovieHandler:
         if not rating:
             raise ApplicationError(RATING_DOES_NOT_EXIST)
 
-        current_user_id = self._identity_provider.get_user_id()
+        current_user_id = self._identity_provider.user_id()
         if current_user_id != rating.user_id:
             raise ApplicationError(USER_IS_NOT_OWNER)
 
