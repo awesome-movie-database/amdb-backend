@@ -11,12 +11,12 @@ from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.rate_movie import RateMovie
 from amdb.domain.constants.exceptions import INVALID_RATING_VALUE
 from amdb.domain.exception import DomainError
-from amdb.application.common.interfaces.permissions_gateway import PermissionsGateway
-from amdb.application.common.interfaces.user_gateway import UserGateway
-from amdb.application.common.interfaces.movie_gateway import MovieGateway
-from amdb.application.common.interfaces.rating_gateway import RatingGateway
-from amdb.application.common.interfaces.unit_of_work import UnitOfWork
-from amdb.application.common.interfaces.identity_provider import IdentityProvider
+from amdb.application.common.gateways.permissions import PermissionsGateway
+from amdb.application.common.gateways.user import UserGateway
+from amdb.application.common.gateways.movie import MovieGateway
+from amdb.application.common.gateways.rating import RatingGateway
+from amdb.application.common.unit_of_work import UnitOfWork
+from amdb.application.common.identity_provider import IdentityProvider
 from amdb.application.commands.rate_movie import RateMovieCommand
 from amdb.application.command_handlers.rate_movie import RateMovieHandler
 from amdb.application.common.constants.exceptions import (
@@ -34,7 +34,7 @@ def identity_provider_with_correct_permissions(
     identity_provider = Mock()
 
     correct_permissions = permissions_gateway.for_rate_movie()
-    identity_provider.get_permissions = Mock(return_value=correct_permissions)
+    identity_provider.permissions = Mock(return_value=correct_permissions)
 
     return identity_provider
 
@@ -50,6 +50,7 @@ def test_rate_movie(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -64,15 +65,15 @@ def test_rate_movie(
 
     unit_of_work.commit()
 
-    identity_provider_with_correct_permissions.get_user_id = Mock(
+    identity_provider_with_correct_permissions.user_id = Mock(
         return_value=user.id,
     )
 
-    rate_movie_command = RateMovieCommand(
+    command = RateMovieCommand(
         movie_id=movie.id,
         rating=9,
     )
-    rate_movie_handler = RateMovieHandler(
+    handler = RateMovieHandler(
         access_concern=AccessConcern(),
         rate_movie=RateMovie(),
         permissions_gateway=permissions_gateway,
@@ -83,7 +84,7 @@ def test_rate_movie(
         identity_provider=identity_provider_with_correct_permissions,
     )
 
-    rate_movie_handler.execute(rate_movie_command)
+    handler.execute(command)
 
 
 def test_rate_movie_should_raise_error_when_access_is_denied(
@@ -94,11 +95,11 @@ def test_rate_movie_should_raise_error_when_access_is_denied(
     unit_of_work: UnitOfWork,
     identity_provider_with_incorrect_permissions: IdentityProvider,
 ):
-    rate_movie_command = RateMovieCommand(
+    command = RateMovieCommand(
         movie_id=MovieId(uuid7()),
         rating=9,
     )
-    rate_movie_handler = RateMovieHandler(
+    handler = RateMovieHandler(
         access_concern=AccessConcern(),
         rate_movie=RateMovie(),
         permissions_gateway=permissions_gateway,
@@ -110,7 +111,7 @@ def test_rate_movie_should_raise_error_when_access_is_denied(
     )
 
     with pytest.raises(ApplicationError) as error:
-        rate_movie_handler.execute(rate_movie_command)
+        handler.execute(command)
 
     assert error.value.message == RATE_MOVIE_ACCESS_DENIED
 
@@ -123,11 +124,11 @@ def test_rate_movie_should_raise_error_when_movie_does_not_exist(
     unit_of_work: UnitOfWork,
     identity_provider_with_correct_permissions: IdentityProvider,
 ):
-    rate_movie_command = RateMovieCommand(
+    command = RateMovieCommand(
         movie_id=MovieId(uuid7()),
         rating=9,
     )
-    rate_movie_handler = RateMovieHandler(
+    handler = RateMovieHandler(
         access_concern=AccessConcern(),
         rate_movie=RateMovie(),
         permissions_gateway=permissions_gateway,
@@ -139,7 +140,7 @@ def test_rate_movie_should_raise_error_when_movie_does_not_exist(
     )
 
     with pytest.raises(ApplicationError) as error:
-        rate_movie_handler.execute(rate_movie_command)
+        handler.execute(command)
 
     assert error.value.message == MOVIE_DOES_NOT_EXIST
 
@@ -155,6 +156,7 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -178,15 +180,15 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
 
     unit_of_work.commit()
 
-    identity_provider_with_correct_permissions.get_user_id = Mock(
+    identity_provider_with_correct_permissions.user_id = Mock(
         return_value=user.id,
     )
 
-    rate_movie_command = RateMovieCommand(
+    command = RateMovieCommand(
         movie_id=movie.id,
         rating=9,
     )
-    rate_movie_handler = RateMovieHandler(
+    handler = RateMovieHandler(
         access_concern=AccessConcern(),
         rate_movie=RateMovie(),
         permissions_gateway=permissions_gateway,
@@ -198,7 +200,7 @@ def test_rate_movie_should_raise_error_when_movie_already_rated(
     )
 
     with pytest.raises(ApplicationError) as error:
-        rate_movie_handler.execute(rate_movie_command)
+        handler.execute(command)
 
     assert error.value.message == MOVIE_ALREADY_RATED
 
@@ -228,6 +230,7 @@ def test_rate_movie_should_raise_error_when_rating_is_invalid(
     user = User(
         id=UserId(uuid7()),
         name="John Doe",
+        email="John@doe.com",
     )
     user_gateway.save(user)
 
@@ -242,15 +245,15 @@ def test_rate_movie_should_raise_error_when_rating_is_invalid(
 
     unit_of_work.commit()
 
-    identity_provider_with_correct_permissions.get_user_id = Mock(
+    identity_provider_with_correct_permissions.user_id = Mock(
         return_value=user.id,
     )
 
-    rate_movie_command = RateMovieCommand(
+    command = RateMovieCommand(
         movie_id=movie.id,
         rating=rating_value,
     )
-    rate_movie_handler = RateMovieHandler(
+    handler = RateMovieHandler(
         access_concern=AccessConcern(),
         rate_movie=RateMovie(),
         permissions_gateway=permissions_gateway,
@@ -262,6 +265,6 @@ def test_rate_movie_should_raise_error_when_rating_is_invalid(
     )
 
     with pytest.raises(DomainError) as error:
-        rate_movie_handler.execute(rate_movie_command)
+        handler.execute(command)
 
     assert error.value.message == INVALID_RATING_VALUE

@@ -1,20 +1,14 @@
 from dataclasses import dataclass
 
+import toml
+
 
 @dataclass(frozen=True, slots=True)
 class PostgresConfig:
-    host: str
-    port: str
-    name: str
-    user: str
-    password: str
+    url: str
 
-    @property
-    def dsn(self) -> str:
-        return "postgresql://{}:{}@{}:{}/{}".format(
-            self.user,
-            self.password,
-            self.host,
-            self.port,
-            self.name,
-        )
+    @classmethod
+    def from_toml(cls, path: str) -> "PostgresConfig":
+        toml_as_dict = toml.load(path)
+        postgres_section_as_dict = toml_as_dict["postgres"]
+        return PostgresConfig(url=postgres_section_as_dict["url"])

@@ -1,7 +1,17 @@
 from dataclasses import dataclass
 from datetime import timedelta
 
+import toml
+
 
 @dataclass(frozen=True, slots=True)
 class SessionConfig:
-    session_lifetime: timedelta
+    lifetime: timedelta
+
+    @classmethod
+    def from_toml(cls, path: str) -> "SessionConfig":
+        toml_as_dict = toml.load(path)
+        session_section_as_dict = toml_as_dict["auth-session"]
+        return SessionConfig(
+            lifetime=timedelta(minutes=session_section_as_dict["lifetime"]),
+        )

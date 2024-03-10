@@ -1,0 +1,5 @@
+[postgres]
+url = "postgresql://postgres:1234@127.0.0.1:5433/amdb_test"
+
+[redis]
+url = "redis://:1234@127.0.0.1:6378/1"

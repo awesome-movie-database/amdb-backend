@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import NewType
+from typing import NewType, Optional
 from uuid import UUID
 
 
@@ -10,3 +10,4 @@ UserId = NewType("UserId", UUID)
 class User:
     id: UserId
     name: str
+    email: Optional[str]
