@@ -45,7 +45,7 @@ def run_web_api() -> None:
 
     app = FastAPI(
         title="Awesome Movie Database",
-        version="0.5.0",
+        version="1.0.0",
         swagger_ui_parameters={"defaultModelsExpandDepth": -1},
     )
     app.include_router(router)
