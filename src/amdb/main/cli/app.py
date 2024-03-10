@@ -1,17 +1,14 @@
 import os
+from typing import Annotated
 
-import uvicorn
-from fastapi import FastAPI
-from dishka import make_async_container
-from dishka.integrations.fastapi import setup_dishka
+import typer
+from dishka import make_container
+from alembic import config
 
 from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
 from amdb.infrastructure.persistence.redis.config import RedisConfig
-from amdb.infrastructure.auth.session.config import SessionConfig
-from amdb.presentation.web_api.router import router
-from amdb.presentation.web_api.exception_handlers import (
-    setup_exception_handlers,
-)
+from amdb.infrastructure.persistence.alembic.config import ALEMBIC_CONFIG
+from amdb.presentation.cli.movie import movie_commands
 from amdb.main.providers import (
     ConfigsProvider,
     DomainValidatorsProvider,
@@ -30,10 +27,11 @@ from amdb.main.providers import (
     QueryHandlersProvider,
     QueryHandlerMakersProvider,
 )
-from .session_adapters_provider import SessionAdaptersProvider
+from amdb.main.web_api.app import run_web_api
+from amdb.main.worker.app import run_worker
 
 
-def run_web_api() -> None:
+def run_cli() -> None:
     path_to_config = os.getenv("CONFIG_PATH")
     if not path_to_config:
         message = "Path to config env var is not set"
@@ -41,17 +39,8 @@ def run_web_api() -> None:
 
     postgres_config = PostgresConfig.from_toml(path_to_config)
     redis_config = RedisConfig.from_toml(path_to_config)
-    session_config = SessionConfig.from_toml(path_to_config)
 
-    app = FastAPI(
-        title="Awesome Movie Database",
-        version="0.5.0",
-        swagger_ui_parameters={"defaultModelsExpandDepth": -1},
-    )
-    app.include_router(router)
-    setup_exception_handlers(app)
-
-    container = make_async_container(
+    container = make_container(
         ConfigsProvider(
             postgres_config=postgres_config,
             redis_config=redis_config,
@@ -71,14 +60,33 @@ def run_web_api() -> None:
         CommandHandlerMakersProvider(),
         QueryHandlersProvider(),
         QueryHandlerMakersProvider(),
-        SessionAdaptersProvider(
-            session_config=session_config,
-        ),
     )
-    setup_dishka(container, app)
 
-    uvicorn.run(
-        app=app,
-        host="0.0.0.0",
-        port=8000,
+    app = typer.Typer(
+        rich_markup_mode="rich",
+        context_settings={"obj": {"container": container}},
     )
+    app.add_typer(movie_commands)
+
+    @app.command()
+    def alembic(commands: Annotated[list[str], typer.Argument()]) -> None:
+        """
+        [green]Run[/green] alembic.
+        """
+        config.main(["-c", ALEMBIC_CONFIG, *commands])
+
+    @app.command()
+    def web_api() -> None:
+        """
+        [green]Run[/green] web api.
+        """
+        run_web_api()
+
+    @app.command()
+    def worker() -> None:
+        """
+        [green]Run[/green] worker.
+        """
+        run_worker()
+
+    app()

@@ -22,8 +22,9 @@
 ## Used technologies:
 
 * [Python 3](https://www.python.org/downloads/)
-    * [FastAPI](https://github.com/tiangolo/fastapi) - Web framework for building APIs
-    * [FastStream](https://github.com/airtai/faststream) - framework for building message queues
+    * [FastAPI](https://github.com/tiangolo/fastapi) - Framework for building WEB APIs
+    * [FastStream](https://github.com/airtai/faststream) - Framework for building message queues
+    * [Typer](https://github.com/tiangolo/typer) - Framework for buildig CLIs
     * [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy) - Toolkit for building high level db integrations
     * [alembic](https://github.com/sqlalchemy/alembic) - Tool for writing db migrations
     * [redis-py](https://github.com/redis/redis-py) - Redis python client

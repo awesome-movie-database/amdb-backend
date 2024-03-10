@@ -32,6 +32,7 @@ dependencies = [
     "alembic==1.13.*",
     "redis==5.0.*",
     "faststream[redis]==0.4.*",
+    "typer[all]==0.9.*",
 ]
 
 [project.optional-dependencies]
@@ -52,5 +53,4 @@ coverage = [
 ]
 
 [project.scripts]
-amdb-web_api = "amdb.main.web_api.app:run_web_api"
-amdb-worker = "amdb.main.worker.app:run_worker"
+amdb = "amdb.main.cli.app:run_cli"
