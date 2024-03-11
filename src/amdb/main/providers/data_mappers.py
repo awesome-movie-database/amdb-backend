@@ -7,6 +7,7 @@ from amdb.application.common.gateways import (
     MovieGateway,
     RatingGateway,
     ReviewGateway,
+    MovieForLaterGateway,
     PermissionsGateway,
 )
 from amdb.application.common.readers import (
@@ -25,6 +26,7 @@ from amdb.infrastructure.persistence.sqlalchemy.mappers import (
     MovieMapper,
     RatingMapper,
     ReviewMapper,
+    MovieForLaterMapper,
     PermissionsMapper,
     PasswordHashMapper,
     DetailedMovieViewModelMapper,
@@ -48,6 +50,10 @@ class EntityMappersProvider(Provider):
     movie = provide(MovieMapper, provides=MovieGateway)
     rating = provide(RatingMapper, provides=RatingGateway)
     review = provide(ReviewMapper, provides=ReviewGateway)
+    movie_for_later = provide(
+        MovieForLaterMapper,
+        provides=MovieForLaterGateway,
+    )
 
     unit_of_work = alias(source=Connection, provides=UnitOfWork)
 

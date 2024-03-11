@@ -17,9 +17,9 @@ class WatchLater:
     def __call__(
         self,
         *,
+        id: MovieForLaterId,
         user: User,
         movie: Movie,
-        id: MovieForLaterId,
         note: str,
         current_timestamp: datetime,
     ) -> MovieForLater:

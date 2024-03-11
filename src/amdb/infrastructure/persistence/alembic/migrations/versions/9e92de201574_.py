@@ -54,7 +54,11 @@ def upgrade() -> None:
             ["movies.id"],
             ondelete="CASCADE",
         ),
-        sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
+        sa.ForeignKeyConstraint(
+            ["user_id"],
+            ["users.id"],
+            ondelete="CASCADE",
+        ),
         sa.PrimaryKeyConstraint("movie_id", "user_id"),
     )
 

@@ -8,12 +8,14 @@ from amdb.domain.services import (
     RateMovie,
     UnrateMovie,
     ReviewMovie,
+    WatchLater,
 )
 from amdb.application.common.gateways import (
     UserGateway,
     MovieGateway,
     RatingGateway,
     ReviewGateway,
+    MovieForLaterGateway,
     PermissionsGateway,
 )
 from amdb.application.common.unit_of_work import UnitOfWork
@@ -29,6 +31,7 @@ from amdb.application.command_handlers import (
     RateMovieHandler,
     UnrateMovieHandler,
     ReviewMovieHandler,
+    AddToWatchlistHandler,
 )
 from amdb.presentation.create_handler import CreateHandler
 
@@ -177,6 +180,29 @@ class CommandHandlerMakersProvider(Provider):
                 user_gateway=user_gateway,
                 movie_gateway=movie_gateway,
                 review_gateway=review_gateway,
+                unit_of_work=unit_of_work,
+                identity_provider=identity_provider,
+            )
+
+        return create_handler
+
+    @provide
+    def add_to_watchlist(
+        self,
+        watch_later: WatchLater,
+        user_gateway: UserGateway,
+        movie_gateway: MovieGateway,
+        movie_for_later_gateway: MovieForLaterGateway,
+        unit_of_work: UnitOfWork,
+    ) -> CreateHandler[AddToWatchlistHandler]:
+        def create_handler(
+            identity_provider: IdentityProvider,
+        ) -> AddToWatchlistHandler:
+            return AddToWatchlistHandler(
+                watch_later=watch_later,
+                user_gateway=user_gateway,
+                movie_gateway=movie_gateway,
+                movie_for_later_gateway=movie_for_later_gateway,
                 unit_of_work=unit_of_work,
                 identity_provider=identity_provider,
             )

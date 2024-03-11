@@ -18,3 +18,5 @@ MOVIE_NOT_REVIEWED = "Movie is not reviewed"
 
 RATING_DOES_NOT_EXIST = "Rating doesn't exist"
 REVIEW_DOES_NOT_EXIST = "Review doesn't exist"
+
+MOVIE_ALREADY_IN_WATCHLIST = "Movie already in watchlist"

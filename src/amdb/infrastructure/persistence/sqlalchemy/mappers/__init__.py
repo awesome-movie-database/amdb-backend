@@ -3,6 +3,7 @@ __all__ = (
     "MovieMapper",
     "RatingMapper",
     "ReviewMapper",
+    "MovieForLaterMapper",
     "DetailedMovieViewModelMapper",
     "DetailedReviewViewModelsMapper",
     "RatingForExportViewModelMapper",
@@ -16,6 +17,7 @@ from .entities.user import UserMapper
 from .entities.movie import MovieMapper
 from .entities.rating import RatingMapper
 from .entities.review import ReviewMapper
+from .entities.movie_for_later import MovieForLaterMapper
 from .view_models.detailed_movie import DetailedMovieViewModelMapper
 from .view_models.detailed_review import DetailedReviewViewModelsMapper
 from .view_models.rating_for_export import RatingForExportViewModelMapper

@@ -11,6 +11,7 @@ from amdb.infrastructure.persistence.sqlalchemy.mappers import (
     MovieMapper,
     RatingMapper,
     ReviewMapper,
+    MovieForLaterMapper,
     DetailedMovieViewModelMapper,
     DetailedReviewViewModelsMapper,
     RatingForExportViewModelMapper,
@@ -79,6 +80,13 @@ def rating_gateway(sqlalchemy_connection: Connection) -> RatingMapper:
 @pytest.fixture
 def review_gateway(sqlalchemy_connection: Connection) -> ReviewMapper:
     return ReviewMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def movie_for_later_gateway(
+    sqlalchemy_connection: Connection,
+) -> MovieForLaterMapper:
+    return MovieForLaterMapper(sqlalchemy_connection)
 
 
 @pytest.fixture

@@ -6,6 +6,7 @@ __all__ = (
     "RateMovie",
     "UnrateMovie",
     "ReviewMovie",
+    "WatchLater",
 )
 
 from .access_concern import AccessConcern
@@ -15,3 +16,4 @@ from .create_movie import CreateMovie
 from .rate_movie import RateMovie
 from .unrate_movie import UnrateMovie
 from .review_movie import ReviewMovie
+from .watch_later import WatchLater

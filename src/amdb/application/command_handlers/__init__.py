@@ -6,6 +6,7 @@ __all__ = (
     "RateMovieHandler",
     "UnrateMovieHandler",
     "ReviewMovieHandler",
+    "AddToWatchlistHandler",
 )
 
 from .register_user import RegisterUserHandler
@@ -15,3 +16,4 @@ from .delete_movie import DeleteMovieHandler
 from .rate_movie import RateMovieHandler
 from .unrate_movie import UnrateMovieHandler
 from .review_movie import ReviewMovieHandler
+from .add_to_watchlist import AddToWatchlistHandler

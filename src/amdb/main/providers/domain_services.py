@@ -8,6 +8,7 @@ from amdb.domain.services import (
     RateMovie,
     UnrateMovie,
     ReviewMovie,
+    WatchLater,
 )
 
 
@@ -21,3 +22,4 @@ class DomainServicesProvider(Provider):
     rate_movie = provide(RateMovie, provides=RateMovie)
     unrate_movie = provide(UnrateMovie, provides=UnrateMovie)
     review_movie = provide(ReviewMovie, provides=ReviewMovie)
+    watch_later = provide(WatchLater, provides=WatchLater)
