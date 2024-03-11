@@ -43,8 +43,10 @@ class DetailedMovieViewModelMapper:
                 movies m
             LEFT JOIN ratings urt
                 ON urt.user_id = :current_user_id
+                AND urt.movie_id = m.id
             LEFT JOIN reviews urv
                 ON urv.user_id = :current_user_id
+                AND urv.movie_id = m.id
             WHERE
                 m.id = :movie_id
             LIMIT 1

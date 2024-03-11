@@ -35,6 +35,7 @@ class NonDetailedMovieViewModelsMapper:
                 movies m
             LEFT JOIN ratings urt
                 ON urt.user_id = :current_user_id
+                AND urt.movie_id = m.id
             LIMIT :limit OFFSET :offset
             """,
         )
