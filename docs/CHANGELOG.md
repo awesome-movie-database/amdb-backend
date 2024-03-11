@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.1.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v1.0.0) (2024-03-11)
+## [v1.1.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v1.1.0) (2024-03-11)
 
 ### Added
 
