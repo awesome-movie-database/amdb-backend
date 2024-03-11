@@ -11,3 +11,6 @@ INVALID_USER_NAME = (
 )
 INVALID_REVIEW_TITLE = "Number of characters in review title must be more than 5 and less than 128"
 INVALID_REVIEW_CONTENT = "Number of characters in review content must be more than 5 and less than 1024"
+INVALID_MOVIE_FOR_LATER_NOTE = (
+    "Number of characters in movie for later note must be less than 256"
+)
