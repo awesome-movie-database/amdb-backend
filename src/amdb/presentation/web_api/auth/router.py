@@ -1,9 +1,8 @@
-__all__ = ("auth_router",)
-
 from fastapi import APIRouter
 
 from .register import register
 from .login import login
+from .logout import logout
 
 
 auth_router = APIRouter(
@@ -19,4 +18,9 @@ auth_router.add_api_route(
     path="/login",
     endpoint=login,
     methods=["POST"],
+)
+auth_router.add_api_route(
+    path="/logout",
+    endpoint=logout,
+    methods=["DELETE"],
 )

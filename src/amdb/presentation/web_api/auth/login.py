@@ -35,12 +35,12 @@ async def login(
     user_id = handler.execute(query)
 
     session = session_processor.create(user_id)
-    session_id = session_mapper.save(session)
+    session_mapper.save(session)
     session_expires_at = datetime.now(timezone.utc) + session_config.lifetime
 
     response.set_cookie(
         key=SESSION_ID_COOKIE,
-        value=session_id,
+        value=session.id,
         expires=session_expires_at,
         httponly=True,
     )

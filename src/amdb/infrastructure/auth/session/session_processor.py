@@ -12,5 +12,5 @@ class SessionProcessor:
         )
 
     def _gen_session_id(self) -> SessionId:
-        random_value = uuid4().hex + uuid4().hex + uuid4().hex
+        random_value = uuid4().hex + uuid4().hex + uuid4().hex + uuid4().hex
         return SessionId(random_value)
