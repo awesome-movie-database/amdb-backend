@@ -17,8 +17,7 @@ class RateMovie:
         rating: float,
         current_timestamp: datetime,
     ) -> Rating:
-        if rating <= 0 or rating > 10 or rating % 0.5 != 0:
-            raise DomainError(INVALID_RATING_VALUE)
+        self._validate_rating(rating)
 
         movie.rating = (movie.rating * movie.rating_count + rating) / (
             movie.rating_count + 1
@@ -32,3 +31,7 @@ class RateMovie:
             value=rating,
             created_at=current_timestamp,
         )
+
+    def _validate_rating(self, rating: float) -> None:
+        if rating <= 0 or rating > 10 or rating % 0.5 != 0:
+            raise DomainError(INVALID_RATING_VALUE)

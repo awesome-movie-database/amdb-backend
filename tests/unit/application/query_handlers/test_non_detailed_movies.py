@@ -36,7 +36,7 @@ def test_get_non_detailed_movies(
 ):
     user = User(
         id=UserId(uuid7()),
-        name="John Doe",
+        name="JohnDoe",
         email="John@doe.com",
     )
     user_gateway.save(user)

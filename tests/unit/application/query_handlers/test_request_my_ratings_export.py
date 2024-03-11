@@ -34,7 +34,7 @@ def test_request_my_ratings_export(
 ):
     user = User(
         id=UserId(uuid7()),
-        name="John Doe",
+        name="JohnDoe",
         email="John@doe.com",
     )
     user_gateway.save(user)
@@ -81,7 +81,7 @@ def test_request_my_ratings_export_should_raise_error_when_user_cannot_use_sendi
 ):
     user = User(
         id=UserId(uuid7()),
-        name="John Doe",
+        name="JohnDoe",
         email=email,
     )
     user_gateway.save(user)

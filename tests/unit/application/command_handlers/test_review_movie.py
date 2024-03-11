@@ -47,7 +47,7 @@ def test_review_movie(
 ):
     user = User(
         id=UserId(uuid7()),
-        name="John Doe",
+        name="JohnDoe",
         email="John@doe.com",
     )
     user_gateway.save(user)
@@ -98,7 +98,7 @@ def test_review_movie_should_raise_error_when_access_is_denied(
     command = ReviewMovieCommand(
         movie_id=MovieId(uuid7()),
         title="Mid",
-        content="So-so",
+        content="So-so..",
         type=ReviewType.NEUTRAL,
     )
     handler = ReviewMovieHandler(
@@ -159,7 +159,7 @@ def test_review_movie_should_raise_error_when_movie_already_reviewed(
 ):
     user = User(
         id=UserId(uuid7()),
-        name="John Doe",
+        name="JohnDoe",
         email="John@doe.com",
     )
     user_gateway.save(user)

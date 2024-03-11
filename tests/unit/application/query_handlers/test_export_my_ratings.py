@@ -36,7 +36,7 @@ def test_export_my_ratings_in_csv(
 ):
     user = User(
         id=UserId(uuid7()),
-        name="John Doe",
+        name="JohnDoe",
         email="John@doe.com",
     )
     user_gateway.save(user)

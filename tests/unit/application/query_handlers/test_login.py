@@ -27,7 +27,7 @@ def test_login(
 
     user = User(
         id=UserId(uuid7()),
-        name="John Doe",
+        name="JohnDoe",
         email="John@doe.com",
     )
     user_gateway.save(user)
@@ -67,7 +67,7 @@ def test_login_should_raise_error_when_user_does_not_exist(
     password_manager: PasswordManager,
 ):
     login_query = LoginQuery(
-        name="John Doe",
+        name="JohnDoe",
         password="secret",
     )
     login_handler = LoginHandler(
@@ -91,7 +91,7 @@ def test_login_should_raise_error_when_password_is_incorrect(
 ):
     user = User(
         id=UserId(uuid7()),
-        name="John Doe",
+        name="JohnDoe",
         email="John@doe.com",
     )
     user_gateway.save(user)
@@ -130,7 +130,7 @@ def test_login_should_raise_error_when_access_is_denied(
 
     user = User(
         id=UserId(uuid7()),
-        name="John Doe",
+        name="JohnDoe",
         email="John@doe.com",
     )
     user_gateway.save(user)

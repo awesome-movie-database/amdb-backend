@@ -24,7 +24,7 @@ def test_register_user(
     password_manager: PasswordManager,
 ):
     command = RegisterUserCommand(
-        name="John Doe",
+        name="JohnDoe",
         email="John@doe.com",
         password="Secret",
     )
@@ -45,7 +45,7 @@ def test_create_user_should_raise_error_when_user_name_already_exists(
     unit_of_work: UnitOfWork,
     password_manager: PasswordManager,
 ):
-    user_name = "John Doe"
+    user_name = "JohnDoe"
 
     user = User(
         id=UserId(uuid7()),
@@ -93,7 +93,7 @@ def test_create_user_should_raise_error_when_user_email_already_exists(
     unit_of_work.commit()
 
     command = RegisterUserCommand(
-        name="Johny Doe",
+        name="JohnyDoe",
         email=user_email,
         password="Secret",
     )
