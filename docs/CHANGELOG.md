@@ -1,5 +1,28 @@
 # Changelog
 
+## [v1.1.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v1.0.0) (2024-03-11)
+
+### Added
+
+- WEB API logout endpoint
+
+### Changed
+
+- [*Breaking change*] Now number of characters in `Movie` title must be more than 1 and less than 128
+- [*Breaking change*] Now number of characters in `User` name must be more than 1 and less than 128
+- [*Breaking change*] Now `User` name must not contain spaces
+- [*Breaking change*] Now number of characters in `Review` title must be more than 5 and less than 128
+- [*Breaking change*] Now number of characters in `Review` content must be more than 5 and less than 1024
+
+### Fixed
+
+- Misspell in 'How to run' instruction
+
+### Echancements
+
+- Now Session ID length is 128 characters
+
+
 ## [v1.0.0](https://github.com/Awesome-Movie-Database/amdb-backend/releases/tag/v1.0.0) (2024-03-10)
 
 ### Added
