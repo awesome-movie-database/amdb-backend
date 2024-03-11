@@ -62,7 +62,7 @@ amdb worker
 6. Run server
 
 ```sh
-amdb web_api
+amdb web-api
 ```
 
 ### Using docker-compose:
