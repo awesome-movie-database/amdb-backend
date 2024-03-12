@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from sqlalchemy import Connection, Row, select, insert, and_
+from sqlalchemy import Connection, Row, select, insert, delete, and_
 
 from amdb.domain.entities.user import UserId
 from amdb.domain.entities.movie import MovieId
@@ -13,6 +13,18 @@ from amdb.infrastructure.persistence.sqlalchemy.models.movie_for_later import (
 class MovieForLaterMapper:
     def __init__(self, connection: Connection) -> None:
         self._connection = connection
+
+    def with_id(
+        self,
+        movie_for_later_id: MovieForLaterId,
+    ) -> Optional[MovieForLater]:
+        statement = select(MovieForLaterModel).where(
+            MovieForLaterModel.id == movie_for_later_id,
+        )
+        row = self._connection.execute(statement).one_or_none()
+        if row:
+            return self._to_entity(row)  # type: ignore
+        return None
 
     def with_movie_id_and_user_id(
         self,
@@ -27,7 +39,7 @@ class MovieForLaterMapper:
         )
         row = self._connection.execute(statement).one_or_none()
         if row:
-            return self._to_entity(row)
+            return self._to_entity(row)  # type: ignore
         return None
 
     def save(self, movie_for_later: MovieForLater) -> None:
@@ -37,6 +49,12 @@ class MovieForLaterMapper:
             movie_id=movie_for_later.movie_id,
             note=movie_for_later.note,
             created_at=movie_for_later.created_at,
+        )
+        self._connection.execute(statement)
+
+    def delete(self, movie_for_later: MovieForLater) -> None:
+        statement = delete(MovieForLaterModel).where(
+            MovieForLaterModel.id == movie_for_later.id,
         )
         self._connection.execute(statement)
 

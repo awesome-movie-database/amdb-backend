@@ -32,6 +32,7 @@ from amdb.application.command_handlers import (
     UnrateMovieHandler,
     ReviewMovieHandler,
     AddToWatchlistHandler,
+    DeleteFromWatchlistHandler,
 )
 from amdb.presentation.create_handler import CreateHandler
 
@@ -108,7 +109,7 @@ class CommandHandlerMakersProvider(Provider):
         return create_handler
 
     @provide
-    def rate_movie_handler(
+    def rate_movie(
         self,
         access_concern: AccessConcern,
         rate_movie: RateMovie,
@@ -135,7 +136,7 @@ class CommandHandlerMakersProvider(Provider):
         return create_handler
 
     @provide
-    def unrate_movie_handler(
+    def unrate_movie(
         self,
         access_concern: AccessConcern,
         unrate_movie: UnrateMovie,
@@ -160,7 +161,7 @@ class CommandHandlerMakersProvider(Provider):
         return create_handler
 
     @provide
-    def review_movie_handler(
+    def review_movie(
         self,
         access_concern: AccessConcern,
         review_movie: ReviewMovie,
@@ -202,6 +203,23 @@ class CommandHandlerMakersProvider(Provider):
                 watch_later=watch_later,
                 user_gateway=user_gateway,
                 movie_gateway=movie_gateway,
+                movie_for_later_gateway=movie_for_later_gateway,
+                unit_of_work=unit_of_work,
+                identity_provider=identity_provider,
+            )
+
+        return create_handler
+
+    @provide
+    def delete_from_watchlist(
+        self,
+        movie_for_later_gateway: MovieForLaterGateway,
+        unit_of_work: UnitOfWork,
+    ) -> CreateHandler[DeleteFromWatchlistHandler]:
+        def create_handler(
+            identity_provider: IdentityProvider,
+        ) -> DeleteFromWatchlistHandler:
+            return DeleteFromWatchlistHandler(
                 movie_for_later_gateway=movie_for_later_gateway,
                 unit_of_work=unit_of_work,
                 identity_provider=identity_provider,

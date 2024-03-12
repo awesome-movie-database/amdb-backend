@@ -67,4 +67,6 @@ class AddToWatchlistHandler:
         )
         self._movie_for_later_gateway.save(new_movie_for_later)
 
+        self._unit_of_work.commit()
+
         return new_movie_for_later.id
