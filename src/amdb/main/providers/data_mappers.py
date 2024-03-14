@@ -16,6 +16,7 @@ from amdb.application.common.readers import (
     RatingForExportViewModelsReader,
     MyDetailedRatingsViewModelReader,
     NonDetailedMovieViewModelsReader,
+    MyDetailedWatchlistViewModelReader,
 )
 from amdb.application.common.unit_of_work import UnitOfWork
 from amdb.infrastructure.password_manager.password_hash_gateway import (
@@ -34,6 +35,7 @@ from amdb.infrastructure.persistence.sqlalchemy.mappers import (
     RatingForExportViewModelMapper,
     MyDetailedRatingsViewModelMapper,
     NonDetailedMovieViewModelsMapper,
+    MyDetailedWatchlistViewModelMapper,
 )
 from amdb.infrastructure.persistence.redis.cache.permissions_mapper import (
     PermissionsMapperCacheProvider,
@@ -100,4 +102,8 @@ class ViewModelMappersProvider(Provider):
     non_detailed_movie = provide(
         NonDetailedMovieViewModelsMapper,
         provides=NonDetailedMovieViewModelsReader,
+    )
+    my_detailed_watchlist = provide(
+        MyDetailedWatchlistViewModelMapper,
+        provides=MyDetailedWatchlistViewModelReader,
     )

@@ -7,6 +7,7 @@ __all__ = (
     "ExportAndSendMyRatingsHandler",
     "GetMyDetailedRatingsHandler",
     "GetNonDetailedMoviesHandler",
+    "GetMyDetailedWatchlistHandler",
 )
 
 from .login import LoginHandler
@@ -17,3 +18,4 @@ from .request_my_ratings_export import RequestMyRatingsExportHandler
 from .export_and_send_my_ratings import ExportAndSendMyRatingsHandler
 from .my_detailed_ratings import GetMyDetailedRatingsHandler
 from .non_detailed_movies import GetNonDetailedMoviesHandler
+from .my_detailed_watchlist import GetMyDetailedWatchlistHandler

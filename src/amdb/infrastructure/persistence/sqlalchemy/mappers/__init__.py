@@ -9,6 +9,7 @@ __all__ = (
     "RatingForExportViewModelMapper",
     "NonDetailedMovieViewModelsMapper",
     "MyDetailedRatingsViewModelMapper",
+    "MyDetailedWatchlistViewModelMapper",
     "PermissionsMapper",
     "PasswordHashMapper",
 )
@@ -23,5 +24,8 @@ from .view_models.detailed_review import DetailedReviewViewModelsMapper
 from .view_models.rating_for_export import RatingForExportViewModelMapper
 from .view_models.non_detailed_movie import NonDetailedMovieViewModelsMapper
 from .view_models.my_detailed_ratings import MyDetailedRatingsViewModelMapper
+from .view_models.my_detailed_watchlist import (
+    MyDetailedWatchlistViewModelMapper,
+)
 from .permissions import PermissionsMapper
 from .password_hash import PasswordHashMapper

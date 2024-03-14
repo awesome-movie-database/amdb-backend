@@ -17,6 +17,7 @@ from amdb.infrastructure.persistence.sqlalchemy.mappers import (
     RatingForExportViewModelMapper,
     MyDetailedRatingsViewModelMapper,
     NonDetailedMovieViewModelsMapper,
+    MyDetailedWatchlistViewModelMapper,
     PasswordHashMapper,
     PermissionsMapper,
 )
@@ -122,6 +123,13 @@ def ratings_for_export_reader(
     sqlalchemy_connection: Connection,
 ) -> RatingForExportViewModelMapper:
     return RatingForExportViewModelMapper(sqlalchemy_connection)
+
+
+@pytest.fixture
+def my_detailed_watchlist_reader(
+    sqlalchemy_connection: Connection,
+) -> MyDetailedWatchlistViewModelMapper:
+    return MyDetailedWatchlistViewModelMapper(sqlalchemy_connection)
 
 
 @pytest.fixture

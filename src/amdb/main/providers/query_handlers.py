@@ -16,6 +16,7 @@ from amdb.application.common.readers import (
     RatingForExportViewModelsReader,
     NonDetailedMovieViewModelsReader,
     MyDetailedRatingsViewModelReader,
+    MyDetailedWatchlistViewModelReader,
 )
 from amdb.application.common.password_manager import PasswordManager
 from amdb.application.common.sending.email import SendEmail
@@ -34,6 +35,7 @@ from amdb.application.query_handlers import (
     ExportAndSendMyRatingsHandler,
     GetMyDetailedRatingsHandler,
     GetNonDetailedMoviesHandler,
+    GetMyDetailedWatchlistHandler,
 )
 from amdb.presentation.create_handler import CreateHandler
 
@@ -164,6 +166,21 @@ class QueryHandlerMakersProvider(Provider):
                 ensure_can_use_sending_method=ensure_can_use_sending_method,
                 user_gateway=user_gateway,
                 enqueue_export_and_sending=enuqueue_export_and_sending,
+                identity_provider=identity_provider,
+            )
+
+        return create_handler
+
+    @provide
+    def get_my_detailed_watchlist(
+        self,
+        my_detailed_watchlist_reader: MyDetailedWatchlistViewModelReader,
+    ) -> CreateHandler[GetMyDetailedWatchlistHandler]:
+        def create_handler(
+            identity_provider: IdentityProvider,
+        ) -> GetMyDetailedWatchlistHandler:
+            return GetMyDetailedWatchlistHandler(
+                my_detailed_watchlist_reader=my_detailed_watchlist_reader,
                 identity_provider=identity_provider,
             )
 
