@@ -80,5 +80,5 @@ docker-compose up web_api
 4. Run migrations
 
 ```sh
-docker exec amdb_backend.web_api amdb alembic upgrade head
+docker exec -it amdb_backend.web_api amdb alembic upgrade head
 ```
