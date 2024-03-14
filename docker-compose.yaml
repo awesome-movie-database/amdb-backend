@@ -12,8 +12,10 @@ services:
             context: ./
             dockerfile: ./Dockerfile
             target: web_api
+        volumes:
+            - ${CONFIG_PATH}:/app/config/prod_config.toml:ro
         environment:
-            - CONFIG_PATH
+            - CONFIG_PATH=./config/prod_config.toml
 
     worker:
         profiles: [web_api, worker]
@@ -25,8 +27,10 @@ services:
             context: ./
             dockerfile: ./Dockerfile
             target: worker
+        volumes:
+            - ${CONFIG_PATH}:/app/config/prod_config.toml:ro
         environment:
-            - CONFIG_PATH
+            - CONFIG_PATH=./config/prod_config.toml
 
     postgres:
         profiles: [web_api, worker]
