@@ -4,6 +4,8 @@ from uuid_extensions import uuid7
 from amdb.domain.entities.user import UserId, User
 from amdb.domain.services.create_user import CreateUser
 from amdb.domain.validators.email import ValidateEmail
+from amdb.domain.constants.exceptions import INVALID_USER_NAME, INVALID_EMAIL
+from amdb.domain.exception import DomainError
 from amdb.application.common.gateways.user import UserGateway
 from amdb.application.common.gateways.permissions import PermissionsGateway
 from amdb.application.common.unit_of_work import UnitOfWork
@@ -39,7 +41,7 @@ def test_register_user(
     handler.execute(command)
 
 
-def test_create_user_should_raise_error_when_user_name_already_exists(
+def test_register_user_should_raise_error_when_user_name_already_exists(
     user_gateway: UserGateway,
     permissions_gateway: PermissionsGateway,
     unit_of_work: UnitOfWork,
@@ -75,7 +77,7 @@ def test_create_user_should_raise_error_when_user_name_already_exists(
     assert error.value.message == USER_NAME_ALREADY_EXISTS
 
 
-def test_create_user_should_raise_error_when_user_email_already_exists(
+def test_register_user_should_raise_error_when_user_email_already_exists(
     user_gateway: UserGateway,
     permissions_gateway: PermissionsGateway,
     unit_of_work: UnitOfWork,
@@ -109,3 +111,67 @@ def test_create_user_should_raise_error_when_user_email_already_exists(
         handler.execute(command)
 
     assert error.value.message == USER_EMAIL_ALREADY_EXISTS
+
+
+USER_NAME_SHORTER_THAN_1_CHARACTER = ""
+USER_NAME_LONGER_THAN_128_CHARACTERS = "_" * 129
+
+
+@pytest.mark.parametrize(
+    "user_name",
+    (
+        USER_NAME_SHORTER_THAN_1_CHARACTER,
+        USER_NAME_LONGER_THAN_128_CHARACTERS,
+    ),
+)
+def test_register_user_should_raise_error_when_name_is_invalid(
+    user_name: str,
+    user_gateway: UserGateway,
+    permissions_gateway: PermissionsGateway,
+    unit_of_work: UnitOfWork,
+    password_manager: PasswordManager,
+):
+    command = RegisterUserCommand(
+        name=user_name,
+        password="Secret",
+    )
+    handler = RegisterUserHandler(
+        create_user=CreateUser(validate_email=ValidateEmail()),
+        user_gateway=user_gateway,
+        permissions_gateway=permissions_gateway,
+        unit_of_work=unit_of_work,
+        password_manager=password_manager,
+    )
+
+    with pytest.raises(DomainError) as error:
+        handler.execute(command)
+
+    assert error.value.message == INVALID_USER_NAME
+
+
+NOT_EMAIL = "definitelynotemail.com"
+
+
+def test_register_user_should_raise_error_when_email_is_invalid(
+    user_gateway: UserGateway,
+    permissions_gateway: PermissionsGateway,
+    unit_of_work: UnitOfWork,
+    password_manager: PasswordManager,
+):
+    command = RegisterUserCommand(
+        name="JohnDoe",
+        email=NOT_EMAIL,
+        password="Secret",
+    )
+    handler = RegisterUserHandler(
+        create_user=CreateUser(validate_email=ValidateEmail()),
+        user_gateway=user_gateway,
+        permissions_gateway=permissions_gateway,
+        unit_of_work=unit_of_work,
+        password_manager=password_manager,
+    )
+
+    with pytest.raises(DomainError) as error:
+        handler.execute(command)
+
+    assert error.value.message == INVALID_EMAIL

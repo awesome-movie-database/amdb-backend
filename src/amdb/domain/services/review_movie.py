@@ -45,7 +45,7 @@ class ReviewMovie:
         title_length = len(title)
         if (
             title_length < REVIEW_TITLE_MIN_LENGTH
-            or title_length > REVIEW_CONTENT_MAX_LENGTH
+            or title_length > REVIEW_TITLE_MAX_LENGTH
         ):
             raise DomainError(INVALID_REVIEW_TITLE)
 

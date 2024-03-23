@@ -9,6 +9,11 @@ from amdb.domain.entities.movie import MovieId, Movie
 from amdb.domain.entities.review import ReviewId, ReviewType, Review
 from amdb.domain.services.access_concern import AccessConcern
 from amdb.domain.services.review_movie import ReviewMovie
+from amdb.domain.constants.exceptions import (
+    INVALID_REVIEW_TITLE,
+    INVALID_REVIEW_CONTENT,
+)
+from amdb.domain.exception import DomainError
 from amdb.application.common.gateways.permissions import PermissionsGateway
 from amdb.application.common.gateways.user import UserGateway
 from amdb.application.common.gateways.movie import MovieGateway
@@ -211,3 +216,133 @@ def test_review_movie_should_raise_error_when_movie_already_reviewed(
         handler.execute(command)
 
     assert error.value.message == MOVIE_ALREADY_REVIEWED
+
+
+REVIEW_TITLE_SHORTER_THAN_5_CHARACTERS = "Bad!"
+REVIEW_TITLE_LONGER_THAN_128_CHARACTERS = "_" * 129
+
+
+@pytest.mark.parametrize(
+    "review_title",
+    (
+        REVIEW_TITLE_SHORTER_THAN_5_CHARACTERS,
+        REVIEW_TITLE_LONGER_THAN_128_CHARACTERS,
+    ),
+)
+def test_review_movie_should_raise_error_when_title_is_invalid(
+    review_title: str,
+    permissions_gateway: PermissionsGateway,
+    movie_gateway: MovieGateway,
+    user_gateway: UserGateway,
+    review_gateway: ReviewGateway,
+    unit_of_work: UnitOfWork,
+    identity_provider_with_correct_permissions: IdentityProvider,
+):
+    user = User(
+        id=UserId(uuid7()),
+        name="JohnDoe",
+        email="John@doe.com",
+    )
+    user_gateway.save(user)
+
+    movie = Movie(
+        id=MovieId(uuid7()),
+        title="Gone girl",
+        release_date=date(2014, 10, 3),
+        rating=0,
+        rating_count=0,
+    )
+    movie_gateway.save(movie)
+
+    unit_of_work.commit()
+
+    identity_provider_with_correct_permissions.user_id = Mock(
+        return_value=user.id,
+    )
+
+    command = ReviewMovieCommand(
+        movie_id=movie.id,
+        title=review_title,
+        content="Extremely underrated",
+        type=ReviewType.POSITIVE,
+    )
+    handler = ReviewMovieHandler(
+        access_concern=AccessConcern(),
+        review_movie=ReviewMovie(),
+        permissions_gateway=permissions_gateway,
+        user_gateway=user_gateway,
+        movie_gateway=movie_gateway,
+        review_gateway=review_gateway,
+        unit_of_work=unit_of_work,
+        identity_provider=identity_provider_with_correct_permissions,
+    )
+
+    with pytest.raises(DomainError) as error:
+        handler.execute(command)
+
+    assert error.value.message == INVALID_REVIEW_TITLE
+
+
+REVIEW_CONTENT_SHORTER_THAN_5_CHARACTERS = "Bad!"
+REVIEW_CONTENT_LONGER_THAN_1024_CHARACTERS = "_" * 1025
+
+
+@pytest.mark.parametrize(
+    "review_content",
+    (
+        REVIEW_CONTENT_SHORTER_THAN_5_CHARACTERS,
+        REVIEW_CONTENT_LONGER_THAN_1024_CHARACTERS,
+    ),
+)
+def test_review_movie_should_raise_error_when_content_is_invalid(
+    review_content: str,
+    permissions_gateway: PermissionsGateway,
+    movie_gateway: MovieGateway,
+    user_gateway: UserGateway,
+    review_gateway: ReviewGateway,
+    unit_of_work: UnitOfWork,
+    identity_provider_with_correct_permissions: IdentityProvider,
+):
+    user = User(
+        id=UserId(uuid7()),
+        name="JohnDoe",
+        email="John@doe.com",
+    )
+    user_gateway.save(user)
+
+    movie = Movie(
+        id=MovieId(uuid7()),
+        title="Gone girl",
+        release_date=date(2014, 10, 3),
+        rating=0,
+        rating_count=0,
+    )
+    movie_gateway.save(movie)
+
+    unit_of_work.commit()
+
+    identity_provider_with_correct_permissions.user_id = Mock(
+        return_value=user.id,
+    )
+
+    command = ReviewMovieCommand(
+        movie_id=movie.id,
+        title="Bad!!!!",
+        content=review_content,
+        type=ReviewType.POSITIVE,
+    )
+    handler = ReviewMovieHandler(
+        access_concern=AccessConcern(),
+        review_movie=ReviewMovie(),
+        permissions_gateway=permissions_gateway,
+        user_gateway=user_gateway,
+        movie_gateway=movie_gateway,
+        review_gateway=review_gateway,
+        unit_of_work=unit_of_work,
+        identity_provider=identity_provider_with_correct_permissions,
+    )
+
+    with pytest.raises(DomainError) as error:
+        handler.execute(command)
+
+    assert error.value.message == INVALID_REVIEW_CONTENT

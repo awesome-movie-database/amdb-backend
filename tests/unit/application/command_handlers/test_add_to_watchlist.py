@@ -8,6 +8,8 @@ from amdb.domain.entities.user import User, UserId
 from amdb.domain.entities.movie import Movie, MovieId
 from amdb.domain.entities.movie_for_later import MovieForLater, MovieForLaterId
 from amdb.domain.services.watch_later import WatchLater
+from amdb.domain.constants.exceptions import INVALID_MOVIE_FOR_LATER_NOTE
+from amdb.domain.exception import DomainError
 from amdb.application.common.gateways.user import UserGateway
 from amdb.application.common.gateways.movie import MovieGateway
 from amdb.application.common.gateways.movie_for_later import (
@@ -149,3 +151,52 @@ def test_add_to_watchlist_should_raise_error_when_movie_already_in_watchlist(
         handler.execute(command)
 
     assert error.value.message == MOVIE_ALREADY_IN_WATCHLIST
+
+
+MOVIE_FOR_LATER_NOTE_LONGER_THAN_256_CHARACTERS = "_" * 257
+
+
+def test_add_to_watchlist_should_raise_error_when_note_is_invalid(
+    user_gateway: UserGateway,
+    movie_gateway: MovieGateway,
+    movie_for_later_gateway: MovieForLaterGateway,
+    unit_of_work: UnitOfWork,
+):
+    user = User(
+        id=UserId(uuid7()),
+        name="JohnDoe",
+        email="john@doe.com",
+    )
+    user_gateway.save(user)
+
+    movie = Movie(
+        id=MovieId(uuid7()),
+        title="Matrix",
+        release_date=date(1999, 3, 31),
+        rating=0,
+        rating_count=0,
+    )
+    movie_gateway.save(movie)
+
+    unit_of_work.commit()
+
+    identity_provider: IdentityProvider = Mock()
+    identity_provider.user_id = Mock(return_value=user.id)
+
+    command = AddToWatchlistCommand(
+        movie_id=movie.id,
+        note=MOVIE_FOR_LATER_NOTE_LONGER_THAN_256_CHARACTERS,
+    )
+    handler = AddToWatchlistHandler(
+        watch_later=WatchLater(),
+        user_gateway=user_gateway,
+        movie_gateway=movie_gateway,
+        movie_for_later_gateway=movie_for_later_gateway,
+        unit_of_work=unit_of_work,
+        identity_provider=identity_provider,
+    )
+
+    with pytest.raises(DomainError) as error:
+        handler.execute(command)
+
+    assert error.value.message == INVALID_MOVIE_FOR_LATER_NOTE
