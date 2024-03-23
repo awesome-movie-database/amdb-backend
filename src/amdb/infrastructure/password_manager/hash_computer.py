@@ -1,16 +1,17 @@
 import hashlib
 
 
-class HashComputer:
-    _ALGORITHM = "sha256"
-    _ITERATIONS = 10000
+ALGORITHM = "sha256"
+ITERATIONS = 10000
 
+
+class HashComputer:
     def hash(self, value: bytes, salt: bytes) -> bytes:
         return hashlib.pbkdf2_hmac(
-            hash_name=self._ALGORITHM,
+            hash_name=ALGORITHM,
             password=value,
             salt=salt,
-            iterations=self._ITERATIONS,
+            iterations=ITERATIONS,
         )
 
     def verify(
@@ -20,9 +21,9 @@ class HashComputer:
         salt: bytes,
     ) -> bool:
         computed_hash = hashlib.pbkdf2_hmac(
-            hash_name=self._ALGORITHM,
+            hash_name=ALGORITHM,
             password=value,
             salt=salt,
-            iterations=self._ITERATIONS,
+            iterations=ITERATIONS,
         )
         return computed_hash == hashed_value
