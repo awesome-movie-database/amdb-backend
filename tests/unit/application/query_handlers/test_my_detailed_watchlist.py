@@ -41,6 +41,7 @@ def test_get_my_detailed_watchlist(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="john@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 

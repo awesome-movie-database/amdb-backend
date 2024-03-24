@@ -40,6 +40,7 @@ def test_get_detailed_reviews(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 

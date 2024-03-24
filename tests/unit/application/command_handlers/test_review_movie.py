@@ -54,6 +54,7 @@ def test_review_movie(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 
@@ -166,6 +167,7 @@ def test_review_movie_should_raise_error_when_movie_already_reviewed(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 
@@ -242,6 +244,7 @@ def test_review_movie_should_raise_error_when_title_is_invalid(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 
@@ -307,6 +310,7 @@ def test_review_movie_should_raise_error_when_content_is_invalid(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 

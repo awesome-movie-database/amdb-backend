@@ -11,3 +11,4 @@ class User:
     id: UserId
     name: str
     email: Optional[str]
+    telegram: Optional[str]

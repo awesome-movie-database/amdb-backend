@@ -13,6 +13,9 @@ class UserGateway(Protocol):
     def with_email(self, user_email: str) -> Optional[User]:
         raise NotImplementedError
 
+    def with_telegram(self, user_telegram: str) -> Optional[User]:
+        raise NotImplementedError
+
     def save(self, user: User) -> None:
         raise NotImplementedError
 

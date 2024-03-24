@@ -2,6 +2,7 @@ from typing import Optional
 
 from amdb.domain.entities.user import UserId, User
 from amdb.domain.validators.email import ValidateEmail
+from amdb.domain.validators.telegram import ValidateTelegram
 from amdb.domain.constants.exceptions import INVALID_USER_NAME
 from amdb.domain.exception import DomainError
 
@@ -14,8 +15,10 @@ class CreateUser:
     def __init__(
         self,
         validate_email: ValidateEmail,
+        validate_telegram: ValidateTelegram,
     ) -> None:
         self._validate_email = validate_email
+        self._validate_telegram = validate_telegram
 
     def __call__(
         self,
@@ -23,11 +26,12 @@ class CreateUser:
         id: UserId,
         name: str,
         email: Optional[str],
+        telegram: Optional[str],
     ) -> User:
         if email:
-            email = self._validate_email(email)
-        else:
-            email = None
+            self._validate_email(email)
+        if telegram:
+            self._validate_telegram(telegram)
 
         self._validate_name(name)
 
@@ -35,6 +39,7 @@ class CreateUser:
             id=id,
             name=name,
             email=email,
+            telegram=telegram,
         )
 
     def _validate_name(self, name: str) -> None:

@@ -7,6 +7,7 @@ USER_IS_NOT_OWNER = "User is not an owner"
 USER_HAS_NO_EMAIL = "User has no email"
 USER_NAME_ALREADY_EXISTS = "User name already exists"
 USER_EMAIL_ALREADY_EXISTS = "User email already exists"
+USER_TELEGRAM_ALREADY_EXISTS = "User telegram already exists"
 USER_DOES_NOT_EXIST = "User doesn't exist"
 INCORRECT_PASSWORD = "Password is not correct"
 

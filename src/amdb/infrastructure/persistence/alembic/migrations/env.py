@@ -6,7 +6,9 @@ from sqlalchemy import pool
 from alembic import context
 
 from amdb.infrastructure.persistence.sqlalchemy.models.base import Model
-from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
+from amdb.infrastructure.persistence.sqlalchemy.config import (
+    load_postgres_config_from_toml,
+)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -39,7 +41,7 @@ def get_sqlalchemy_url() -> str:
             message = "Path to config env var is not set"
             raise ValueError(message)
 
-        postgres_config = PostgresConfig.from_toml(path_to_config)
+        postgres_config = load_postgres_config_from_toml(path_to_config)
 
         return postgres_config.url
 

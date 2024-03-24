@@ -31,11 +31,21 @@ class UserMapper:
             return self._to_entity(row)  # type: ignore
         return None
 
+    def with_telegram(self, user_telegram: str) -> Optional[User]:
+        statement = select(UserModel).where(
+            UserModel.telegram == user_telegram,
+        )
+        row = self._connection.execute(statement).one_or_none()
+        if row:
+            return self._to_entity(row)  # type: ignore
+        return None
+
     def save(self, user: User) -> None:
         statement = insert(UserModel).values(
             id=UserId(user.id),
             name=user.name,
             email=user.email,
+            telegram=user.telegram,
         )
         self._connection.execute(statement)
 
@@ -51,4 +61,5 @@ class UserMapper:
             id=UserId(row.id),
             name=row.name,
             email=row.email,
+            telegram=row.telegram,
         )

@@ -7,3 +7,4 @@ class RegisterUserCommand:
     name: str
     password: str
     email: Optional[str] = None
+    telegram: Optional[str] = None

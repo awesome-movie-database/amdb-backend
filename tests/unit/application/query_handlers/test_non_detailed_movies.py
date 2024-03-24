@@ -38,6 +38,7 @@ def test_get_non_detailed_movies(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 

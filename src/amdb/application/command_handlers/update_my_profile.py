@@ -31,6 +31,7 @@ class UpdateMyProfileHandler:
         self._update_profile(
             user=user,
             email=command.email,
+            telegram=command.telegram,
         )
         self._user_gateway.update(user)
 

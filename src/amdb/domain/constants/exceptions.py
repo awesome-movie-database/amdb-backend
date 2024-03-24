@@ -2,6 +2,7 @@ INVALID_RATING_VALUE = (
     "Rating value must be from 0 to 10 and be a multiple of 0.5"
 )
 INVALID_EMAIL = "Email is invalid"
+INVALID_TELEGRAM = "Telegram is invalid"
 INVALID_MOVIE_TITLE = (
     "Number of characters in movie title must be more than 1 and less than 128"
 )

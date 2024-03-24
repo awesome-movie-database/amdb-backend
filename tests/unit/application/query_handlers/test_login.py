@@ -29,6 +29,7 @@ def test_login(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 
@@ -93,6 +94,7 @@ def test_login_should_raise_error_when_password_is_incorrect(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 
@@ -132,6 +134,7 @@ def test_login_should_raise_error_when_access_is_denied(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 

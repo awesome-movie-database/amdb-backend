@@ -18,3 +18,6 @@ class UserModel(Model):
     email: Mapped[Optional[str]] = mapped_column(
         unique=True,
     )
+    telegram: Mapped[Optional[str]] = mapped_column(
+        unique=True,
+    )

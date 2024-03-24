@@ -39,6 +39,7 @@ def test_get_my_detailed_ratings(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 

@@ -1,5 +1,6 @@
 """
-Add movies_for_later table
+Add movies_for_later table,
+Add telegram column in users table
 
 Revision ID: f3b3f8e95dfe
 Revises: a2f7c2383ba8
@@ -44,7 +45,12 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id"),
     )
+    op.add_column(
+        "users",
+        sa.Column("telegram", sa.String(), nullable=True, unique=True),
+    )
 
 
 def downgrade() -> None:
     op.drop_table("movies_for_later")
+    op.drop_column("users", "telegram")

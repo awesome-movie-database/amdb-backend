@@ -36,6 +36,7 @@ def test_request_my_ratings_export(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 
@@ -83,6 +84,7 @@ def test_request_my_ratings_export_should_raise_error_when_user_cannot_use_sendi
         id=UserId(uuid7()),
         name="JohnDoe",
         email=email,
+        telegram=None,
     )
     user_gateway.save(user)
 

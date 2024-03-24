@@ -38,6 +38,7 @@ def test_add_to_watchlist(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="john@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 
@@ -108,6 +109,7 @@ def test_add_to_watchlist_should_raise_error_when_movie_already_in_watchlist(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="john@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 
@@ -166,6 +168,7 @@ def test_add_to_watchlist_should_raise_error_when_note_is_invalid(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="john@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 

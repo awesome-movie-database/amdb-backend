@@ -43,6 +43,7 @@ def test_get_detailed_movie(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 

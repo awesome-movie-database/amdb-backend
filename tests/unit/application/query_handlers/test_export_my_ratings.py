@@ -38,6 +38,7 @@ def test_export_my_ratings_in_csv(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 

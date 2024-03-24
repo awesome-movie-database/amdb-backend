@@ -6,7 +6,11 @@ from uuid_extensions import uuid7
 from amdb.domain.entities.user import User, UserId
 from amdb.domain.services.update_profile import UpdateProfile
 from amdb.domain.validators.email import ValidateEmail
-from amdb.domain.constants.exceptions import INVALID_EMAIL
+from amdb.domain.validators.telegram import ValidateTelegram
+from amdb.domain.constants.exceptions import (
+    INVALID_EMAIL,
+    INVALID_TELEGRAM,
+)
 from amdb.domain.exception import DomainError
 from amdb.application.common.gateways.user import UserGateway
 from amdb.application.common.unit_of_work import UnitOfWork
@@ -25,6 +29,7 @@ def test_update_my_profile(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram="johndoe",
     )
     user_gateway.save(user)
 
@@ -37,9 +42,13 @@ def test_update_my_profile(
 
     command = UpdateMyProfileCommand(
         email="Johny@doe.com",
+        telegram=None,
     )
     handler = UpdateMyProfileHandler(
-        update_profile=UpdateProfile(validate_email=ValidateEmail()),
+        update_profile=UpdateProfile(
+            validate_email=ValidateEmail(),
+            validate_telegram=ValidateTelegram(),
+        ),
         user_gateway=user_gateway,
         unit_of_work=unit_of_work,
         identity_provider=identity_provider,
@@ -59,6 +68,7 @@ def test_update_my_profile_should_raise_error_when_email_is_invalid(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram="johndoe",
     )
     user_gateway.save(user)
 
@@ -73,7 +83,10 @@ def test_update_my_profile_should_raise_error_when_email_is_invalid(
         email=NOT_EMAIL,
     )
     handler = UpdateMyProfileHandler(
-        update_profile=UpdateProfile(validate_email=ValidateEmail()),
+        update_profile=UpdateProfile(
+            validate_email=ValidateEmail(),
+            validate_telegram=ValidateTelegram(),
+        ),
         user_gateway=user_gateway,
         unit_of_work=unit_of_work,
         identity_provider=identity_provider,
@@ -83,3 +96,44 @@ def test_update_my_profile_should_raise_error_when_email_is_invalid(
         handler.execute(command)
 
     assert error.value.message == INVALID_EMAIL
+
+
+NOT_TELEGRAM = "definitely not telegram"
+
+
+def test_update_my_profile_should_raise_error_when_telegram_is_invalid(
+    user_gateway: UserGateway,
+    unit_of_work: UnitOfWork,
+):
+    user = User(
+        id=UserId(uuid7()),
+        name="JohnDoe",
+        email="John@doe.com",
+        telegram="johndoe",
+    )
+    user_gateway.save(user)
+
+    unit_of_work.commit()
+
+    identity_provider: IdentityProvider = Mock()
+    identity_provider.user_id = Mock(
+        return_value=user.id,
+    )
+
+    command = UpdateMyProfileCommand(
+        telegram=NOT_TELEGRAM,
+    )
+    handler = UpdateMyProfileHandler(
+        update_profile=UpdateProfile(
+            validate_email=ValidateEmail(),
+            validate_telegram=ValidateTelegram(),
+        ),
+        user_gateway=user_gateway,
+        unit_of_work=unit_of_work,
+        identity_provider=identity_provider,
+    )
+
+    with pytest.raises(DomainError) as error:
+        handler.execute(command)
+
+    assert error.value.message == INVALID_TELEGRAM

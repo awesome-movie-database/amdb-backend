@@ -49,6 +49,7 @@ def test_unrate_movie(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 
@@ -156,6 +157,7 @@ def test_unrate_movie_should_raise_error_when_user_is_not_rating_owner(
         id=UserId(uuid7()),
         name="JohnDoe",
         email="John@doe.com",
+        telegram=None,
     )
     user_gateway.save(user)
 
