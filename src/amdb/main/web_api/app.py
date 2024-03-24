@@ -5,9 +5,15 @@ from fastapi import FastAPI
 from dishka import make_async_container
 from dishka.integrations.fastapi import setup_dishka
 
-from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
-from amdb.infrastructure.persistence.redis.config import RedisConfig
-from amdb.infrastructure.auth.session.config import SessionConfig
+from amdb.infrastructure.persistence.sqlalchemy.config import (
+    load_postgres_config_from_toml,
+)
+from amdb.infrastructure.persistence.redis.config import (
+    load_redis_config_from_toml,
+)
+from amdb.infrastructure.auth.session.config import (
+    load_session_config_from_toml,
+)
 from amdb.presentation.web_api.router import router
 from amdb.presentation.web_api.exception_handlers import (
     setup_exception_handlers,
@@ -39,9 +45,9 @@ def run_web_api() -> None:
         message = "Path to config env var is not set"
         raise ValueError(message)
 
-    postgres_config = PostgresConfig.from_toml(path_to_config)
-    redis_config = RedisConfig.from_toml(path_to_config)
-    session_config = SessionConfig.from_toml(path_to_config)
+    postgres_config = load_postgres_config_from_toml(path_to_config)
+    redis_config = load_redis_config_from_toml(path_to_config)
+    session_config = load_session_config_from_toml(path_to_config)
 
     app = FastAPI(
         title="Awesome Movie Database",

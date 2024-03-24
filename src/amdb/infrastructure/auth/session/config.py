@@ -8,10 +8,10 @@ import toml
 class SessionConfig:
     lifetime: timedelta
 
-    @classmethod
-    def from_toml(cls, path: str) -> "SessionConfig":
-        toml_as_dict = toml.load(path)
-        session_section_as_dict = toml_as_dict["auth-session"]
-        return SessionConfig(
-            lifetime=timedelta(minutes=session_section_as_dict["lifetime"]),
-        )
+
+def load_session_config_from_toml(path: str) -> SessionConfig:
+    toml_as_dict = toml.load(path)
+    session_section_as_dict = toml_as_dict["auth-session"]
+    return SessionConfig(
+        lifetime=timedelta(minutes=session_section_as_dict["lifetime"]),
+    )

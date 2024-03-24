@@ -12,6 +12,7 @@ from amdb.infrastructure.persistence.redis.cache.permissions_mapper import (
 class CachingPermissionsMapper:
     def __init__(
         self,
+        *,
         permissions_mapper: PermissionsMapper,
         cache_provider: PermissionsMapperCacheProvider,
     ) -> None:

@@ -5,8 +5,12 @@ import typer
 from dishka import make_container
 from alembic import config
 
-from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
-from amdb.infrastructure.persistence.redis.config import RedisConfig
+from amdb.infrastructure.persistence.sqlalchemy.config import (
+    load_postgres_config_from_toml,
+)
+from amdb.infrastructure.persistence.redis.config import (
+    load_redis_config_from_toml,
+)
 from amdb.infrastructure.persistence.alembic.config import ALEMBIC_CONFIG
 from amdb.presentation.cli.movie import movie_commands
 from amdb.main.providers import (
@@ -37,8 +41,8 @@ def run_cli() -> None:
         message = "Path to config env var is not set"
         raise ValueError(message)
 
-    postgres_config = PostgresConfig.from_toml(path_to_config)
-    redis_config = RedisConfig.from_toml(path_to_config)
+    postgres_config = load_postgres_config_from_toml(path_to_config)
+    redis_config = load_redis_config_from_toml(path_to_config)
 
     container = make_container(
         ConfigsProvider(

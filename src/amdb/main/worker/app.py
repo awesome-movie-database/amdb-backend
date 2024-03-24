@@ -6,8 +6,12 @@ from faststream.redis import RedisBroker
 from dishka import make_async_container
 from dishka.integrations.faststream import setup_dishka
 
-from amdb.infrastructure.persistence.sqlalchemy.config import PostgresConfig
-from amdb.infrastructure.persistence.redis.config import RedisConfig
+from amdb.infrastructure.persistence.sqlalchemy.config import (
+    load_postgres_config_from_toml,
+)
+from amdb.infrastructure.persistence.redis.config import (
+    load_redis_config_from_toml,
+)
 from amdb.presentation.worker.router import router
 from amdb.main.providers import (
     ConfigsProvider,
@@ -35,8 +39,8 @@ def run_worker() -> None:
         message = "Path to config env var is not set"
         raise ValueError(message)
 
-    postgres_config = PostgresConfig.from_toml(path_to_config)
-    redis_config = RedisConfig.from_toml(path_to_config)
+    postgres_config = load_postgres_config_from_toml(path_to_config)
+    redis_config = load_redis_config_from_toml(path_to_config)
 
     broker = RedisBroker(url=redis_config.url)
     broker.include_router(router)
